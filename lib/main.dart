@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+
 import './Models/category.dart';
 import './Models/product.dart';
 import './Models/user.dart';
@@ -14,13 +16,14 @@ import 'package:provider/provider.dart';
 import 'Screen/Admin/category.dart';
 import 'Screen/Admin/users.dart';
 import 'Screen/Auth/login.dart';
+import 'firebase_options.dart';
 
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
