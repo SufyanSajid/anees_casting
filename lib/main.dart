@@ -46,13 +46,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Sufyan_casting',
+        title: 'Anees_Casting',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => LoginScreen(),
+          '/': (ctx) => AdminHomePage(),
           AdminHomePage.routeName:(ctx)=>AdminHomePage(),
           CategoryScreen.routeName:(ctx) => CategoryScreen(),
           UserScreen.routeName:(ctx)=>UserScreen(),
