@@ -14,8 +14,7 @@ import 'package:provider/provider.dart';
 import 'Screen/Admin/category.dart';
 import 'Screen/Admin/users.dart';
 import 'Screen/Auth/login.dart';
-import 'Screen/Common/profile.dart';
-import 'firebase_options.dart';
+
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
