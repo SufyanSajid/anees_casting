@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "878643005566",
+    "project_id": "aneescasting-ec184",
+    "storage_bucket": "aneescasting-ec184.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878643005566:android:a3704774e6691a32b9302f",
+        "android_client_info": {
+          "package_name": "com.example.ac_final"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878643005566-rlp1s1nv2u0bpgi669ebh29rj5vhurke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYhlmeIwLt0sdLzbvdUxU5JWFB-pgoa_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878643005566-rlp1s1nv2u0bpgi669ebh29rj5vhurke.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878643005566-irb2u3ifp7iia8va0jjcdg4vkduvhtin.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aneesCosting"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878643005566:android:7342b8fa4c79067ab9302f",
+        "android_client_info": {
+          "package_name": "com.example.anees_costing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878643005566-rlp1s1nv2u0bpgi669ebh29rj5vhurke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYhlmeIwLt0sdLzbvdUxU5JWFB-pgoa_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878643005566-rlp1s1nv2u0bpgi669ebh29rj5vhurke.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878643005566-irb2u3ifp7iia8va0jjcdg4vkduvhtin.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aneesCosting"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
