@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Anees_Casting',
+        title: 'Shani_Cating',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.ubuntuTextTheme(),
