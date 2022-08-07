@@ -1,9 +1,9 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/input_feild.dart';
 import 'package:anees_costing/Widget/submitbutton.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +13,7 @@ class CategoryScreen extends StatelessWidget {
   static const routeName = '/categoryScreen';
   CategoryScreen({Key? key}) : super(key: key);
   final _nameController = TextEditingController();
+  String? parentId;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +21,8 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: Container(
-        decoration: BoxDecoration(
-            gradient:primaryGradient,
-            shape: BoxShape.circle),
+        decoration:
+            BoxDecoration(gradient: primaryGradient, shape: BoxShape.circle),
         child: FloatingActionButton(
           backgroundColor: Colors.transparent,
           onPressed: () {
@@ -36,7 +36,7 @@ class CategoryScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'Add Nee Category',
+                            'Add New Category',
                             style: GoogleFonts.righteous(
                               color: primaryColor,
                               fontSize: 20,
@@ -45,6 +45,12 @@ class CategoryScreen extends StatelessWidget {
                           ),
                           SizedBox(
                             height: height(context) * 4,
+                          ),
+                          CustomAutoComplete(onChange: (Category cat) {
+                            parentId = cat.id;
+                          }),
+                          SizedBox(
+                            height: height(context) * 2,
                           ),
                           InputFeild(
                             hinntText: 'Category Name',
@@ -57,7 +63,11 @@ class CategoryScreen extends StatelessWidget {
                           SubmitButton(
                               height: height(context),
                               width: width(context),
-                              onTap: () {},
+                              onTap: () {
+                                Provider.of<Categories>(context, listen: false)
+                                    .uploadCatagory(parentId ?? "",
+                                        _nameController.text.trim());
+                              },
                               title: 'Add Category')
                         ],
                       ),
@@ -121,7 +131,7 @@ class CategoryScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              categories[index].name,
+                              "category label",
                               style: GoogleFonts.righteous(
                                 color: headingColor,
                                 fontSize: 20,

@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import '../contant.dart';
 
 class CustomAutoComplete extends StatefulWidget {
-  CustomAutoComplete({required this.onChange, });
- 
+  CustomAutoComplete({
+    required this.onChange,
+  });
+
   Function onChange;
 
   @override
@@ -16,13 +18,9 @@ class CustomAutoComplete extends StatefulWidget {
 class _CustomAutoCompleteState extends State<CustomAutoComplete> {
   bool isFirst = true;
 
-
   @override
   void didChangeDependencies() async {
-    if (isFirst) {
-     
-       
-    }
+    if (isFirst) {}
     isFirst = false;
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -30,7 +28,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
 
   @override
   Widget build(BuildContext context) {
-      List<Category>? categories=Provider.of<Categories>(context,listen: false).categories;
+    List<Category>? categories =
+        Provider.of<Categories>(context, listen: false).categories;
     // TextEditingValue textEditingValue = TextEditingValue(text: widget.town);
 
     var height = MediaQuery.of(context).size.height / 100;
@@ -44,7 +43,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
           return const Iterable<String>.empty();
         }
         return categories.where((Category option) {
-          return option.name
+          return option.title
               .toLowerCase()
               .contains(textEditingValue.text.toLowerCase());
         });
@@ -58,40 +57,42 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
           VoidCallback onFieldSubmitted) {
         return Container(
           margin: const EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-      
-        borderRadius: BorderRadius.circular(15),
-       
-        boxShadow: [
-          BoxShadow(color: Colors.grey, offset: Offset(0, 5), blurRadius: 12),
-        ],
-        ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey, offset: Offset(0, 5), blurRadius: 12),
+            ],
+          ),
           child: Center(
             child: TextField(
               focusNode: fieldFocusNode,
               controller: fieldTextEditingController,
               decoration: InputDecoration(
-                label:  Text(
-                  'Select Category',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,color: primaryColor),
-                ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    border: InputBorder.none
-                // enabledBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(13),
-                //   borderSide: BorderSide(color: primaryColor, width: 1.0),
-                // ),
-                // focusedBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(13),
-                //   borderSide: BorderSide(color: primaryColor, width: 1.0),
-                // ),
-                // errorBorder: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(13),
-                //   borderSide: const BorderSide(color: Colors.red, width: 1.0),
-                // ),
-              ),
+                  label: Text(
+                    'Select Category',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: primaryColor),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  border: InputBorder.none
+                  // enabledBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(13),
+                  //   borderSide: BorderSide(color: primaryColor, width: 1.0),
+                  // ),
+                  // focusedBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(13),
+                  //   borderSide: BorderSide(color: primaryColor, width: 1.0),
+                  // ),
+                  // errorBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(13),
+                  //   borderSide: const BorderSide(color: Colors.red, width: 1.0),
+                  // ),
+                  ),
             ),
           ),
         );
@@ -103,8 +104,6 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
           child: Material(
             child: Container(
               height: height * 33,
-
-              
               margin: const EdgeInsets.only(
                 right: 40,
               ),
@@ -124,12 +123,12 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
 
                   return GestureDetector(
                     onTap: () {
-                      onSelected(option.name);
-                     
+                      onSelected(option.title);
+
                       widget.onChange(option);
                     },
                     child: ListTile(
-                      title: Text(option.name,
+                      title: Text(option.title,
                           style: const TextStyle(color: Colors.white)),
                     ),
                   );

@@ -18,7 +18,6 @@ import 'Screen/Admin/users.dart';
 import 'Screen/Auth/login.dart';
 import 'firebase_options.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -26,8 +25,9 @@ void main() async {
   );
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key) ;
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Users(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
       ],
@@ -53,13 +53,12 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (ctx) => AdminHomePage(),
-          AdminHomePage.routeName:(ctx)=>AdminHomePage(),
-          CategoryScreen.routeName:(ctx) => CategoryScreen(),
-          UserScreen.routeName:(ctx)=>UserScreen(),
-          ProductScreen.routeName:(ctx)=>ProductScreen(),
-          AddProduct.routeName:(ctx)=>AddProduct(),
-          AddUser.routeName:(ctx)=>AddUser(),
-
+          AdminHomePage.routeName: (ctx) => AdminHomePage(),
+          CategoryScreen.routeName: (ctx) => CategoryScreen(),
+          UserScreen.routeName: (ctx) => UserScreen(),
+          ProductScreen.routeName: (ctx) => ProductScreen(),
+          AddProduct.routeName: (ctx) => AddProduct(),
+          AddUser.routeName: (ctx) => AddUser(),
         },
       ),
     );
