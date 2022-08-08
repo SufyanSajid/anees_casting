@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+String APIkey='AIzaSyBYhlmeIwLt0sdLzbvdUxU5JWFB-pgoa_Y';
+
 LinearGradient gradientBase(List<Color> colorList){
   return LinearGradient(
     begin: Alignment.topCenter,

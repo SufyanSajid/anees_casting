@@ -1,3 +1,5 @@
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import './Models/category.dart';
@@ -23,7 +25,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,6 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+         ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => Categories(),
         ),
@@ -52,13 +57,16 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => AdminHomePage(),
-          AdminHomePage.routeName: (ctx) => AdminHomePage(),
-          CategoryScreen.routeName: (ctx) => CategoryScreen(),
-          UserScreen.routeName: (ctx) => UserScreen(),
-          ProductScreen.routeName: (ctx) => ProductScreen(),
-          AddProduct.routeName: (ctx) => AddProduct(),
-          AddUser.routeName: (ctx) => AddUser(),
+          '/': (ctx) => SplashScreen(),
+
+          LoginScreen.routeName:(ctx)=>LoginScreen(),
+          AdminHomePage.routeName:(ctx)=>AdminHomePage(),
+          CategoryScreen.routeName:(ctx) => CategoryScreen(),
+          UserScreen.routeName:(ctx)=>UserScreen(),
+          ProductScreen.routeName:(ctx)=>ProductScreen(),
+          AddProduct.routeName:(ctx)=>AddProduct(),
+          AddUser.routeName:(ctx)=>AddUser(),
+
         },
       ),
     );

@@ -1,9 +1,12 @@
 import 'dart:io';
 
 // import 'package:chiarra_fazzini/Models/auth.dart';
+import 'package:anees_costing/Screen/Admin/homepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import '../../Models/auth.dart';
 import '../../Models/product.dart';
+import '../../Widget/adaptiveDialog.dart';
 import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/input_feild.dart';
 import '../../Widget/submitbutton.dart';
@@ -31,56 +34,34 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   void _submit() async {
-    // setState(() {
-    //   isLoading=true;
-    // });
-    // Provider.of<Auth>(context, listen: false)
-    //     .login(_emailController.text.trim(), _passController.text.trim())
-    //     .then((value) async {
-
-    //   CurrentUser currentUser =
-    //       Provider.of<Auth>(context, listen: false).currentUser!;
-
-    //   if (currentUser.role == 'admin') {
-    //     //admin side request//
-    //     await Provider.of<Products>(context, listen: false)
-    //         .fetchAndSetProducts(int.parse(currentUser.businessId));
-    //     await Provider.of<Users>(context, listen: false)
-    //         .fetchAndSetUsers(int.parse(currentUser.businessId));
-    //     await Provider.of<Customers>(context, listen: false)
-    //         .fetchAndSetCustomers(int.parse(currentUser.businessId));
-
-    //     await Provider.of<Sales>(context, listen: false)
-    //         .getTotalSalesAmount(int.parse(currentUser.businessId));
-        
-    //         setState(() {
-    //           isLoading=false;
-    //         });
-
-    //     //admin requests//
-    //     Navigator.of(context).pushReplacementNamed(AdminDashboard.routeName);
-    //   } else if (currentUser.role == 'booker') {
-    //     Navigator.of(context)
-    //         .pushReplacementNamed(BookerDashBoadScreen.routeName);
-    //   } else if (currentUser.role == 'medical') {
-    //     Navigator.of(context)
-    //         .pushReplacementNamed(MedicalRepDashBoard.routeName);
-    //   }
-    // }).catchError((error) {
-    //   setState(() {
-    //     isLoading=false;
-    //   });
-    //   showDialog(
-    //       context: context,
-    //       builder: (ctx) => AdaptiveDiaglog(
-    //           ctx: ctx,
-    //           title: '❌',
-    //           content: error.toString(),
-    //           btnYes: 'Okay',
-    //           yesPressed: () {
-    //             Navigator.of(context).pop();
-    //           }));
-    // });
+    print('sufyan');
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<Auth>(context, listen: false)
+        .login(_emailController.text.trim(), _passController.text.trim())
+        .then((value) async {
+      setState(() {
+        isLoading = false;
+      });
+      CurrentUser currentUser =
+          Provider.of<Auth>(context, listen: false).currentUser!;
+      Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      showDialog(
+          context: context,
+          builder: (ctx) => AdaptiveDiaglog(
+              ctx: ctx,
+              title: '❌',
+              content: error.toString(),
+              btnYes: 'Okay',
+              yesPressed: () {
+                Navigator.of(context).pop();
+              }));
+    });
   }
 
   @override
@@ -242,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                           ),
                                         );
-                                      }else{
+                                      } else {
                                         _submit();
                                       }
                                     }),

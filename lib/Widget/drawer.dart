@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Screen/Auth/login.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../contant.dart';
-
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -105,39 +106,37 @@ class _AppDrawerState extends State<AppDrawer> {
                             height: 10,
                           ),
                           // if (currentUser != null)
-                            Text(
-                              "userName",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: primaryColor,
-                                  ),
-                            ),
+                          Text(
+                            "userName",
+                            style:
+                                Theme.of(context).textTheme.headline5!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: primaryColor,
+                                    ),
+                          ),
                           SizedBox(
                             height: height * 0,
                           ),
                           // if (currentUser != null)
-                            Text(
-                              'Email',
-                              style: TextStyle(
-                                color: secondaryColor,
-                                fontSize: 14,
-                              ),
+                          Text(
+                            'Email',
+                            style: TextStyle(
+                              color: secondaryColor,
+                              fontSize: 14,
                             ),
-                            SizedBox(
-                              height: height*1,
+                          ),
+                          SizedBox(
+                            height: height * 1,
+                          ),
+                          // if (currentUser != null)
+                          Text(
+                            "role",
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                              // if (currentUser != null)
-                            Text(
-                              "role",
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -173,7 +172,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                   onTap: () {},
                 ),
-                
+
                 if (Platform.isAndroid)
                   ListTile(
                     leading: const Icon(
@@ -211,7 +210,11 @@ class _AppDrawerState extends State<AppDrawer> {
                               btnYes: 'Yes',
                               btnNO: 'No',
                               yesPressed: () async {
-                                
+                                print('logout');
+                                await Provider.of<Auth>(context, listen: false)
+                                    .logout();
+                                Navigator.of(context).pushReplacementNamed(
+                                    LoginScreen.routeName);
                               },
                               noPressed: () {
                                 Navigator.of(ctx).pop();
