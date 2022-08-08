@@ -8,53 +8,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../Widget/appbar.dart';
-import '../../contant.dart';
 
-class CategoryScreen extends StatefulWidget {
+class CategoryScreen extends StatelessWidget {
   static const routeName = '/categoryScreen';
   CategoryScreen({Key? key}) : super(key: key);
-
-  @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
-}
-
-class _CategoryScreenState extends State<CategoryScreen> {
   final _nameController = TextEditingController();
-
   String? parentId;
-  bool isUpLoadingCat = false;
-
-  addCategory(BuildContext context, String parentId, String title) async {
-    var provider = Provider.of<Categories>(context, listen: false);
-    if (title.isNotEmpty) {
-      await Provider.of<Categories>(context, listen: false)
-          .uploadCatagory(parentId, title);
-      provider.fetchAndUpdateCategoris();
-    }
-
-    _nameController.text = "";
-    setState(() {
-      isUpLoadingCat = false;
-    });
-  }
-
-  bool isFirst = true;
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    if (isFirst) {
-      isFirst = false;
-      Provider.of<Categories>(context, listen: false).fetchAndUpdateCategoris();
-    }
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
-    var categories = Provider.of<Categories>(context).categories;
-    List<Category> parentCategories =
-        Provider.of<Categories>(context).parentCategories;
-
+    var categories = Provider.of<Categories>(context, listen: false).categories;
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: Container(
@@ -63,11 +26,54 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: FloatingActionButton(
           backgroundColor: Colors.transparent,
           onPressed: () {
-            setState(() {
-              isUpLoadingCat = true;
-            });
+            showBottomSheet(
+                context: context,
+                builder: (ctx) => Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      height: height(context) * 40,
+                      width: width(context) * 100,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Add New Category',
+                            style: GoogleFonts.righteous(
+                              color: primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            height: height(context) * 4,
+                          ),
+                          CustomAutoComplete(onChange: (Category cat) {
+                            parentId = cat.id;
+                          }),
+                          SizedBox(
+                            height: height(context) * 2,
+                          ),
+                          InputFeild(
+                            hinntText: 'Category Name',
+                            validatior: () {},
+                            inputController: _nameController,
+                          ),
+                          SizedBox(
+                            height: height(context) * 2,
+                          ),
+                          SubmitButton(
+                              height: height(context),
+                              width: width(context),
+                              onTap: () {
+                                Provider.of<Categories>(context, listen: false)
+                                    .uploadCatagory(parentId ?? "",
+                                        _nameController.text.trim());
+                              },
+                              title: 'Add Category')
+                        ],
+                      ),
+                    ));
           },
-          child: const Icon(
+          child: Icon(
             Icons.add,
             color: Colors.white,
           ),
@@ -90,42 +96,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
               SizedBox(
                 height: height(context) * 3,
               ),
-              if (isUpLoadingCat)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CustomAutoComplete(
-                        categories: parentCategories,
-                        onChange: (Category val) {
-                          parentId = val.id;
-                        }),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    InputFeild(
-                      hinntText: 'Category Name',
-                      validatior: () {},
-                      inputController: _nameController,
-                    ),
-                    SizedBox(
-                      height: height(context) * 2,
-                    ),
-                    SubmitButton(
-                        height: height(context),
-                        width: width(context) / 2,
-                        onTap: () async {
-                          addCategory(context, parentId ?? "",
-                              _nameController.text.trim());
-                        },
-                        title: 'Add Category')
-                  ],
-                ),
-              SizedBox(
-                height: 30,
-              ),
               Expanded(
                 child: GridView.builder(
-                  // physics: const NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -145,7 +118,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               color: primaryColor,
                               style: BorderStyle.solid,
                               width: 1),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
                               color: Colors.grey,
                               offset: Offset(0, 5),
@@ -158,7 +131,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              categories[index].title,
+                              "category label",
                               style: GoogleFonts.righteous(
                                 color: headingColor,
                                 fontSize: 20,
