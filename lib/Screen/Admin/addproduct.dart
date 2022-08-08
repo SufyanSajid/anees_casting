@@ -1,6 +1,5 @@
-import 'package:anees_costing/Models/category.dart';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../Widget/appbar.dart';
 import '../../Widget/customautocomplete.dart';
@@ -20,8 +19,6 @@ class AddProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Category> categories =
-        Provider.of<Categories>(context, listen: false).categories;
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -77,10 +74,7 @@ class AddProduct extends StatelessWidget {
               SizedBox(
                 height: height(context) * 5,
               ),
-              CustomAutoComplete(
-                categories: categories,
-                onChange: () {},
-              ),
+            CustomAutoComplete(onChange: (){},),
               SizedBox(
                 height: height(context) * 2,
               ),
@@ -115,16 +109,23 @@ class AddProduct extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Expanded(flex: 2, child: Container()),
+                Expanded(
+                  flex: 2,
+                    child: Container()),  
+               
                   Expanded(
                     flex: 4,
-                    child: CustomDropDown(
-                        items: ['Cm', 'MM'],
-                        onChanged: (value) {
-                          print(value);
-                        }),
+                    child: CustomDropDown(items: [
+                      'Cm',
+                      'MM'
+                    ],onChanged: (value){
+                      
+                      print(value);
+                    }),
                   ),
-                  Expanded(flex: 2, child: Container()),
+                   Expanded(
+                    flex: 2,
+                    child: Container()),  
                 ],
               ),
               SizedBox(

@@ -7,11 +7,9 @@ import '../contant.dart';
 class CustomAutoComplete extends StatefulWidget {
   CustomAutoComplete({
     required this.onChange,
-    required this.categories,
   });
 
   Function onChange;
-  List<Category> categories;
 
   @override
   State<CustomAutoComplete> createState() => _CustomAutoCompleteState();
@@ -30,6 +28,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
 
   @override
   Widget build(BuildContext context) {
+    List<Category>? categories =
+        Provider.of<Categories>(context, listen: false).categories;
     // TextEditingValue textEditingValue = TextEditingValue(text: widget.town);
 
     var height = MediaQuery.of(context).size.height / 100;
@@ -42,7 +42,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
         if (textEditingValue.text == '') {
           return const Iterable<String>.empty();
         }
-        return widget.categories.where((Category option) {
+        return categories.where((Category option) {
           return option.title
               .toLowerCase()
               .contains(textEditingValue.text.toLowerCase());
@@ -60,7 +60,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
                   color: Colors.grey, offset: Offset(0, 5), blurRadius: 12),
             ],
