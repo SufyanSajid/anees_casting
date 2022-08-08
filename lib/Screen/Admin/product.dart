@@ -97,7 +97,6 @@ class ProductScreen extends StatelessWidget {
                         ],
                       ),
                       child: Column(
-                        
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
@@ -106,8 +105,8 @@ class ProductScreen extends StatelessWidget {
                             width: height(context) * 10,
                             fit: BoxFit.cover,
                           ),
-                            SizedBox(
-                            height: height(context)*0.5,
+                          SizedBox(
+                            height: height(context) * 0.5,
                           ),
                           Text(
                             products[index].name,
@@ -118,7 +117,7 @@ class ProductScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: height(context)*1,
+                            height: height(context) * 1,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -132,10 +131,9 @@ class ProductScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                products[index].category.name,
+                                "category title",
                                 style: TextStyle(
                                   color: contentColor,
-                                  
                                   fontSize: 16,
                                 ),
                               ),
