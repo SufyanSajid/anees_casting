@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../Models/category.dart';
+
 class ProductScreen extends StatelessWidget {
   static const routeName = '/productscreen';
   final _productController = TextEditingController();
@@ -16,6 +18,9 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var products = Provider.of<Products>(context, listen: false).products;
+    List<Category> categories =
+        Provider.of<Categories>(context, listen: false).categories;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -36,6 +41,7 @@ class ProductScreen extends StatelessWidget {
                 height: height(context) * 2,
               ),
               CustomAutoComplete(
+                categories: categories,
                 onChange: () {},
               ),
               SizedBox(

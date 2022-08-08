@@ -1,6 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import './Models/category.dart';
 import './Models/product.dart';
@@ -18,13 +17,10 @@ import 'package:provider/provider.dart';
 import 'Screen/Admin/category.dart';
 import 'Screen/Admin/users.dart';
 import 'Screen/Auth/login.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
   runApp(const MyApp());
 }
 
@@ -36,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
         ChangeNotifierProvider(
@@ -57,16 +53,14 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => SplashScreen(),
-
-          LoginScreen.routeName:(ctx)=>LoginScreen(),
-          AdminHomePage.routeName:(ctx)=>AdminHomePage(),
-          CategoryScreen.routeName:(ctx) => CategoryScreen(),
-          UserScreen.routeName:(ctx)=>UserScreen(),
-          ProductScreen.routeName:(ctx)=>ProductScreen(),
-          AddProduct.routeName:(ctx)=>AddProduct(),
-          AddUser.routeName:(ctx)=>AddUser(),
-
+          '/': (ctx) => AddProduct(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          AdminHomePage.routeName: (ctx) => AdminHomePage(),
+          CategoryScreen.routeName: (ctx) => CategoryScreen(),
+          UserScreen.routeName: (ctx) => UserScreen(),
+          ProductScreen.routeName: (ctx) => ProductScreen(),
+          AddProduct.routeName: (ctx) => AddProduct(),
+          AddUser.routeName: (ctx) => AddUser(),
         },
       ),
     );

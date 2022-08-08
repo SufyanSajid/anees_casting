@@ -1,6 +1,11 @@
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../Models/category.dart';
+import '../../Models/storage_methods.dart';
 import '../../Widget/appbar.dart';
 import '../../Widget/customautocomplete.dart';
 import '../../Widget/dropDown.dart';
@@ -17,8 +22,13 @@ class AddProduct extends StatelessWidget {
   final _MeasureController = TextEditingController();
   AddProduct({Key? key}) : super(key: key);
 
+  File? image;
+
   @override
   Widget build(BuildContext context) {
+    List<Category> categories =
+        Provider.of<Categories>(context, listen: false).categories;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -63,7 +73,27 @@ class AddProduct extends StatelessWidget {
                       right: 0,
                       bottom: -10,
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            // final result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: false);
+
+                            // if (result != null && result.files.isNotEmpty) {
+                            //   final fileBytes = result.files.first.bytes;
+                            //   final fileName = result.files.first.name;
+
+                            // }
+
+                            FilePickerResult? result1 =
+                                await FilePicker.platform.pickFiles();
+
+                            if (result1 != null) {
+                              //   image = File(result1.files.single.path!);
+                              //image.bytes;
+                              StorageMethods()
+                                  .uploadImage(result1.files.first.bytes);
+                            } else {
+                              // User canceled the picker
+                            }
+                          },
                           icon: Icon(
                             Icons.add_a_photo_outlined,
                             color: primaryColor,
@@ -74,7 +104,10 @@ class AddProduct extends StatelessWidget {
               SizedBox(
                 height: height(context) * 5,
               ),
-            CustomAutoComplete(onChange: (){},),
+              CustomAutoComplete(
+                categories: categories,
+                onChange: () {},
+              ),
               SizedBox(
                 height: height(context) * 2,
               ),
@@ -109,23 +142,16 @@ class AddProduct extends StatelessWidget {
               ),
               Row(
                 children: [
-                Expanded(
-                  flex: 2,
-                    child: Container()),  
-               
+                  Expanded(flex: 2, child: Container()),
                   Expanded(
                     flex: 4,
-                    child: CustomDropDown(items: [
-                      'Cm',
-                      'MM'
-                    ],onChanged: (value){
-                      
-                      print(value);
-                    }),
+                    child: CustomDropDown(
+                        items: ['Cm', 'MM'],
+                        onChanged: (value) {
+                          print(value);
+                        }),
                   ),
-                   Expanded(
-                    flex: 2,
-                    child: Container()),  
+                  Expanded(flex: 2, child: Container()),
                 ],
               ),
               SizedBox(

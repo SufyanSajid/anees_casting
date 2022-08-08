@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-FirebaseFirestore db = FirebaseFirestore.instance;
+import 'firestore_methods.dart';
 
 class Category {
   String id;
@@ -14,45 +14,61 @@ class Category {
     required this.parentId,
     required this.title,
   });
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'id': id});
-    result.addAll({'title': title});
-    result.addAll({'parentId': parentId});
-
-    return result;
-  }
-
-  factory Category.fromMap(Map<String, dynamic> map) {
-    return Category(
-      id: map['id']?.toInt() ?? 0,
-      title: map['title'] ?? '',
-      parentId: map['parentId'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Category.fromJson(String source) =>
-      Category.fromMap(json.decode(source));
 }
 
 class Categories with ChangeNotifier {
-  final List<Category> _categories = [];
+  List<Category> _categories = [];
+  List<Category> _parentCategories = [];
+  List<Category> _childCategories = [];
 
   List<Category> get categories {
     return [..._categories];
   }
 
-  uploadCatagory(String parentId, String title) async {
-    try {
-      await db
-          .collection("categories")
-          .add({"title": title, "parentId": parentId});
-    } catch (e) {
-      print('sufyan');
+  List<Category> get parentCategories {
+    return [..._parentCategories];
+  }
+
+  List<Category> get childCategories {
+    return [..._childCategories];
+  }
+
+  Future<void> uploadCatagory(String parentId, String title) async {
+    var payLoad = {
+      "fields": {
+        "title": {"stringValue": title},
+        "parentId": {"stringValue": parentId}
+      }
+    };
+    var catRes = await FirestoreMethods()
+        .createRecord(collection: "categories", data: payLoad);
+  }
+
+  Future<void> fetchAndUpdateCat() async {
+    List<Category> tempCat = [];
+    List<Category> tempParentCat = [];
+    List<Category> tempChildCat = [];
+
+    FirestoreMethods methods = FirestoreMethods();
+    http.Response catRes =
+        await methods.getRecords(collection: "categories/?pageSize=100");
+    List<dynamic> docsData = json.decode(catRes.body)["documents"];
+
+    docsData.forEach((element) {
+      Map fields = element["fields"];
+      String parentId = fields["parentId"]["stringValue"];
+      String title = fields["title"]["stringValue"];
+      String id = (element["name"] as String).split("categories/").last;
+      tempCat.add(Category(id: id, parentId: parentId, title: title));
+    });
+
+    for (var cat in tempCat) {
+      cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);
     }
+
+    _categories = tempCat;
+    _parentCategories = tempParentCat;
+    _childCategories = tempChildCat;
+    notifyListeners();
   }
 }

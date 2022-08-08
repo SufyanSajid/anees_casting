@@ -12,7 +12,7 @@ class AddUser extends StatelessWidget {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   AddUser({Key? key}) : super(key: key);
 
   @override
@@ -100,7 +100,7 @@ class AddUser extends StatelessWidget {
                 height: height(context) * 2,
               ),
               InputFeild(
-                suffix: Icons.email_outlined,
+                  suffix: Icons.email_outlined,
                   hinntText: 'Email',
                   validatior: () {},
                   inputController: _emailController),
@@ -108,7 +108,7 @@ class AddUser extends StatelessWidget {
                 height: height(context) * 2,
               ),
               InputFeild(
-                suffix:Icons.phone_outlined,
+                  suffix: Icons.phone_outlined,
                   hinntText: 'Phone',
                   validatior: () {},
                   inputController: _phoneController),
@@ -116,7 +116,7 @@ class AddUser extends StatelessWidget {
                 height: height(context) * 2,
               ),
               InputFeild(
-                suffix: Icons.password_outlined,
+                  suffix: Icons.password_outlined,
                   hinntText: 'Password',
                   validatior: () {},
                   inputController: _passwordController),
