@@ -71,7 +71,7 @@ class ProductScreen extends StatelessWidget {
               ),
               Expanded(
                 child: GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  // physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
