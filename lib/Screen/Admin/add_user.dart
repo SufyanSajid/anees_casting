@@ -1,5 +1,4 @@
 import 'package:anees_costing/Widget/appbar.dart';
-import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/dropDown.dart';
 import 'package:anees_costing/Widget/input_feild.dart';
 import 'package:anees_costing/Widget/submitbutton.dart';
@@ -21,7 +20,7 @@ class AddUser extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               Appbar(
@@ -29,7 +28,9 @@ class AddUser extends StatelessWidget {
                 subtitle: 'Add New User',
                 svgIcon: 'assets/icons/users.svg',
                 leadingIcon: Icons.arrow_back,
-                leadingTap: () {},
+                leadingTap: () {
+                  Navigator.of(context).pop();
+                },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {},
               ),

@@ -5,7 +5,7 @@ import './Models/category.dart';
 import './Models/product.dart';
 import './Models/user.dart';
 import './Screen/Admin/addproduct.dart';
-import './Screen/Admin/addseller.dart';
+import 'Screen/Admin/add_user.dart';
 import './Screen/Admin/homepage.dart';
 import './Screen/Admin/product.dart';
 // import '../Screen/Auth/login.dart';
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => AddProduct(),
+          '/': (ctx) => SplashScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AdminHomePage.routeName: (ctx) => AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),

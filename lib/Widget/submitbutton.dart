@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 import '../contant.dart';
 
-
 class SubmitButton extends StatelessWidget {
-   SubmitButton({
+  SubmitButton({
     Key? key,
     required this.height,
     required this.width,
@@ -25,16 +23,14 @@ class SubmitButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: height * 5,
-        width: width*70,
+        width: width * 70,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-         gradient: primaryGradient
-        ),
+            borderRadius: BorderRadius.circular(50), gradient: primaryGradient),
         child: Center(
           child: Text(
             title,
             style: const TextStyle(
-                color: Colors.white, fontSize: 16,fontWeight:FontWeight.bold),
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       ),

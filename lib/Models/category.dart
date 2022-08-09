@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:anees_costing/Models/storage_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -70,5 +71,10 @@ class Categories with ChangeNotifier {
     _parentCategories = tempParentCat;
     _childCategories = tempChildCat;
     notifyListeners();
+  }
+
+  Future<void> deleteCat() async {
+    String res = await StorageMethods().deleteImage();
+    print(res);
   }
 }

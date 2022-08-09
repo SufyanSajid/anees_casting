@@ -5,12 +5,12 @@ class FirestoreMethods {
   final String baseUrl =
       "https://firestore.googleapis.com/v1/projects/aneescasting-ec184/databases/(default)/documents/";
 
-  Future<String> createRecord(
+  Future<http.Response> createRecord(
       {required String collection, required var data}) async {
     final URL = Uri.parse(baseUrl + collection);
 
     var res = await http.post(URL, body: json.encode(data));
-    return res.body.toString();
+    return res;
   }
 
   Future<http.Response> getRecords({required String collection}) async {

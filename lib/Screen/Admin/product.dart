@@ -10,14 +10,31 @@ import 'package:provider/provider.dart';
 
 import '../../Models/category.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   static const routeName = '/productscreen';
-  final _productController = TextEditingController();
+
   ProductScreen({Key? key}) : super(key: key);
 
   @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  final _productController = TextEditingController();
+  bool isFirst = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      isFirst = false;
+      Provider.of<Products>(context).fetchAndUpdateProducts();
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var products = Provider.of<Products>(context, listen: false).products;
+    List<Product> products = Provider.of<Products>(context).products;
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
 
@@ -25,7 +42,7 @@ class ProductScreen extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               Appbar(
@@ -33,7 +50,9 @@ class ProductScreen extends StatelessWidget {
                 subtitle: 'List of Products',
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
-                leadingTap: () {},
+                leadingTap: () {
+                  Navigator.of(context).pop();
+                },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {},
               ),
@@ -105,11 +124,11 @@ class ProductScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            'assets/icons/ring.png',
-                            height: height(context) * 10,
-                            width: height(context) * 10,
-                            fit: BoxFit.cover,
+                          Image.network(
+                            products[index].image,
+                            fit: BoxFit.contain,
+                            height: height(context) * 12,
+                            width: width(context) * 100,
                           ),
                           SizedBox(
                             height: height(context) * 0.5,
@@ -125,26 +144,28 @@ class ProductScreen extends StatelessWidget {
                           SizedBox(
                             height: height(context) * 1,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Category: ",
-                                style: GoogleFonts.righteous(
-                                  color: headingColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                "category title",
-                                style: TextStyle(
-                                  color: contentColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     FittedBox(
+                          //       child: Text(
+                          //         products[index].dateTime,
+                          //         style: GoogleFonts.righteous(
+                          //           color: headingColor,
+                          //           fontWeight: FontWeight.w500,
+                          //           fontSize: 16,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Text(
+                          //       products[index].dateTime.runtimeType.toString(),
+                          //       style: TextStyle(
+                          //         color: contentColor,
+                          //         fontSize: 16,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     );

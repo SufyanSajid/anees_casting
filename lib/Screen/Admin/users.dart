@@ -1,11 +1,12 @@
 import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Screen/Admin/add_user.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserScreen extends StatelessWidget {
-  static const routeName='/userscreen';
+  static const routeName = '/userscreen';
   const UserScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,9 +14,10 @@ class UserScreen extends StatelessWidget {
     var users = Provider.of<Users>(context, listen: false).users;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        
         backgroundColor: primaryColor,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddUser.routeName);
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
