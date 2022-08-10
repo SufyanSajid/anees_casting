@@ -1,7 +1,9 @@
+import '/Helpers/firebase_auth.dart';
+
 import '/Models/user.dart';
-import 'package:anees_costing/Screen/Admin/add_user.dart';
-import 'package:anees_costing/Widget/appbar.dart';
-import 'package:anees_costing/contant.dart';
+import '/Screen/Admin/add_user.dart';
+import '/Widget/appbar.dart';
+import '/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +17,8 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   bool isFirst = true;
+
+  _deleteUser({required String authId, required String docId}) {}
 
   @override
   void didChangeDependencies() {
@@ -62,7 +66,8 @@ class _UserScreenState extends State<UserScreen> {
                   child: ListView.builder(
                 itemCount: users.length,
                 itemBuilder: (ctx, index) => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -140,21 +145,25 @@ class _UserScreenState extends State<UserScreen> {
                           SizedBox(
                             width: width(context) * 4,
                           ),
-                          Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(0, 5),
-                                      blurRadius: 5),
-                                ]),
-                            padding: const EdgeInsets.all(8),
-                            child: Icon(
-                              Icons.delete_outline,
-                              color: Colors.red,
-                              size: 20,
+                          InkWell(
+                            onTap:
+                                FirebaseAuth().deletUser(users[index].authId),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0, 5),
+                                        blurRadius: 5),
+                                  ]),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.red,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],

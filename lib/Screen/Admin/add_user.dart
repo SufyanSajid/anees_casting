@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class AddUser extends StatefulWidget {
   static const routeName = '/adduser';
 
-  AddUser({Key? key}) : super(key: key);
+  const AddUser({Key? key}) : super(key: key);
 
   @override
   State<AddUser> createState() => _AddUserState();
@@ -166,6 +166,7 @@ class _AddUserState extends State<AddUser> {
                 height: height(context) * 2,
               ),
               InputFeild(
+                  secure: true,
                   suffix: Icons.password_outlined,
                   hinntText: 'Password',
                   validatior: () {},

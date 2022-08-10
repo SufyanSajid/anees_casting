@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:anees_costing/Helpers/firestore_methods.dart';
+import '/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AUser {
   String id;
+  String authId;
   String name;
   String email;
   String role;
@@ -13,6 +14,7 @@ class AUser {
 
   AUser({
     required this.id,
+    required this.authId,
     required this.name,
     required this.email,
     required this.phone,
@@ -28,7 +30,7 @@ class Users with ChangeNotifier {
   }
 
   Future<void> createUser({
-    required String id,
+    required String authId,
     required String name,
     required String email,
     required String role,
@@ -37,7 +39,7 @@ class Users with ChangeNotifier {
   }) async {
     var payLoad = {
       "fields": {
-        "id": {"stringValue": id},
+        "authId": {"stringValue": authId},
         "phone": {"stringValue": phone},
         "name": {"stringValue": name},
         "email": {"stringValue": email},
@@ -48,7 +50,6 @@ class Users with ChangeNotifier {
 
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "users", data: payLoad);
-    print(res);
   }
 
   fetchAndUpdateUser() async {
@@ -59,15 +60,16 @@ class Users with ChangeNotifier {
     List<AUser> tempUsers = [];
     for (var element in resData) {
       Map fields = element["fields"];
-      String id = fields["id"]["stringValue"];
+      String authId = fields["authId"]["stringValue"];
       String name = fields["name"]["stringValue"];
-
       String email = fields["email"]["stringValue"];
       String phone = fields["phone"]["stringValue"];
       String role = fields["role"]["stringValue"];
+      String id = (element["name"] as String).split("users/").last;
 
       tempUsers.add(AUser(
         id: id,
+        authId: authId,
         name: name,
         email: email,
         phone: phone,
@@ -76,7 +78,7 @@ class Users with ChangeNotifier {
     }
 
     _users = tempUsers;
-    print(_users);
+
     notifyListeners();
   }
 }

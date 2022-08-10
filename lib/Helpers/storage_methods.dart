@@ -17,18 +17,18 @@ class StorageMethods {
 
     http.Response res = await http.post(Uri.parse(url2file),
         body: file, headers: {"Content-Type": "image/png"});
-    print(res);
     Map resDate = jsonDecode(res.body);
-    String name = resDate["name"];
+    // String name = resDate["name"];
     String token = resDate["downloadTokens"];
-    String downloadUrl = url2file + "?alt=media&token=${token}";
-    print(downloadUrl);
+    String downloadUrl = "$url2file?alt=media&token=$token";
     return downloadUrl;
   }
 
-  Future<String> deleteImage() async {
-    http.Response res = await http.delete(Uri.parse(
-        "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2Fyour_pic.png?alt=media&token=2171982c-f239-462c-9bc4-7ff7553b89f4"));
+  Future<String> deleteImage({required String imgUrl}) async {
+    var URL = Uri.parse(imgUrl);
+    http.Response res = await http.delete(URL);
+    // http.Response res = await http.delete(Uri.parse(
+    // "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2Fyour_pic.png?alt=media&token=2171982c-f239-462c-9bc4-7ff7553b89f4"));
     return res.toString();
   }
 }

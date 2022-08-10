@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -69,7 +68,7 @@ class Products with ChangeNotifier {
       String productWidth = fields["productWidth"]["stringValue"];
       String productUnit = fields["productUnit"]["stringValue"];
       String productLength = fields["productLength"]["stringValue"];
-      String id = (element["name"] as String).split("categories/").last;
+      String id = (element["name"] as String).split("products/").last;
       String time = element["updateTime"];
       tempProds.add(Product(
           id: id,
@@ -85,22 +84,34 @@ class Products with ChangeNotifier {
 
     notifyListeners();
   }
-}
 
-Map a = {
-  "name":
-      "projects/aneescasting-ec184/databases/(default)/documents/products/IzhOER0vIRiXgTtH9LOl",
-  "fields": {
-    "productName": {"stringValue": "ggggg"},
-    "productUnit": {"stringValue": "CM"},
-    "imageUrl": {
-      "stringValue":
-          "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660031687012.png?alt=media&token=05e376d6-aadb-4524-b159-eb75710417dd"
-    },
-    "catId": {"stringValue": "Eb1AccjvlgKTeQCJKeki"},
-    "productLength": {"stringValue": "44"},
-    "productWidth": {"stringValue": "55"}
-  },
-  "createTime": "2022-08-09T07:54:48.854670Z",
-  "updateTime": "2022-08-09T07:54:48.854670Z"
-};
+  Future<void> updatProduct(
+      {required String imgUrl,
+      required String prodName,
+      required String prodWidth,
+      required String unit,
+      required String catId,
+      required String prodLen,
+      required String prodId}) async {
+    var payLoad = {
+      "fields": {
+        "catId": {"stringValue": catId},
+        "imageUrl": {"stringValue": imgUrl},
+        "productName": {"stringValue": prodName},
+        "productWidth": {"stringValue": prodWidth},
+        "productUnit": {"stringValue": unit},
+        "productLength": {"stringValue": prodLen},
+      }
+    };
+    http.Response res = await FirestoreMethods()
+        .updateRecords(collection: "products", data: payLoad, prodId: prodId);
+  }
+
+  Future<void> deleteProduct(String prodId) async {
+    http.Response res = await FirestoreMethods()
+        .deleteRecord(collection: "products", prodId: prodId);
+    print(res.statusCode.toString());
+    print(res.body.toString());
+    print(res.toString());
+  }
+}

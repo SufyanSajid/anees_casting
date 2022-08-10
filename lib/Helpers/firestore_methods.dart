@@ -19,4 +19,23 @@ class FirestoreMethods {
     var res = await http.get(URL);
     return res;
   }
+
+  Future<http.Response> updateRecords(
+      {required String collection,
+      required var data,
+      required String prodId}) async {
+    final URL = Uri.parse("$baseUrl$collection/$prodId");
+
+    var res = await http.patch(URL, body: json.encode(data));
+
+    return res;
+  }
+
+  Future<http.Response> deleteRecord(
+      {required String collection, required String prodId}) async {
+    final URL = Uri.parse("$baseUrl$collection/$prodId");
+    var res = await http.delete(URL);
+
+    return res;
+  }
 }

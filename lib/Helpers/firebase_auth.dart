@@ -1,6 +1,5 @@
-import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/Models/user.dart';
-import 'package:anees_costing/contant.dart';
+import '/Models/user.dart';
+import '/contant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -26,11 +25,19 @@ class FirebaseAuth {
     var extractedData = json.decode(response.body);
 
     await Users().createUser(
-        id: extractedData["localId"],
+        authId: extractedData["localId"],
         name: name,
         email: email,
         role: role,
         image: image,
         phone: phone);
+  }
+
+  deletUser(authId) async {
+    var URL = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts/$authId/:delete?key=$APIkey');
+    http.Response delRes = await http.delete(URL);
+
+    print(delRes.body.toString());
   }
 }

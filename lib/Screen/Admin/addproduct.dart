@@ -47,7 +47,10 @@ class _AddProductState extends State<AddProduct> {
   }
 
   _addProduct(var img) async {
-    if (img != null) {
+    if (img != null &&
+        _prodNameController.text.isNotEmpty &&
+        _prodLengthController.text.isNotEmpty &&
+        _prodWidthController.text.isNotEmpty) {
       setState(() {
         isLoading = true;
       });
@@ -74,6 +77,15 @@ class _AddProductState extends State<AddProduct> {
   }
 
   @override
+  void dispose() {
+    _prodNameController.dispose();
+    _prodWidthController.dispose();
+    _prodLengthController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
@@ -82,7 +94,7 @@ class _AddProductState extends State<AddProduct> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               Appbar(

@@ -1,9 +1,12 @@
-import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Widget/appbar.dart';
-import 'package:anees_costing/Widget/customautocomplete.dart';
-import 'package:anees_costing/Widget/dropDown.dart';
-import 'package:anees_costing/Widget/input_feild.dart';
-import 'package:anees_costing/contant.dart';
+import '/Helpers/storage_methods.dart';
+import '/Screen/Admin/addproduct.dart';
+
+import '/Models/product.dart';
+import '/Widget/appbar.dart';
+import '/Widget/customautocomplete.dart';
+import '/Widget/dropDown.dart';
+import '/Widget/input_feild.dart';
+import '/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +33,12 @@ class _ProductScreenState extends State<ProductScreen> {
       Provider.of<Products>(context).fetchAndUpdateProducts();
     }
     super.didChangeDependencies();
+  }
+
+  _deleteProduct({required imgUrl, required prodId}) async {
+    final BuildContext ctx = context;
+    await StorageMethods().deleteImage(imgUrl: imgUrl);
+    await Provider.of<Products>(ctx, listen: false).deleteProduct(prodId);
   }
 
   @override
@@ -82,7 +91,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   Expanded(
                     flex: 4,
                     child: CustomDropDown(
-                      items: [
+                      items: const [
                         'By Date',
                         'By Article',
                       ],
@@ -133,17 +142,27 @@ class _ProductScreenState extends State<ProductScreen> {
                           SizedBox(
                             height: height(context) * 0.5,
                           ),
-                          Text(
-                            products[index].name,
-                            style: GoogleFonts.righteous(
-                              color: headingColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          ),
-                          SizedBox(
-                            height: height(context) * 1,
-                          ),
+                          // Text(
+                          //   products[index].name,
+                          //   style: GoogleFonts.righteous(
+                          //     color: headingColor,
+                          //     fontWeight: FontWeight.w500,
+                          //     fontSize: 20,
+                          //   ),
+                          // ),
+                          IconButton(
+                              onPressed: () {
+                                _deleteProduct(
+                                    imgUrl: products[index].image,
+                                    prodId: products[index].id);
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              )),
+                          // SizedBox(
+                          //   height: height(context) * 1,
+                          // ),
                           // Row(
                           //   mainAxisAlignment: MainAxisAlignment.center,
                           //   children: [
@@ -175,6 +194,12 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddProduct.routeName);
+        },
       ),
     );
   }

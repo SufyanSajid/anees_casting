@@ -73,9 +73,4 @@ class Categories with ChangeNotifier {
     _childCategories = tempChildCat;
     notifyListeners();
   }
-
-  Future<void> deleteCat() async {
-    String res = await StorageMethods().deleteImage();
-    print(res);
-  }
 }
