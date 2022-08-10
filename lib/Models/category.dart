@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:anees_costing/Models/storage_methods.dart';
+import 'package:anees_costing/Helpers/storage_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'firestore_methods.dart';
+import '../Helpers/firestore_methods.dart';
+import '../Helpers/storage_methods.dart';
 
 class Category {
   String id;

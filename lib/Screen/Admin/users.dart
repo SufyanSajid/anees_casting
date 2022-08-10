@@ -1,24 +1,41 @@
-import 'package:anees_costing/Models/user.dart';
+import '/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/add_user.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   static const routeName = '/userscreen';
   const UserScreen({Key? key}) : super(key: key);
 
   @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  bool isFirst = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      isFirst = false;
+
+      Provider.of<Users>(context, listen: false).fetchAndUpdateUser();
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var users = Provider.of<Users>(context, listen: false).users;
+    var users = Provider.of<Users>(context, listen: true).users;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryColor,
         onPressed: () {
           Navigator.of(context).pushNamed(AddUser.routeName);
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -26,7 +43,7 @@ class UserScreen extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               Appbar(
@@ -74,7 +91,7 @@ class UserScreen extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.asset(
-                            users[index].image,
+                            "assets/images/profile.jpeg",
                             height: height(context) * 6,
                             width: height(context) * 6,
                             fit: BoxFit.cover,

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class CurrentUser {
   String id;
+  String? name;
   String? role;
   String token;
   String email;
@@ -17,13 +18,13 @@ class CurrentUser {
     required this.id,
     required this.token,
     required this.expiryDate,
+    this.name,
     this.role,
     required this.email,
   });
 }
 
 class Auth with ChangeNotifier {
-  
   CurrentUser? currentUser;
 
   // String? _token;
@@ -62,7 +63,6 @@ class Auth with ChangeNotifier {
           },
         ),
       );
-      // print(json.decode(response.body));
 
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
@@ -118,12 +118,10 @@ class Auth with ChangeNotifier {
     final expiryDate =
         DateTime.parse(extractedUserData['expiryDate'] as String);
 
-   
-
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-     currentUser = CurrentUser(
+    currentUser = CurrentUser(
         id: extractedUserData['userId'] as String,
         token: extractedUserData['token'] as String,
         expiryDate: expiryDate,
@@ -137,10 +135,10 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    currentUser==null;
+    currentUser == null;
     // _token = '';
     // _userId = '';
-   // _expiryDate = null;
+    // _expiryDate = null;
     if (_authTimer != null) {
       _authTimer!.cancel();
       _authTimer = null;
@@ -155,7 +153,8 @@ class Auth with ChangeNotifier {
     if (_authTimer != null) {
       _authTimer!.cancel();
     }
-    final timeToExpiry = currentUser!.expiryDate.difference(DateTime.now()).inSeconds;
+    final timeToExpiry =
+        currentUser!.expiryDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }

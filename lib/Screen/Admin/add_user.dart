@@ -1,3 +1,6 @@
+import 'package:anees_costing/Helpers/firebase_auth.dart';
+import '/Helpers/show_snackbar.dart';
+import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/Widget/dropDown.dart';
 import 'package:anees_costing/Widget/input_feild.dart';
@@ -5,14 +8,58 @@ import 'package:anees_costing/Widget/submitbutton.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
-class AddUser extends StatelessWidget {
+class AddUser extends StatefulWidget {
   static const routeName = '/adduser';
+
+  AddUser({Key? key}) : super(key: key);
+
+  @override
+  State<AddUser> createState() => _AddUserState();
+}
+
+class _AddUserState extends State<AddUser> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  AddUser({Key? key}) : super(key: key);
+  String role = "Customer";
+  bool isLoading = false;
+
+  _sigUpUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    BuildContext ctx = context;
+    await FirebaseAuth().createNewUser(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        role: role,
+        image:
+            "https://images.unsplash.com/photo-1659976057522-817791f9bf3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60",
+        phone: _phoneController.text.trim(),
+        password: _passwordController.text.trim());
+
+    //clear controllers
+    _nameController.clear();
+    _emailController.clear();
+    _phoneController.clear();
+    _passwordController.clear();
+    role = "Customer";
+    showSnackBar(ctx, "User is added");
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,12 +135,14 @@ class AddUser extends StatelessWidget {
                   Expanded(
                       flex: 5,
                       child: CustomDropDown(
-                        items: [
+                        items: const [
                           'Customer',
                           'Seller',
                           'Admin',
                         ],
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          role = value;
+                        },
                       ))
                 ],
               ),
@@ -124,11 +173,17 @@ class AddUser extends StatelessWidget {
               SizedBox(
                 height: height(context) * 5,
               ),
-              SubmitButton(
-                  height: height(context),
-                  width: width(context),
-                  onTap: () {},
-                  title: 'Add User')
+              isLoading
+                  ? AdaptiveIndecator(
+                      color: primaryColor,
+                    )
+                  : SubmitButton(
+                      height: height(context),
+                      width: width(context),
+                      onTap: () {
+                        _sigUpUser();
+                      },
+                      title: 'Add User')
             ],
           ),
         ),

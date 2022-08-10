@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Models/category.dart';
-import 'package:anees_costing/Models/firestore_methods.dart';
+import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
