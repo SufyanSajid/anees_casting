@@ -53,14 +53,14 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => SplashScreen(),
+          '/': (ctx) => const SplashScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AdminHomePage.routeName: (ctx) => AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
-          UserScreen.routeName: (ctx) => UserScreen(),
+          UserScreen.routeName: (ctx) => const UserScreen(),
           ProductScreen.routeName: (ctx) => ProductScreen(),
-          AddProduct.routeName: (ctx) => AddProduct(),
-          AddUser.routeName: (ctx) => AddUser(),
+          AddProduct.routeName: (ctx) => const AddProduct(),
+          AddUser.routeName: (ctx) => const AddUser(),
         },
       ),
     );

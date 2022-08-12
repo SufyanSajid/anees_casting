@@ -31,4 +31,19 @@ class StorageMethods {
     // "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2Fyour_pic.png?alt=media&token=2171982c-f239-462c-9bc4-7ff7553b89f4"));
     return res.toString();
   }
+
+  Future<http.Response> updateImage(
+      {required String imgUrl, required var file}) async {
+    String url =
+        // "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660200981231.png";
+        // "${baseUrl}products%2F1660200981231.png";
+
+        "https://storage.googleapis.com/storage/v1/b/gs:/aneescasting-ec184.appspot.com/acl/products/1660200981231.png?&token=47e92d3e-c3cf-4b3c-bff8-106c5169c0e1";
+    var URL = Uri.parse(url);
+    var body = json.encode(file);
+    http.Response res = await http.put(URL, body: body);
+    print(res.statusCode.toString());
+    print(res.body.toString());
+    return res;
+  }
 }

@@ -36,9 +36,16 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   _deleteProduct({required imgUrl, required prodId}) async {
-    final BuildContext ctx = context;
+    var provider = Provider.of<Products>(context, listen: false);
     await StorageMethods().deleteImage(imgUrl: imgUrl);
-    await Provider.of<Products>(ctx, listen: false).deleteProduct(prodId);
+
+    await provider.deleteProduct(prodId);
+  }
+
+  @override
+  void dispose() {
+    _productController.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,14 +122,14 @@ class _ProductScreenState extends State<ProductScreen> {
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
-                              offset: Offset(0, 5),
+                              offset: const Offset(0, 5),
                               blurRadius: 15),
                           BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
@@ -150,16 +157,35 @@ class _ProductScreenState extends State<ProductScreen> {
                           //     fontSize: 20,
                           //   ),
                           // ),
-                          IconButton(
-                              onPressed: () {
-                                _deleteProduct(
-                                    imgUrl: products[index].image,
-                                    prodId: products[index].id);
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              )),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  _deleteProduct(
+                                      imgUrl: products[index].image,
+                                      prodId: products[index].id);
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, AddProduct.routeName,
+                                      arguments: {
+                                        "action": "edit",
+                                        "imgUrl": products[index].image
+                                      });
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
                           // SizedBox(
                           //   height: height(context) * 1,
                           // ),
@@ -198,7 +224,9 @@ class _ProductScreenState extends State<ProductScreen> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed(AddProduct.routeName);
+          Navigator.of(context).pushNamed(AddProduct.routeName, arguments: {
+            "action": "add",
+          });
         },
       ),
     );

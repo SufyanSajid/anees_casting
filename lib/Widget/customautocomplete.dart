@@ -10,8 +10,8 @@ class CustomAutoComplete extends StatefulWidget {
     required this.categories,
   });
 
-  Function onChange;
-  List<Category> categories;
+  final Function onChange;
+  final List<Category> categories;
 
   @override
   State<CustomAutoComplete> createState() => _CustomAutoCompleteState();
@@ -51,10 +51,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
       onSelected: (value) {
         print('yeh ha on selectedValue ${value}');
       },
-      fieldViewBuilder: (BuildContext context,
-          TextEditingController fieldTextEditingController,
-          FocusNode fieldFocusNode,
-          VoidCallback onFieldSubmitted) {
+      fieldViewBuilder: (BuildContext context, TextEditingController controller,
+          FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
         return Container(
           margin: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
@@ -68,7 +66,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
           child: Center(
             child: TextField(
               focusNode: fieldFocusNode,
-              controller: fieldTextEditingController,
+              controller: controller,
               decoration: InputDecoration(
                   label: Text(
                     'Select Category',

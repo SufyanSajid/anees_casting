@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:anees_costing/Models/product.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/category.dart';
@@ -19,7 +20,7 @@ import '../../contant.dart';
 class AddProduct extends StatefulWidget {
   static const routeName = '/addproduct';
 
-  AddProduct({Key? key}) : super(key: key);
+  const AddProduct({Key? key}) : super(key: key);
 
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -76,6 +77,21 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
+  _editProduct({required var img, required String imgUrl}) async {
+    setState(() {
+      isLoading = true;
+    });
+    Response res = await StorageMethods().updateImage(
+        imgUrl:
+            "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660200981231.png?alt=media&token=47e92d3e-c3cf-4b3c-bff8-106c5169c0e1",
+        file: img);
+    print(res.statusCode);
+    print(res.toString());
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void dispose() {
     _prodNameController.dispose();
@@ -87,6 +103,8 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, String> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
 
@@ -99,7 +117,8 @@ class _AddProductState extends State<AddProduct> {
             children: [
               Appbar(
                 title: 'Design',
-                subtitle: 'Add New Design',
+                subtitle:
+                    args["action"] == "add" ? 'Add New Design' : "Edit Design",
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -213,7 +232,7 @@ class _AddProductState extends State<AddProduct> {
                   Expanded(
                     flex: 4,
                     child: CustomDropDown(
-                        items: ['Cm', 'MM'],
+                        items: const ['Cm', 'MM'],
                         onChanged: (String value) {
                           prodUnit = value;
                         }),
@@ -232,7 +251,9 @@ class _AddProductState extends State<AddProduct> {
                       height: height(context),
                       width: width(context),
                       onTap: () {
-                        _addProduct(image);
+                        args["action"] == "add"
+                            ? _addProduct(image)
+                            : _editProduct(img: image, imgUrl: args["imgUrl"]!);
                       },
                       title: 'Add Design')
             ],

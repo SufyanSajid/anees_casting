@@ -35,6 +35,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;

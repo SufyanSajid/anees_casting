@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/Helpers/storage_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -92,7 +93,9 @@ class Products with ChangeNotifier {
       required String unit,
       required String catId,
       required String prodLen,
-      required String prodId}) async {
+      required String prodId,
+      required var file}) async {
+    StorageMethods().updateImage(imgUrl: imgUrl, file: file);
     var payLoad = {
       "fields": {
         "catId": {"stringValue": catId},
@@ -110,8 +113,5 @@ class Products with ChangeNotifier {
   Future<void> deleteProduct(String prodId) async {
     http.Response res = await FirestoreMethods()
         .deleteRecord(collection: "products", prodId: prodId);
-    print(res.statusCode.toString());
-    print(res.body.toString());
-    print(res.toString());
   }
 }
