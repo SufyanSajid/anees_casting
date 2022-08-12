@@ -81,15 +81,26 @@ class _AddProductState extends State<AddProduct> {
     setState(() {
       isLoading = true;
     });
-    Response res = await StorageMethods().updateImage(
-        imgUrl:
-            "https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660200981231.png?alt=media&token=47e92d3e-c3cf-4b3c-bff8-106c5169c0e1",
-        file: img);
-    print(res.statusCode);
-    print(res.toString());
+    await StorageMethods().updateImage(
+        file: img,
+        imageURl:
+            'https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660200981231.png');
+
     setState(() {
       isLoading = false;
     });
+
+    // setState(() {
+    //   isLoading = true;
+    // });
+    // Response res = await StorageMethods().updateImage(
+    //    collection: '',
+    //     file: img);
+    // print(res.statusCode);
+    // print(res.toString());
+    // setState(() {
+    //   isLoading = false;
+    // });
   }
 
   @override

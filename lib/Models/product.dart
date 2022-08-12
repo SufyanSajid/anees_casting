@@ -95,7 +95,7 @@ class Products with ChangeNotifier {
       required String prodLen,
       required String prodId,
       required var file}) async {
-    StorageMethods().updateImage(imgUrl: imgUrl, file: file);
+    // StorageMethods().updateImage(imgUrl: imgUrl, file: file);
     var payLoad = {
       "fields": {
         "catId": {"stringValue": catId},
