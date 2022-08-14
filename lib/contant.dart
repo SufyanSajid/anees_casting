@@ -24,3 +24,8 @@ var contentColor = Color.fromRGBO(176, 176, 176, 1);
 
 height(context) => MediaQuery.of(context).size.height / 100;
 width(context) => MediaQuery.of(context).size.width / 100;
+
+var mainGradient = const LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Color.fromRGBO(213, 178, 79, 1), Color.fromARGB(0, 148, 103, 31)]);

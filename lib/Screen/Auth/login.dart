@@ -1,7 +1,7 @@
 import 'dart:io';
 
 // import 'package:chiarra_fazzini/Models/auth.dart';
-import 'package:anees_costing/Screen/Admin/homepage.dart';
+import 'package:anees_costing/Screen/Admin/homepage/mobile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../Models/auth.dart';
@@ -13,6 +13,8 @@ import '../../Widget/submitbutton.dart';
 import '../../contant.dart';
 
 import 'package:flutter/material.dart';
+
+import '../Admin/homepage/admin_home.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';

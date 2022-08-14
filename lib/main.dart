@@ -4,18 +4,19 @@ import 'package:anees_costing/Screen/Common/splash.dart';
 import './Models/category.dart';
 import './Models/product.dart';
 import './Models/user.dart';
-import './Screen/Admin/addproduct.dart';
-import 'Screen/Admin/add_user.dart';
-import './Screen/Admin/homepage.dart';
-import './Screen/Admin/product.dart';
+import 'Screen/Admin/Product/addproduct.dart';
+import 'Screen/Admin/homepage/admin_home.dart';
+import 'Screen/Admin/users/add_user.dart';
+import 'Screen/Admin/homepage/mobile.dart';
+import 'Screen/Admin/Product/product.dart';
 // import '../Screen/Auth/login.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'Screen/Admin/category.dart';
-import 'Screen/Admin/users.dart';
+import 'Screen/Admin/category/category.dart';
+import 'Screen/Admin/users/users.dart';
 import 'Screen/Auth/login.dart';
 
 void main() async {
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => const SplashScreen(),
+          '/': (ctx) => const AdminHomePage(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AdminHomePage.routeName: (ctx) => AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),

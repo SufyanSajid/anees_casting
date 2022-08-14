@@ -9,15 +9,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../contant.dart';
 
-class AdminHomePage extends StatefulWidget {
-  static const routeName = '/adminhomepage';
-  const AdminHomePage({Key? key}) : super(key: key);
+class MobileAdminHomePage extends StatefulWidget {
+  const MobileAdminHomePage({Key? key}) : super(key: key);
 
   @override
-  State<AdminHomePage> createState() => _AdminHomePageState();
+  State<MobileAdminHomePage> createState() => _MobileAdminHomePageState();
 }
 
-class _AdminHomePageState extends State<AdminHomePage> {
+class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   //bottomNavigationBar: CustomBottomBar(selectedIndex: 1, onTap: (){}),
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int selectIndex = 0;
