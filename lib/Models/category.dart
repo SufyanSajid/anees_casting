@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:anees_costing/Helpers/storage_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../Helpers/firestore_methods.dart';
-import '../Helpers/storage_methods.dart';
 
 class Category {
   String id;
@@ -56,13 +54,13 @@ class Categories with ChangeNotifier {
         await methods.getRecords(collection: "categories/?pageSize=100");
     List<dynamic> docsData = json.decode(catRes.body)["documents"];
 
-    docsData.forEach((element) {
+    for (var element in docsData) {
       Map fields = element["fields"];
       String parentId = fields["parentId"]["stringValue"];
       String title = fields["title"]["stringValue"];
       String id = (element["name"] as String).split("categories/").last;
       tempCat.add(Category(id: id, parentId: parentId, title: title));
-    });
+    }
 
     for (var cat in tempCat) {
       cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);

@@ -1,21 +1,22 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import '../../Models/category.dart';
-import '../../Helpers/storage_methods.dart';
-import '../../Widget/adaptive_indecator.dart';
-import '../../Widget/appbar.dart';
-import '../../Widget/customautocomplete.dart';
-import '../../Widget/dropDown.dart';
-import '../../Widget/input_feild.dart';
-import '../../Widget/submitbutton.dart';
-import '../../contant.dart';
+import '../../../Models/category.dart';
+import '../../../Helpers/storage_methods.dart';
+import '../../../Widget/adaptive_indecator.dart';
+import '../../../Widget/appbar.dart';
+import '../../../Widget/customautocomplete.dart';
+import '../../../Widget/dropDown.dart';
+import '../../../Widget/input_feild.dart';
+import '../../../Widget/submitbutton.dart';
+import '../../../contant.dart';
 
 class AddProduct extends StatefulWidget {
   static const routeName = '/addproduct';
@@ -48,28 +49,26 @@ class _AddProductState extends State<AddProduct> {
   }
 
   _addProduct(var img) async {
-    if (img != null &&
-        _prodNameController.text.isNotEmpty &&
-        _prodLengthController.text.isNotEmpty &&
-        _prodWidthController.text.isNotEmpty) {
+    if (productNotEmpty()) {
       setState(() {
         isLoading = true;
       });
       var provider = Provider.of<Products>(context, listen: false);
       downloadImgUrl =
           await StorageMethods().uploadImage(file: img, collection: "products");
-      await provider.addProduct(
-          imgUrl: downloadImgUrl!,
-          prodName: _prodNameController.text.trim(),
-          prodWidth: _prodWidthController.text.trim(),
-          catId: category!.id,
-          prodLen: _prodLengthController.text.trim(),
-          unit: prodUnit);
+      Product newProduct = Product(
+        id: "",
+        name: _prodNameController.text.trim(),
+        length: _prodLengthController.text.trim(),
+        width: _prodWidthController.text.trim(),
+        unit: prodUnit,
+        categoryId: category!.id,
+        image: downloadImgUrl!,
+        dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
+      );
+      await provider.addProduct(product: newProduct);
 
-      image = null;
-      _prodLengthController.clear();
-      _prodWidthController.clear();
-      _prodNameController.clear();
+      clearControllersAndImage();
 
       setState(() {
         isLoading = false;
@@ -77,30 +76,34 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
-  _editProduct({required var img, required String imgUrl}) async {
+  _editProduct(
+      {required var img,
+      required String prodId,
+      required String imageUrl}) async {
     setState(() {
       isLoading = true;
     });
-    await StorageMethods().updateImage(
-        file: img,
-        imageURl:
-            'https://firebasestorage.googleapis.com/v0/b/aneescasting-ec184.appspot.com/o/products%2F1660200981231.png');
 
+    if (productNotEmpty()) {
+      Product newProduct = prodObj();
+
+      newProduct.id = prodId;
+      newProduct.image = imageUrl;
+
+      var provider = Provider.of<Products>(context, listen: false);
+
+      await StorageMethods().updateImage(
+        imageURl: newProduct.image.split("?").first,
+        file: img,
+      );
+
+      await provider.updateProduct(product: newProduct);
+
+      clearControllersAndImage();
+    }
     setState(() {
       isLoading = false;
     });
-
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // Response res = await StorageMethods().updateImage(
-    //    collection: '',
-    //     file: img);
-    // print(res.statusCode);
-    // print(res.toString());
-    // setState(() {
-    //   isLoading = false;
-    // });
   }
 
   @override
@@ -114,8 +117,8 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, String> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
 
@@ -160,29 +163,12 @@ class _AddProductState extends State<AddProduct> {
                             fit: BoxFit.contain,
                           )
                         : Container(),
-                    // child: ClipRRect(
-                    //   borderRadius: BorderRadius.circular(100),
-                    //   child: Image.network(
-                    //     'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
-                    //     height: height(context) * 12,
-                    //     width: height(context) * 12,
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
                   ),
                   Positioned(
                       right: 1,
                       bottom: 1,
                       child: IconButton(
                           onPressed: () async {
-                            // final result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: false);
-
-                            // if (result != null && result.files.isNotEmpty) {
-                            //   final fileBytes = result.files.first.bytes;
-                            //   final fileName = result.files.first.name;
-
-                            // }
-
                             FilePickerResult? result1 =
                                 await FilePicker.platform.pickFiles();
                             setState(() {
@@ -264,7 +250,10 @@ class _AddProductState extends State<AddProduct> {
                       onTap: () {
                         args["action"] == "add"
                             ? _addProduct(image)
-                            : _editProduct(img: image, imgUrl: args["imgUrl"]!);
+                            : _editProduct(
+                                img: image,
+                                prodId: (args["product"] as Product).id,
+                                imageUrl: (args["product"] as Product).image);
                       },
                       title: 'Add Design')
             ],
@@ -272,5 +261,36 @@ class _AddProductState extends State<AddProduct> {
         ),
       ),
     );
+  }
+
+  Product prodObj() {
+    return Product(
+        id: "",
+        name: _prodNameController.text.trim(),
+        length: _prodLengthController.text.trim(),
+        width: _prodWidthController.text.trim(),
+        unit: prodUnit,
+        categoryId: category!.id,
+        image: "",
+        dateTime: "");
+  }
+
+  void clearControllersAndImage() {
+    image = null;
+    _prodLengthController.clear();
+    _prodWidthController.clear();
+    _prodNameController.clear();
+  }
+
+  bool productNotEmpty() {
+    if (image != null &&
+        category != null &&
+        _prodNameController.text.isNotEmpty &&
+        _prodLengthController.text.isNotEmpty &&
+        _prodWidthController.text.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

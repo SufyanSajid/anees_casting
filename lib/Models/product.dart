@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/Helpers/storage_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,21 +32,15 @@ class Products with ChangeNotifier {
     return [..._products];
   }
 
-  Future<void> addProduct(
-      {required String imgUrl,
-      required String prodName,
-      required String prodWidth,
-      required String unit,
-      required String catId,
-      required String prodLen}) async {
+  Future<void> addProduct({required Product product}) async {
     var payLoad = {
       "fields": {
-        "catId": {"stringValue": catId},
-        "imageUrl": {"stringValue": imgUrl},
-        "productName": {"stringValue": prodName},
-        "productWidth": {"stringValue": prodWidth},
-        "productUnit": {"stringValue": unit},
-        "productLength": {"stringValue": prodLen},
+        "catId": {"stringValue": product.categoryId},
+        "imageUrl": {"stringValue": product.image},
+        "productName": {"stringValue": product.name},
+        "productWidth": {"stringValue": product.width},
+        "productUnit": {"stringValue": product.unit},
+        "productLength": {"stringValue": product.length},
       }
     };
     http.Response res = await FirestoreMethods()
@@ -61,7 +54,7 @@ class Products with ChangeNotifier {
 
     List<dynamic> docsData = json.decode(prodRes.body)["documents"];
 
-    docsData.forEach((element) {
+    for (var element in docsData) {
       Map fields = element["fields"];
       String catId = fields["catId"]["stringValue"];
       String imageUrl = fields["imageUrl"]["stringValue"];
@@ -71,6 +64,7 @@ class Products with ChangeNotifier {
       String productLength = fields["productLength"]["stringValue"];
       String id = (element["name"] as String).split("products/").last;
       String time = element["updateTime"];
+
       tempProds.add(Product(
           id: id,
           name: productName,
@@ -80,38 +74,55 @@ class Products with ChangeNotifier {
           categoryId: catId,
           image: imageUrl,
           dateTime: time));
-    });
+    }
+
     _products = tempProds;
 
     notifyListeners();
   }
 
-  Future<void> updatProduct(
-      {required String imgUrl,
-      required String prodName,
-      required String prodWidth,
-      required String unit,
-      required String catId,
-      required String prodLen,
-      required String prodId,
-      required var file}) async {
-    // StorageMethods().updateImage(imgUrl: imgUrl, file: file);
-    var payLoad = {
-      "fields": {
-        "catId": {"stringValue": catId},
-        "imageUrl": {"stringValue": imgUrl},
-        "productName": {"stringValue": prodName},
-        "productWidth": {"stringValue": prodWidth},
-        "productUnit": {"stringValue": unit},
-        "productLength": {"stringValue": prodLen},
-      }
-    };
-    http.Response res = await FirestoreMethods()
-        .updateRecords(collection: "products", data: payLoad, prodId: prodId);
-  }
+  // Future<void> updatProduct(
+  //     {required String imgUrl,
+  //     required String prodName,
+  //     required String prodWidth,
+  //     required String unit,
+  //     required String catId,
+  //     required String prodLen,
+  //     required String prodId,
+  //     required var file}) async {
+  //   // StorageMethods().updateImage(imgUrl: imgUrl, file: file);
+  //   var payLoad = {
+  //     "fields": {
+  //       "catId": {"stringValue": catId},
+  //       "imageUrl": {"stringValue": imgUrl},
+  //       "productName": {"stringValue": prodName},
+  //       "productWidth": {"stringValue": prodWidth},
+  //       "productUnit": {"stringValue": unit},
+  //       "productLength": {"stringValue": prodLen},
+  //     }
+  //   };
+  //   http.Response res = await FirestoreMethods()
+  //       .updateRecords(collection: "products", data: payLoad, prodId: prodId);
+  // }
 
   Future<void> deleteProduct(String prodId) async {
     http.Response res = await FirestoreMethods()
         .deleteRecord(collection: "products", prodId: prodId);
+  }
+
+  Future<void> updateProduct({required Product product}) async {
+    var payLoad = {
+      "fields": {
+        "catId": {"stringValue": product.categoryId},
+        "imageUrl": {"stringValue": product.image},
+        "productName": {"stringValue": product.name},
+        "productWidth": {"stringValue": product.width},
+        "productUnit": {"stringValue": product.unit},
+        "productLength": {"stringValue": product.length},
+      }
+    };
+    http.Response res = await FirestoreMethods().updateRecords(
+        collection: "products", data: payLoad, prodId: product.id);
+    print(res.body.toString());
   }
 }

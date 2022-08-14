@@ -2,8 +2,8 @@ import 'package:anees_costing/Models/product.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 
-import '../../Widget/appbar.dart';
-import '../../contant.dart';
+import '../../../Widget/appbar.dart';
+import '../../../contant.dart';
 
 class MyWidget extends StatelessWidget {
   const MyWidget({Key? key}) : super(key: key);

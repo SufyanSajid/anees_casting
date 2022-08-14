@@ -1,20 +1,17 @@
-import 'package:anees_costing/Helpers/storage_methods.dart';
-import 'package:anees_costing/Models/category.dart';
-import 'package:anees_costing/Screen/Admin/addproduct.dart';
-import 'package:anees_costing/Screen/Admin/category.dart';
-import 'package:anees_costing/Screen/Admin/product.dart';
-import 'package:anees_costing/Screen/Admin/users.dart';
+import 'package:anees_costing/Screen/Admin/category/category.dart';
+import 'package:anees_costing/Screen/Admin/Product/product.dart';
+import 'package:anees_costing/Screen/Admin/users/users.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Widget/bottombar.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../contant.dart';
+import '../../../contant.dart';
 
 class AdminHomePage extends StatefulWidget {
   static const routeName = '/adminhomepage';
-  AdminHomePage({Key? key}) : super(key: key);
+  const AdminHomePage({Key? key}) : super(key: key);
 
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
@@ -156,12 +153,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
               style: GoogleFonts.righteous(fontSize: 18, color: primaryColor),
             ),
           ),
-          // SizedBox(
-          //   height: height * 1.5,
-          //   ch,
-          // ),
+          SizedBox(
+            height: height * 1.5,
+          ),
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             height: height * 18,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -290,7 +286,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Active',
                         style: TextStyle(color: Colors.green),
                       ),
@@ -328,13 +324,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
     List<Widget> _tabs = [
       homePage,
-      UserScreen(),
+      const UserScreen(),
       CategoryScreen(),
-      ProfileScreen(),
+      const ProfileScreen(),
     ];
     return Scaffold(
         key: _scaffoldKey,
-        drawer: AppDrawer(),
+        drawer: const AppDrawer(),
         bottomNavigationBar: CustomBottomBar(
           onTap: (value) {
             setState(() {
@@ -348,7 +344,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 }
 
 class DisplayBox extends StatelessWidget {
-  DisplayBox({
+  const DisplayBox({
     Key? key,
     required this.height,
     required this.title,
@@ -356,8 +352,8 @@ class DisplayBox extends StatelessWidget {
   }) : super(key: key);
 
   final double height;
-  String value;
-  String title;
+  final String value;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +361,7 @@ class DisplayBox extends StatelessWidget {
       children: [
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -376,7 +372,7 @@ class DisplayBox extends StatelessWidget {
         ),
         Text(
           title,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ],
     );
@@ -396,10 +392,10 @@ class QuickChecks extends StatelessWidget {
 
   final double width;
   final double height;
-  String title;
-  String subtitle;
-  IconData icon;
-  Function()? onTap;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -415,7 +411,7 @@ class QuickChecks extends StatelessWidget {
           boxShadow: [
             BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                offset: Offset(0, 1),
+                offset: const Offset(0, 1),
                 blurRadius: 20),
           ],
         ),

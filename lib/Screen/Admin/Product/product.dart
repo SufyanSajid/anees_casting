@@ -1,5 +1,5 @@
 import '/Helpers/storage_methods.dart';
-import '/Screen/Admin/addproduct.dart';
+import 'addproduct.dart';
 
 import '/Models/product.dart';
 import '/Widget/appbar.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../Models/category.dart';
+import '../../../Models/category.dart';
 
 class ProductScreen extends StatefulWidget {
   static const routeName = '/productscreen';
@@ -176,7 +176,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       context, AddProduct.routeName,
                                       arguments: {
                                         "action": "edit",
-                                        "imgUrl": products[index].image
+                                        "product": products[index]
                                       });
                                 },
                                 icon: const Icon(

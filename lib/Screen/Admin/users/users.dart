@@ -1,7 +1,7 @@
 import '/Helpers/firebase_auth.dart';
 
 import '/Models/user.dart';
-import '/Screen/Admin/add_user.dart';
+import 'add_user.dart';
 import '/Widget/appbar.dart';
 import '/contant.dart';
 import 'package:flutter/material.dart';
