@@ -30,7 +30,7 @@ class _WebAppbarState extends State<WebAppbar> {
               flex: 9,
               child: Text(
                 widget.title,
-                style: TextStyle(fontSize: 32, color: primaryColor),
+                style: GoogleFonts.righteous(fontSize: 32, color: primaryColor),
               ),
             ),
             Row(
@@ -76,7 +76,14 @@ class _WebAppbarState extends State<WebAppbar> {
                       ),
                       decoration: BoxDecoration(
                           // gradient: primaryColor,
-                          color: primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.6),
+                                blurRadius: 20,
+                                spreadRadius: 5,
+                                offset: Offset(0, 1)),
+                          ],
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(50)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +92,7 @@ class _WebAppbarState extends State<WebAppbar> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
-                                backgroundColor: contentColor,
+                                backgroundColor: btnbgColor.withOpacity(1),
                                 radius: 16,
                                 child: const Text(
                                   'T',
@@ -95,13 +102,16 @@ class _WebAppbarState extends State<WebAppbar> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              const Text(
+                              Text(
                                 "tallme20@gmail.com",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: contentColor),
                               ),
-                              const Icon(
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
                                 Icons.expand_more,
-                                color: Colors.white,
+                                color: primaryColor,
                                 size: 25,
                               ),
                             ],

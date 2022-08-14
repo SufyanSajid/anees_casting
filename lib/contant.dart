@@ -17,6 +17,7 @@ var primaryGradient = gradientBase([
 ]);
 
 var primaryColor = Color.fromRGBO(141, 90, 49, 1);
+var btnbgColor = Color.fromRGBO(213, 178, 79, 0.17);
 var secondaryColor = Colors.blueGrey;
 var backgroundColor = Color.fromRGBO(245, 245, 245, 1);
 var headingColor = Color.fromRGBO(137, 123, 115, 1);
@@ -29,3 +30,21 @@ var mainGradient = const LinearGradient(
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
     colors: [Color.fromRGBO(213, 178, 79, 1), Color.fromARGB(0, 148, 103, 31)]);
+
+//shadow
+List<BoxShadow> shadow = [
+  BoxShadow(
+    color: Colors.grey.withOpacity(
+      0.5,
+    ),
+    offset: Offset(0, 5),
+    blurRadius: 20,
+    spreadRadius: 1,
+  ),
+];
+BorderRadius customRadius = BorderRadius.circular(10);
+
+var customGradient = const LinearGradient(colors: [
+  Color.fromRGBO(213, 178, 79, 1),
+  Color.fromRGBO(150, 105, 34, 1),
+], end: Alignment.bottomCenter, begin: Alignment.topCenter);

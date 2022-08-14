@@ -133,8 +133,10 @@ class SideBarItem extends StatelessWidget {
         border: isSelected
             ? Border(
                 left: BorderSide(
-                    width: width(context) * 0.4,
-                    color: const Color.fromRGBO(213, 178, 79, 1)))
+                  width: width(context) * 0.4,
+                  color: const Color.fromRGBO(213, 178, 79, 1),
+                ),
+              )
             : Border(),
       ),
       child: Column(
