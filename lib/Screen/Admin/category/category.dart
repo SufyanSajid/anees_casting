@@ -10,15 +10,15 @@ import 'package:provider/provider.dart';
 
 import '../../../Widget/appbar.dart';
 
-class CategoryScreen extends StatefulWidget {
+class MobileCategoryScreen extends StatefulWidget {
   static const routeName = '/categoryScreen';
-  CategoryScreen({Key? key}) : super(key: key);
+  MobileCategoryScreen({Key? key}) : super(key: key);
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<MobileCategoryScreen> createState() => _MobileCategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _MobileCategoryScreenState extends State<MobileCategoryScreen> {
   final _nameController = TextEditingController();
 
   String? parentId;

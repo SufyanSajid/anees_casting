@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 class ResponsiveLayout extends StatelessWidget {
   Widget mobileLayout;
   Widget webLayout;
-  Widget tabLayout;
 
   ResponsiveLayout({
     required this.mobileLayout,
     required this.webLayout,
-    required this.tabLayout,
   });
 
   @override

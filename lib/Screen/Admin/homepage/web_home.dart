@@ -1,5 +1,5 @@
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
-import 'package:anees_costing/Screen/Admin/category/content.dart';
+import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/users/content.dart';
 import 'package:anees_costing/Widget/webappbar.dart';
 import 'package:anees_costing/contant.dart';
