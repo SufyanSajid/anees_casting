@@ -1,10 +1,12 @@
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/users/content.dart';
+import 'package:anees_costing/Widget/drawer/web_drawer.dart';
 import 'package:anees_costing/Widget/webappbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
+import '../../../Widget/grad_button.dart';
 import '../../../Widget/sidebar.dart';
 
 class WebHome extends StatefulWidget {
@@ -16,6 +18,7 @@ class WebHome extends StatefulWidget {
 
 class _WebHomeState extends State<WebHome> {
   int selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -130,18 +133,9 @@ class _WebHomeState extends State<WebHome> {
                     color: primaryColor,
                     fontWeight: FontWeight.bold),
               ),
-              DecoratedBox(
-                decoration: BoxDecoration(gradient: customGradient),
-                child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
-                        maximumSize: Size(120, 50),
-                        minimumSize: Size(120, 50)),
-                    child: Text(
-                      'View All',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    )),
+              gradientButton(
+                title: 'View All',
+                onTap: () {},
               ),
             ],
           ),
@@ -261,11 +255,20 @@ class _WebHomeState extends State<WebHome> {
     );
     List<Widget> _tabs = [
       homeContent,
-      ProductWebContent(),
+      ProductWebContent(
+        scaffoldKey: _ScaffoldKey,
+      ),
       UserWebContent(),
-      CategoryWebContent(),
+      CategoryWebContent(
+        scaffoldKey: _ScaffoldKey,
+      ),
     ];
     return Scaffold(
+      endDrawer: WebDrawer(
+        selectedIndex: selectedIndex,
+      ),
+      endDrawerEnableOpenDragGesture: true,
+      key: _ScaffoldKey,
       backgroundColor: backgroundColor,
       body: Row(
         children: [

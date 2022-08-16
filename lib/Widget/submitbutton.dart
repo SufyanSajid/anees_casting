@@ -25,7 +25,7 @@ class SubmitButton extends StatelessWidget {
         height: height * 5,
         width: width * 70,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50), gradient: primaryGradient),
+            borderRadius: BorderRadius.circular(50), gradient: customGradient),
         child: Center(
           child: Text(
             title,

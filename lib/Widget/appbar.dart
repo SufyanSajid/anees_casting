@@ -4,27 +4,25 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../contant.dart';
 
-
 class Appbar extends StatelessWidget {
-   Appbar({
+  Appbar({
     Key? key,
     required this.title,
     required this.subtitle,
     required this.svgIcon,
-    required this.leadingIcon,
-    required this.leadingTap,
-    required this.tarilingIcon,
-    required this.tarilingTap,
+    this.leadingIcon,
+    this.leadingTap,
+    this.tarilingIcon,
+    this.tarilingTap,
   }) : super(key: key);
 
   String title;
   String subtitle;
   String svgIcon;
-  IconData leadingIcon;
+  IconData? leadingIcon;
   Function()? leadingTap;
-  IconData tarilingIcon;
+  IconData? tarilingIcon;
   Function()? tarilingTap;
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,43 +35,48 @@ class Appbar extends StatelessWidget {
               onTap: leadingTap,
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0,5),
-                      blurRadius: 5
-                    ),
-                  ]
-                ),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0, 5),
+                          blurRadius: 5),
+                    ]),
                 padding: const EdgeInsets.all(10),
-                child: Icon(leadingIcon,color: primaryColor,),
+                child: Icon(
+                  leadingIcon,
+                  color: primaryColor,
+                ),
               ),
             ),
-            SvgPicture.asset(svgIcon,color: primaryColor,),
-             InkWell(
+            SvgPicture.asset(
+              svgIcon,
+              color: primaryColor,
+            ),
+            InkWell(
               onTap: tarilingTap,
-               child: Container(
+              child: Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0,5),
-                      blurRadius: 5
-                    ),
-                  ]
-                ),
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0, 5),
+                          blurRadius: 5),
+                    ]),
                 padding: const EdgeInsets.all(10),
-                child: Icon(tarilingIcon,color: primaryColor,),
-                         ),
-             ),
+                child: Icon(
+                  tarilingIcon,
+                  color: primaryColor,
+                ),
+              ),
+            ),
           ],
         ),
         SizedBox(
-          height: height(context)*1,
+          height: height(context) * 1,
         ),
         Column(
           children: [

@@ -18,18 +18,18 @@ class _CustomDropDownState extends State<CustomDropDown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-          gradient: primaryGradient,
+          gradient: customGradient,
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(color: Colors.grey, offset: Offset(0, 5), blurRadius: 15)
           ]),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           dropdownColor: primaryColor,
           isExpanded: true,
-          icon: Icon(
+          icon: const Icon(
             Icons.keyboard_arrow_down_outlined,
             color: Colors.white,
           ),
