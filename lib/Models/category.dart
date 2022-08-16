@@ -59,7 +59,13 @@ class Categories with ChangeNotifier {
       String parentId = fields["parentId"]["stringValue"];
       String title = fields["title"]["stringValue"];
       String id = (element["name"] as String).split("categories/").last;
-      tempCat.add(Category(id: id, parentId: parentId, title: title));
+      tempCat.add(
+        Category(
+          id: id,
+          parentId: parentId,
+          title: title,
+        ),
+      );
     }
 
     for (var cat in tempCat) {

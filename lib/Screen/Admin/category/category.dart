@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../Widget/appbar.dart';
 
 class MobileCategoryScreen extends StatefulWidget {
-  static const routeName = '/categoryScreen';
   MobileCategoryScreen({Key? key}) : super(key: key);
 
   @override
