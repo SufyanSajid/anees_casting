@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/users/content.dart';
@@ -19,6 +20,7 @@ class WebHome extends StatefulWidget {
 class _WebHomeState extends State<WebHome> {
   int selectedIndex = 0;
   final GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
+  Category? category;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +36,8 @@ class _WebHomeState extends State<WebHome> {
           ),
           child: Row(
             children: [
-              Image(
-                image: const AssetImage(
+              const Image(
+                image: AssetImage(
                   'assets/images/banner.png',
                 ),
                 fit: BoxFit.cover,
@@ -258,14 +260,23 @@ class _WebHomeState extends State<WebHome> {
       ProductWebContent(
         scaffoldKey: _ScaffoldKey,
       ),
-      UserWebContent(),
+      UserWebContent(
+        scaffoldKey: _ScaffoldKey,
+      ),
       CategoryWebContent(
         scaffoldKey: _ScaffoldKey,
+        onChanged: (Category value) {
+          print('yeh ha value ${value.title}');
+          setState(() {
+            category = value;
+          });
+        },
       ),
     ];
     return Scaffold(
       endDrawer: WebDrawer(
         selectedIndex: selectedIndex,
+        category: category,
       ),
       endDrawerEnableOpenDragGesture: true,
       key: _ScaffoldKey,

@@ -1,16 +1,33 @@
 import 'package:anees_costing/Screen/Admin/Product/components/formfeilds.dart';
+import 'package:anees_costing/Screen/Admin/users/add_user.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../Models/category.dart';
+import '../customautocomplete.dart';
+import '../input_feild.dart';
+import '../submitbutton.dart';
 
 class WebDrawer extends StatelessWidget {
   WebDrawer({
     Key? key,
     required this.selectedIndex,
+    this.category,
   }) : super(key: key);
 
   int selectedIndex;
+  Category? category;
+
+  bool isEmpty() {
+    if (category == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,32 +35,148 @@ class WebDrawer extends StatelessWidget {
       padding: const EdgeInsets.only(top: 25),
       width: width(context) * 35,
       color: Colors.white,
-      child: Column(
-        children: [
-          if (selectedIndex == 1)
-            DrawerAppbar(
-              title: 'Design',
-              subTitle: 'Add New Design',
-              svgIcon: 'assets/icons/daimond.svg',
+      child: SizedBox(
+        height: height(context) * 100,
+        child: Column(
+          children: [
+            if (selectedIndex == 1)
+              DrawerAppbar(
+                title: 'Design',
+                subTitle: 'Add New Design',
+                svgIcon: 'assets/icons/daimond.svg',
+              ),
+            if (selectedIndex == 3)
+              DrawerAppbar(
+                title: 'Category',
+                subTitle: isEmpty() ? 'Add New Category' : 'Edit Category',
+                svgIcon: 'assets/icons/category.svg',
+              ),
+            if (selectedIndex == 2)
+              DrawerAppbar(
+                title: 'Users',
+                subTitle: 'Add New Users',
+                svgIcon: 'assets/icons/profile.svg',
+              ),
+            SizedBox(
+              height: height(context) * 5,
             ),
-          if (selectedIndex == 3)
-            DrawerAppbar(
-              title: 'Category',
-              subTitle: 'Add New Category',
-              svgIcon: 'assets/icons/category.svg',
-            ),
-          SizedBox(
-            height: height(context) * 5,
-          ),
 
-          //Feilds Area
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: AddProductFeilds(),
-          ),
-          //Feilds Area End
-        ],
+            //Feilds Area
+            if (selectedIndex == 1)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: AddProductFeilds(),
+              ),
+            if (selectedIndex == 3)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: AddCategoryFeilds(
+                  category: category,
+                ),
+              ),
+            if (selectedIndex == 2)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: AddUserFeilds(),
+              ),
+
+            //Feilds Area End
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class AddCategoryFeilds extends StatefulWidget {
+  AddCategoryFeilds({
+    Key? key,
+    this.category,
+  }) : super(key: key);
+
+  Category? category;
+  @override
+  State<AddCategoryFeilds> createState() => _AddCategoryFeildsState();
+}
+
+class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
+  final _nameController = TextEditingController();
+
+  String? parentId;
+  bool isCatLoading = false;
+  bool isFirst = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.category != null) {
+      _nameController.text = widget.category!.title.toString();
+    } else {
+      _nameController.text = '';
+    }
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      isFirst = false;
+
+      Provider.of<Categories>(context).fetchAndUpdateCat();
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Category> categories =
+        Provider.of<Categories>(context, listen: false).categories;
+    List<Category> parentCategories =
+        Provider.of<Categories>(context, listen: false).parentCategories;
+    return Column(
+      children: [
+        CustomAutoComplete(
+            categories: parentCategories,
+            onChange: (Category cat) {
+              parentId = cat.id;
+            }),
+        SizedBox(
+          height: height(context) * 2,
+        ),
+        InputFeild(
+          hinntText: 'Category Name',
+          validatior: () {},
+          inputController: _nameController,
+        ),
+        SizedBox(
+          height: height(context) * 2,
+        ),
+        SubmitButton(
+            height: height(context),
+            width: width(context),
+            onTap: () async {
+              // setState(() {
+              //   isCatLoading = true;
+              // });
+              // var navi = Navigator.of(context);
+              // var provider = Provider.of<Categories>(context, listen: false);
+              // await provider.uploadCatagory(
+              //     parentId ?? "", _nameController.text.trim());
+              // await provider.fetchAndUpdateCat();
+              // setState(() {
+              //   _nameController.clear();
+              //   isCatLoading = false;
+              // });
+
+              // navi.pop();
+            },
+            title: 'Add Category')
+      ],
     );
   }
 }

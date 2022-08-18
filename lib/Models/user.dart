@@ -54,7 +54,7 @@ class Users with ChangeNotifier {
 
   fetchAndUpdateUser() async {
     http.Response res =
-        await FirestoreMethods().getRecords(collection: "users/?pageSize=100");
+        await FirestoreMethods().getRecords(collection: "users");
     List<dynamic> resData = jsonDecode(res.body)["documents"];
 
     List<AUser> tempUsers = [];

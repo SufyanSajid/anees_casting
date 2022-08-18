@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,9 +8,15 @@ import 'package:provider/provider.dart';
 import '../../../Models/category.dart';
 
 class CategoryWebContent extends StatefulWidget {
-  CategoryWebContent({Key? key, required this.scaffoldKey}) : super(key: key);
+  CategoryWebContent({
+    Key? key,
+    required this.scaffoldKey,
+    required this.onChanged,
+  }) : super(key: key);
 
   GlobalKey<ScaffoldState> scaffoldKey;
+
+  Function(Category cat) onChanged;
 
   @override
   State<CategoryWebContent> createState() => _CategoryWebContentState();
@@ -56,7 +63,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
               children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                   decoration: BoxDecoration(
                       color: btnbgColor.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(8)),
@@ -114,7 +121,17 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                             child: ActionButton(
                               color: btnbgColor.withOpacity(1),
                               title: 'Edit',
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  widget.onChanged(categories[index]);
+                                  Future.delayed(Duration(seconds: 1))
+                                      .then((value) {
+                                    widget.scaffoldKey.currentState!
+                                        .openEndDrawer();
+                                  });
+                                });
+                              },
+                              icon: Icons.edit_outlined,
                             ),
                           ),
                           Expanded(
@@ -122,6 +139,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                             child: ActionButton(
                               color: Colors.red,
                               title: 'Delete',
+                              icon: Icons.delete,
                               onTap: () {},
                             ),
                           ),
@@ -145,10 +163,12 @@ class ActionButton extends StatelessWidget {
     required this.title,
     required this.color,
     required this.onTap,
+    required this.icon,
   }) : super(key: key);
   Color color;
   String title;
   Function()? onTap;
+  IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +183,8 @@ class ActionButton extends StatelessWidget {
             maximumSize: Size(0, 45),
           ),
           onPressed: onTap,
-          icon: const Icon(
-            Icons.delete,
+          icon: Icon(
+            icon,
             color: Colors.white,
           ),
           label: Text(

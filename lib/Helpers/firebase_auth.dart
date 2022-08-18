@@ -15,6 +15,7 @@ class FirebaseAuth {
     required String phone,
     required String password,
   }) async {
+    print('shani');
     final url = Uri.parse(signUpUrl);
     var body = jsonEncode({
       'email': email,
@@ -22,6 +23,7 @@ class FirebaseAuth {
       'returnSecureToken': true,
     });
     final response = await http.post(url, body: body);
+    print('yeh ha response new user ka ${response.body}');
     var extractedData = json.decode(response.body);
 
     await Users().createUser(

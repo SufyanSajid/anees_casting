@@ -1,14 +1,32 @@
+import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Screen/Admin/users/users.dart';
+import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
 class UserWebContent extends StatelessWidget {
-  const UserWebContent({Key? key}) : super(key: key);
+  UserWebContent({Key? key, required this.scaffoldKey}) : super(key: key);
+  final _usersController = TextEditingController();
+  GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Users'),
-      ),
+    return Column(
+      children: [
+        buildFilterBar(
+          context: context,
+          searchConttroller: _usersController,
+          btnTap: () {
+            scaffoldKey.currentState!.openEndDrawer();
+          },
+          btnText: 'Add New User',
+        ),
+        SizedBox(
+          height: height(context) * 4,
+        ),
+        ShowUsers(
+          isWeb: true,
+        ),
+      ],
     );
   }
 }

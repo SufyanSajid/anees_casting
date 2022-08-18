@@ -23,7 +23,7 @@ class SubmitButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: height * 5,
-        width: width * 70,
+        width: width * 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50), gradient: customGradient),
         child: Center(

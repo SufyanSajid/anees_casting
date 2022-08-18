@@ -134,7 +134,7 @@ class SideBarItem extends StatelessWidget {
             ? Border(
                 left: BorderSide(
                   width: width(context) * 0.4,
-                  color: const Color.fromRGBO(213, 178, 79, 1),
+                  color: primaryColor,
                 ),
               )
             : Border(),
@@ -145,16 +145,15 @@ class SideBarItem extends StatelessWidget {
           Icon(
             icon,
             size: 50,
-            color: isSelected
-                ? const Color.fromRGBO(213, 178, 79, 1)
-                : contentColor,
+            color: isSelected ? primaryColor : contentColor,
           ),
           SizedBox(
             height: height(context) * 0.5,
           ),
           Text(
             title,
-            style: GoogleFonts.righteous(),
+            style: GoogleFonts.righteous(
+                color: isSelected ? primaryColor : contentColor),
           )
         ],
       ),

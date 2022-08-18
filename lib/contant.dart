@@ -16,7 +16,7 @@ var primaryGradient = gradientBase([
   Color.fromRGBO(141, 90, 49, 1),
 ]);
 
-var primaryColor = Color.fromRGBO(141, 90, 49, 1);
+var primaryColor = Color.fromRGBO(150, 105, 34, 1);
 var btnbgColor = Color.fromRGBO(213, 178, 79, 0.17);
 var secondaryColor = Colors.blueGrey;
 var backgroundColor = Color.fromRGBO(245, 245, 245, 1);
