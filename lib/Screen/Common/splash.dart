@@ -1,4 +1,5 @@
 import 'package:anees_costing/Screen/Admin/homepage/mobile.dart';
+import 'package:anees_costing/Screen/Auth/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../Models/auth.dart';
 import '../../contant.dart';
 import '../Admin/homepage/admin_home.dart';
-import '../Auth/login.dart';
+import '../Auth/Login/mobilelogin.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

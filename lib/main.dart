@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 
@@ -17,7 +18,8 @@ import 'package:provider/provider.dart';
 
 import 'Screen/Admin/category/category.dart';
 import 'Screen/Admin/users/users.dart';
-import 'Screen/Auth/login.dart';
+import 'Screen/Auth/Login/login.dart';
+import 'Screen/Auth/Login/mobilelogin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +47,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Products(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Logs(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -54,9 +59,9 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => const AdminHomePage(),
+          '/': (ctx) => const SplashScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
-          AdminHomePage.routeName: (ctx) => AdminHomePage(),
+          AdminHomePage.routeName: (ctx) => const AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
           UserScreen.routeName: (ctx) => const UserScreen(),
           ProductScreen.routeName: (ctx) => ProductScreen(),

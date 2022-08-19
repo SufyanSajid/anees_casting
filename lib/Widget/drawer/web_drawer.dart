@@ -175,7 +175,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
 
               // navi.pop();
             },
-            title: 'Add Category')
+            title: widget.category != null ? 'Edit Category' : 'Add Category')
       ],
     );
   }

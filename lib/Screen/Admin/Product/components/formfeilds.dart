@@ -4,7 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../Helpers/storage_methods.dart';
 import '../../../../Models/category.dart';
+import '../../../../Models/product.dart';
 import '../../../../Widget/adaptive_indecator.dart';
 import '../../../../Widget/customautocomplete.dart';
 import '../../../../Widget/dropDown.dart';
@@ -43,6 +45,65 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
     }
     super.didChangeDependencies();
+  }
+
+  Product prodObj() {
+    return Product(
+        id: "",
+        name: _prodNameController.text.trim(),
+        length: _prodLengthController.text.trim(),
+        width: _prodWidthController.text.trim(),
+        unit: prodUnit,
+        categoryId: category!.id,
+        image: "",
+        dateTime: "");
+  }
+
+  void clearControllersAndImage() {
+    image = null;
+    _prodLengthController.clear();
+    _prodWidthController.clear();
+    _prodNameController.clear();
+  }
+
+  bool productNotEmpty() {
+    if (image != null &&
+        category != null &&
+        _prodNameController.text.isNotEmpty &&
+        _prodLengthController.text.isNotEmpty &&
+        _prodWidthController.text.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _addProduct(var img) async {
+    if (productNotEmpty()) {
+      setState(() {
+        isLoading = true;
+      });
+      var provider = Provider.of<Products>(context, listen: false);
+      downloadImgUrl =
+          await StorageMethods().uploadImage(file: img, collection: "products");
+      Product newProduct = Product(
+        id: "",
+        name: _prodNameController.text.trim(),
+        length: _prodLengthController.text.trim(),
+        width: _prodWidthController.text.trim(),
+        unit: prodUnit,
+        categoryId: category!.id,
+        image: downloadImgUrl!,
+        dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
+      );
+      await provider.addProduct(product: newProduct);
+
+      clearControllersAndImage();
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -156,12 +217,8 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                 height: height(context),
                 width: width(context),
                 onTap: () {
-                  // args["action"] == "add"
-                  //     ? _addProduct(image)
-                  //     : _editProduct(
-                  //         img: image,
-                  //         prodId: (args["product"] as Product).id,
-                  //         imageUrl: (args["product"] as Product).image);
+                  print('shani');
+                  _addProduct(image);
                 },
                 title: 'Add Design',
               )

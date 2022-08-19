@@ -32,77 +32,96 @@ class _SideBarState extends State<SideBar> {
       backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: height(context) * 3),
-              child: Center(child: Image.asset('assets/images/logo.png')),
-            ),
-            lightDivider(),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(0);
-                  select = 0;
-                });
-              },
-              child: SideBarItem(
-                title: 'Home',
-                icon: Icons.home_outlined,
-                isSelected: select == 0,
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(1);
-                  select = 1;
-                });
-              },
-              child: SideBarItem(
-                title: 'Design',
-                icon: Icons.diamond_outlined,
-                isSelected: select == 1,
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(2);
-                  select = 2;
-                });
-              },
-              child: SideBarItem(
-                title: 'Users',
-                icon: Icons.groups_outlined,
-                isSelected: select == 2,
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(3);
-                  select = 3;
-                });
-              },
-              child: SideBarItem(
-                title: 'Category',
-                icon: Icons.interests_outlined,
-                isSelected: select == 3,
-              ),
-            ),
-            SizedBox(
-              height: height(context) * 30,
-            ),
-            lightDivider(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: height(context) * 01),
-              child: Text(
-                'Developed By Rapidev Tech',
-                style: TextStyle(
-                  color: contentColor,
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: height(context) * 3),
+                  child: Center(child: Image.asset('assets/images/logo.png')),
                 ),
-              ),
-            )
+                lightDivider(),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(0);
+                      select = 0;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Home',
+                    icon: Icons.home_outlined,
+                    isSelected: select == 0,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(1);
+                      select = 1;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Design',
+                    icon: Icons.diamond_outlined,
+                    isSelected: select == 1,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(2);
+                      select = 2;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Users',
+                    icon: Icons.groups_outlined,
+                    isSelected: select == 2,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(3);
+                      select = 3;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Category',
+                    icon: Icons.interests_outlined,
+                    isSelected: select == 3,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(4);
+                      select = 4;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Logs',
+                    icon: Icons.recycling,
+                    isSelected: select == 4,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                lightDivider(),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20, top: 20),
+                  child: Text(
+                    'Developed By Rapidev Tech',
+                    style: TextStyle(
+                      color: contentColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:flutter/material.dart';
 
 import '../Widget/dropDown.dart';
@@ -10,6 +11,7 @@ Widget buildFilterBar({
   required,
   required void Function()? btnTap,
   required String btnText,
+  required Widget dropDown,
 }) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -46,15 +48,7 @@ Widget buildFilterBar({
           children: [
             SizedBox(
               width: width(context) * 8,
-              child: CustomDropDown(
-                onChanged: (value) {
-                  print(value);
-                },
-                items: const [
-                  'Asc',
-                  'Dec',
-                ],
-              ),
+              child: dropDown,
             ),
             SizedBox(
               width: width(context) * 2,

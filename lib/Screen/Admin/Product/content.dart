@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
+import '../../../Widget/dropDown.dart';
 
 class ProductWebContent extends StatefulWidget {
   ProductWebContent({
@@ -52,6 +53,15 @@ class _ProductWebContentState extends State<ProductWebContent> {
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
           btnText: 'Add New Design',
+          dropDown: CustomDropDown(
+            onChanged: (value) {
+              print(value);
+            },
+            items: const [
+              'By Date',
+              'By Article',
+            ],
+          ),
         ),
         //Filter bar
 

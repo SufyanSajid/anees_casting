@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/category.dart';
+import '../../../Widget/dropDown.dart';
 
 class CategoryWebContent extends StatefulWidget {
   CategoryWebContent({
@@ -47,6 +48,15 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
           btnText: 'Add New Category',
+          dropDown: CustomDropDown(
+            onChanged: (value) {
+              print(value);
+            },
+            items: const [
+              'Asc',
+              'Dec',
+            ],
+          ),
         ),
         SizedBox(
           height: height(context) * 2,
@@ -124,11 +134,9 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                               onTap: () {
                                 setState(() {
                                   widget.onChanged(categories[index]);
-                                  Future.delayed(Duration(seconds: 1))
-                                      .then((value) {
-                                    widget.scaffoldKey.currentState!
-                                        .openEndDrawer();
-                                  });
+
+                                  widget.scaffoldKey.currentState!
+                                      .openEndDrawer();
                                 });
                               },
                               icon: Icons.edit_outlined,

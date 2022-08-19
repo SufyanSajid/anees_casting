@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
+import 'package:anees_costing/Screen/Admin/logs/content.dart';
 import 'package:anees_costing/Screen/Admin/users/content.dart';
 import 'package:anees_costing/Widget/drawer/web_drawer.dart';
 import 'package:anees_costing/Widget/webappbar.dart';
@@ -137,7 +138,12 @@ class _WebHomeState extends State<WebHome> {
               ),
               gradientButton(
                 title: 'View All',
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 4;
+                    print(4);
+                  });
+                },
               ),
             ],
           ),
@@ -272,6 +278,7 @@ class _WebHomeState extends State<WebHome> {
           });
         },
       ),
+      ActivityLogWebContent(),
     ];
     return Scaffold(
       endDrawer: WebDrawer(
@@ -325,6 +332,11 @@ class _WebHomeState extends State<WebHome> {
                     WebAppbar(
                         title: 'Categories',
                         subTitle: 'Your Categories ',
+                        onChanged: () {}),
+                  if (selectedIndex == 4)
+                    WebAppbar(
+                        title: 'Activity Logs',
+                        subTitle: 'All Users Activities',
                         onChanged: () {}),
 
                   SizedBox(
