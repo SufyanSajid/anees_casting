@@ -116,15 +116,28 @@ class _ProductWebContentState extends State<ProductWebContent> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(),
-                                child: ClipRRect(
-                                  borderRadius: customRadius,
-                                  child: Image.network(
-                                    products[index].image,
-                                    fit: BoxFit.cover,
-                                    height: height(context) * 25,
-                                    width: width(context) * 100,
+                              InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                            content: Container(
+                                              child: Image.network(
+                                                products[index].image,
+                                              ),
+                                            ),
+                                          ));
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(),
+                                  child: ClipRRect(
+                                    borderRadius: customRadius,
+                                    child: Image.network(
+                                      products[index].image,
+                                      fit: BoxFit.contain,
+                                      height: height(context) * 25,
+                                      width: width(context) * 100,
+                                    ),
                                   ),
                                 ),
                               ),
