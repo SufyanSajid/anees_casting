@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -36,6 +37,7 @@ class _AddProductState extends State<AddProduct> {
   String prodUnit = "CM";
   Category? category;
   Uint8List? image;
+  File? image123;
   String? downloadImgUrl;
   bool isLoading = false;
 
@@ -170,9 +172,14 @@ class _AddProductState extends State<AddProduct> {
                       child: IconButton(
                           onPressed: () async {
                             FilePickerResult? result1 =
-                                await FilePicker.platform.pickFiles();
+                                await FilePicker.platform.pickFiles(
+                              withData: true,
+                            );
+
+                            print(result1!.files);
                             setState(() {
-                              image = result1?.files.first.bytes;
+                              image = result1.files.first.bytes;
+                              print(image);
                             });
                           },
                           icon: Icon(

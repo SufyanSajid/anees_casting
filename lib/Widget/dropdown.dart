@@ -18,6 +18,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //   width: width(context) * 20,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
           gradient: customGradient,
@@ -28,7 +29,6 @@ class _CustomDropDownState extends State<CustomDropDown> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           dropdownColor: primaryColor,
-          isExpanded: true,
           icon: const Icon(
             Icons.keyboard_arrow_down_outlined,
             color: Colors.white,
@@ -49,12 +49,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
 DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
       value: item,
-      child: Text(
-        item,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-          fontFamily: 'Poppins-thins',
+      child: FittedBox(
+        child: Text(
+          item,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontFamily: 'Poppins-thins',
+          ),
         ),
       ),
     );

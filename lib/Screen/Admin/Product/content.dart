@@ -42,6 +42,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
   @override
   Widget build(BuildContext context) {
+    var width1 = MediaQuery.of(context).size.width;
     products = Provider.of<Products>(context).products;
     return Column(
       children: [
@@ -80,8 +81,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: width1 < 1000 ? 2 : 4,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
                   ),
@@ -111,17 +112,19 @@ class _ProductWebContentState extends State<ProductWebContent> {
                             ],
                             borderRadius: customRadius),
                         child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 decoration: BoxDecoration(),
-                                height: height(context) * 25,
-                                width: width(context) * 20,
                                 child: ClipRRect(
                                   borderRadius: customRadius,
                                   child: Image.network(
                                     products[index].image,
                                     fit: BoxFit.cover,
+                                    height: height(context) * 25,
+                                    width: width(context) * 100,
                                   ),
                                 ),
                               ),
@@ -146,21 +149,23 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                       SizedBox(
                                         height: height(context) * 0.5,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Article No :',
-                                            style: TextStyle(
-                                                color: headingColor,
-                                                fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            width: width(context) * 0.5,
-                                          ),
-                                          Text(
-                                            products[index].id,
-                                          ),
-                                        ],
+                                      FittedBox(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Article No :',
+                                              style: TextStyle(
+                                                  color: headingColor,
+                                                  fontSize: 16),
+                                            ),
+                                            SizedBox(
+                                              width: width(context) * 0.5,
+                                            ),
+                                            Text(
+                                              products[index].name,
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

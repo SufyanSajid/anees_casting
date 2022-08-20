@@ -137,10 +137,14 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                 bottom: 1,
                 child: IconButton(
                     onPressed: () async {
-                      FilePickerResult? result1 =
-                          await FilePicker.platform.pickFiles();
+                      FilePickerResult? result1 = await FilePicker.platform
+                          .pickFiles(withData: true, type: FileType.image);
+
+                      print(result1);
+
                       setState(() {
                         image = result1?.files.first.bytes;
+                        print(image);
                       });
                     },
                     icon: Icon(

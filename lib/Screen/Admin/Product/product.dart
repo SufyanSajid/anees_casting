@@ -1,3 +1,5 @@
+import 'package:anees_costing/Helpers/firestore_methods.dart';
+
 import '/Helpers/storage_methods.dart';
 import 'addproduct.dart';
 
@@ -30,6 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
     if (isFirst) {
       isFirst = false;
       Provider.of<Products>(context).fetchAndUpdateProducts();
+      FirestoreMethods().getProductsByCatId();
     }
     super.didChangeDependencies();
   }

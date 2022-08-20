@@ -30,6 +30,8 @@ Widget buildFilterBar({
             style: TextStyle(color: headingColor),
             controller: searchConttroller,
             decoration: InputDecoration(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
               hintText: 'Search Here',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -44,20 +46,30 @@ Widget buildFilterBar({
         ),
         //search box
 
-        Row(
-          children: [
-            SizedBox(
-              width: width(context) * 8,
-              child: dropDown,
-            ),
-            SizedBox(
-              width: width(context) * 2,
-            ),
-            gradientButton(
-              onTap: btnTap,
-              title: btnText,
-            ),
-          ],
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: width(context) * 40,
+              ),
+              Expanded(
+                flex: 1,
+                // width: width(context) * 12,
+                child: dropDown,
+              ),
+              SizedBox(
+                width: width(context) * 2,
+              ),
+              Expanded(
+                flex: 1,
+                child: gradientButton(
+                  onTap: btnTap,
+                  title: btnText,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     ),

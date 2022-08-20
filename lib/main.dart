@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
+import 'package:flutter/foundation.dart';
 
 import './Models/category.dart';
 import './Models/product.dart';
@@ -22,6 +23,7 @@ import 'Screen/Auth/Login/login.dart';
 import 'Screen/Auth/Login/mobilelogin.dart';
 
 void main() async {
+  debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const MyApp());
@@ -60,7 +62,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (ctx) => const SplashScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
+          LoginScreen.routeName: (ctx) => const LoginScreen(),
           AdminHomePage.routeName: (ctx) => const AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
           UserScreen.routeName: (ctx) => const UserScreen(),

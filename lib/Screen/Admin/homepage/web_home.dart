@@ -46,42 +46,45 @@ class _WebHomeState extends State<WebHome> {
               SizedBox(
                 width: width(context) * 5,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Welcome to Anees Casting',
-                    style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    height: 3,
-                    width: width(context) * 60,
-                    color: primaryColor,
-                  ),
-                  Container(
-                    alignment: Alignment.bottomRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        BarButton(
-                          title: 'Manage Users',
-                          onTap: () {},
-                        ),
-                        SizedBox(
-                          width: width(context) * 1,
-                        ),
-                        BarButton(
-                          title: 'Manage Designs',
-                          onTap: () {},
-                        ),
-                      ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Welcome to Anees Casting',
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(right: 50),
+                      height: 3,
+                      // width: width(context) * 60,
+                      color: primaryColor,
+                    ),
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          BarButton(
+                            title: 'Manage Users',
+                            onTap: () {},
+                          ),
+                          SizedBox(
+                            width: width(context) * 1,
+                          ),
+                          BarButton(
+                            title: 'Manage Designs',
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -95,20 +98,32 @@ class _WebHomeState extends State<WebHome> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TotalBlock(
-              title: 'Total Designs',
-              value: '50000',
-              icon: Icons.diamond_outlined,
+            Expanded(
+              child: TotalBlock(
+                title: 'Total Designs',
+                value: '50000',
+                icon: Icons.diamond_outlined,
+              ),
             ),
-            TotalBlock(
-              title: 'Total Users',
-              value: '212',
-              icon: Icons.groups_outlined,
+            SizedBox(
+              width: width(context) * 1,
             ),
-            TotalBlock(
-              title: 'Total Categories',
-              value: '50',
-              icon: Icons.diamond_outlined,
+            Expanded(
+              child: TotalBlock(
+                title: 'Total Users',
+                value: '212',
+                icon: Icons.groups_outlined,
+              ),
+            ),
+            SizedBox(
+              width: width(context) * 1,
+            ),
+            Expanded(
+              child: TotalBlock(
+                title: 'Total Categories',
+                value: '50',
+                icon: Icons.diamond_outlined,
+              ),
             ),
           ],
         ),
@@ -372,9 +387,10 @@ class TotalBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width(context) * 25,
+      // width: width(context) * 25,
       height: height(context) * 15,
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: EdgeInsets.symmetric(
+          vertical: height(context) * 1, horizontal: width(context) * 1),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -406,11 +422,11 @@ class TotalBlock extends StatelessWidget {
             ],
           ),
           CircleAvatar(
-            radius: 60,
+            radius: width(context) * 3,
             backgroundColor: btnbgColor.withOpacity(0.2),
             child: Icon(
               icon,
-              size: 50,
+              size: width(context) * 3,
               color: primaryColor,
             ),
           ),
@@ -437,9 +453,12 @@ class BarButton extends StatelessWidget {
             color: Color.fromRGBO(213, 178, 79, 0.3),
             borderRadius: BorderRadius.circular(15)),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Text(
-          title,
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            title,
+            style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500),
+          ),
         ),
       ),
     );

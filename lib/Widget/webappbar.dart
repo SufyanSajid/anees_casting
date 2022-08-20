@@ -1,6 +1,13 @@
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Screen/Auth/Login/login.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../Functions/buildlisttile.dart';
+import '../Functions/dailog.dart';
+import '../Functions/popup.dart';
 
 class WebAppbar extends StatefulWidget {
   WebAppbar({
@@ -36,39 +43,47 @@ class _WebAppbarState extends State<WebAppbar> {
             Row(
               children: [
                 InkWell(
-                  // onTap: () {
-                  //   setState(() {
-                  //     showPopupMenu(context: context, popups: [
-                  //       PopupMenuItem(
-                  //         child: buildListTile(
-                  //           leadingIcon: Icons.person_outline,
-                  //           title: 'Plan Details',
-                  //           subTitle: 'View Your Plan and Account Details',
-                  //           onTap: () {},
-                  //         ),
-                  //       ),
-                  //       PopupMenuItem(
-                  //         child: buildListTile(
-                  //           leadingIcon: Icons.desktop_windows,
-                  //           title: 'Manage Devices',
-                  //           subTitle: 'Manage your connected devices',
-                  //           trailing: Icons.launch,
-                  //           onTap: () {},
-                  //         ),
-                  //       ),
-                  //       PopupMenuItem(
-                  //         child: buildListTile(
-                  //             leadingIcon: Icons.logout_outlined,
-                  //             title: 'Logout',
-                  //             subTitle: 'Logout from Minecloud',
-                  //             onTap: () {
-                  //               showLogoutDialog(
-                  //                   context: context, title: 'Logout');
-                  //             }),
-                  //       ),
-                  //     ]);
-                  //   });
-                  // },
+                  onTap: () {
+                    setState(() {
+                      showPopupMenu(context: context, popups: [
+                        PopupMenuItem(
+                          child: buildListTile(
+                            leadingIcon: Icons.person_outline,
+                            title: 'Plan Details',
+                            subTitle: 'View Your Plan and Account Details',
+                            onTap: () {},
+                          ),
+                        ),
+                        PopupMenuItem(
+                          child: buildListTile(
+                            leadingIcon: Icons.desktop_windows,
+                            title: 'Manage Devices',
+                            subTitle: 'Manage your connected devices',
+                            trailing: Icons.launch,
+                            onTap: () {},
+                          ),
+                        ),
+                        PopupMenuItem(
+                          child: buildListTile(
+                              leadingIcon: Icons.logout_outlined,
+                              title: 'Logout',
+                              subTitle: 'Logout from Minecloud',
+                              onTap: () {
+                                showLogoutDialog(
+                                    context: context,
+                                    title: 'Logout',
+                                    logoutap: () {
+                                      Provider.of<Auth>(context, listen: false)
+                                          .logout();
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              LoginScreen.routeName);
+                                    });
+                              }),
+                        ),
+                      ]);
+                    });
+                  },
                   child: Container(
                       height: 43,
                       padding: const EdgeInsets.symmetric(
@@ -103,7 +118,9 @@ class _WebAppbarState extends State<WebAppbar> {
                                 width: 10,
                               ),
                               Text(
-                                "tallme20@gmail.com",
+                                Provider.of<Auth>(context, listen: false)
+                                    .currentUser!
+                                    .email,
                                 style: TextStyle(color: contentColor),
                               ),
                               const SizedBox(

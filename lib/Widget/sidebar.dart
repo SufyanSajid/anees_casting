@@ -113,10 +113,12 @@ class _SideBarState extends State<SideBar> {
                 lightDivider(),
                 Container(
                   margin: EdgeInsets.only(bottom: 20, top: 20),
-                  child: Text(
-                    'Developed By Rapidev Tech',
-                    style: TextStyle(
-                      color: contentColor,
+                  child: FittedBox(
+                    child: Text(
+                      'Developed By Rapidev Tech',
+                      style: TextStyle(
+                        color: contentColor,
+                      ),
                     ),
                   ),
                 ),
@@ -163,7 +165,7 @@ class SideBarItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 50,
+            size: width(context) * 3,
             color: isSelected ? primaryColor : contentColor,
           ),
           SizedBox(
