@@ -25,13 +25,21 @@ class CategoryWebContent extends StatefulWidget {
 
 class _CategoryWebContentState extends State<CategoryWebContent> {
   bool isFirst = true;
+  bool isLoading = false;
   final categoryController = TextEditingController();
 
   @override
   void didChangeDependencies() {
     if (isFirst) {
       isFirst = false;
-      Provider.of<Categories>(context).fetchAndUpdateCat();
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Categories>(context).fetchAndUpdateCat().then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
     }
     super.didChangeDependencies();
   }
@@ -107,54 +115,58 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: categories.length,
-                    itemBuilder: (ctx, index) => Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: RowItem(
-                              title: categories[index].title,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: RowItem(
-                              title: categories[index].parentId,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: ActionButton(
-                              color: btnbgColor.withOpacity(1),
-                              title: 'Edit',
-                              onTap: () {
-                                setState(() {
-                                  widget.onChanged(categories[index]);
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(color: primaryColor),
+                        )
+                      : ListView.builder(
+                          itemCount: categories.length,
+                          itemBuilder: (ctx, index) => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: RowItem(
+                                    title: categories[index].title,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: RowItem(
+                                    title: categories[index].parentId,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: ActionButton(
+                                    color: btnbgColor.withOpacity(1),
+                                    title: 'Edit',
+                                    onTap: () {
+                                      setState(() {
+                                        widget.onChanged(categories[index]);
 
-                                  widget.scaffoldKey.currentState!
-                                      .openEndDrawer();
-                                });
-                              },
-                              icon: Icons.edit_outlined,
+                                        widget.scaffoldKey.currentState!
+                                            .openEndDrawer();
+                                      });
+                                    },
+                                    icon: Icons.edit_outlined,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: ActionButton(
+                                    color: Colors.red,
+                                    title: 'Delete',
+                                    icon: Icons.delete,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: ActionButton(
-                              color: Colors.red,
-                              title: 'Delete',
-                              icon: Icons.delete,
-                              onTap: () {},
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
               ],
             ),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
+import '../../../Helpers/storage_methods.dart';
 import '../../../Widget/dropDown.dart';
 
 class ProductWebContent extends StatefulWidget {
@@ -30,14 +31,63 @@ class _ProductWebContentState extends State<ProductWebContent> {
       setState(() {
         isLoading = true;
       });
-      Provider.of<Products>(context).fetchAndUpdateProducts();
-      setState(
-        () {
-          isLoading = false;
-        },
-      );
+      Provider.of<Products>(context).fetchAndUpdateProducts().then((value) {
+        setState(
+          () {
+            isLoading = false;
+          },
+        );
+      });
     }
     super.didChangeDependencies();
+  }
+
+  _deleteProduct({required imgUrl, required prodId}) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              backgroundColor: btnbgColor.withOpacity(0.8),
+              title: const Text(
+                'Are Your sure ?',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: const Text(
+                'Design will be deleted Permanently',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    // if (isLoading) {
+                    //   setState(() {
+                    //     showLoaderDialog(context, 'Loading..');
+                    //   });
+                    // }
+                    setState(() {
+                      isLoading = true;
+                    });
+                    var provider =
+                        Provider.of<Products>(context, listen: false);
+                    await StorageMethods().deleteImage(imgUrl: imgUrl);
+
+                    await provider.deleteProduct(prodId);
+                    await provider.fetchAndUpdateProducts();
+
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            ));
   }
 
   @override
@@ -121,7 +171,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                   showDialog(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                            content: Container(
+                                            content: Hero(
+                                              tag: products[index].id,
                                               child: Image.network(
                                                 products[index].image,
                                               ),
@@ -132,11 +183,14 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                   decoration: const BoxDecoration(),
                                   child: ClipRRect(
                                     borderRadius: customRadius,
-                                    child: Image.network(
-                                      products[index].image,
-                                      fit: BoxFit.contain,
-                                      height: height(context) * 25,
-                                      width: width(context) * 100,
+                                    child: Hero(
+                                      tag: products[index].id,
+                                      child: Image.network(
+                                        products[index].image,
+                                        fit: BoxFit.contain,
+                                        height: height(context) * 25,
+                                        width: width(context) * 100,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -197,7 +251,15 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                       ),
                                       PopupMenuItem(
                                         child: PopupItem(
-                                            icon: Icons.delete, text: 'Delete'),
+                                          icon: Icons.delete,
+                                          text: 'Delete',
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            _deleteProduct(
+                                                imgUrl: products[index].image,
+                                                prodId: products[index].id);
+                                          },
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -218,24 +280,29 @@ class PopupItem extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.text,
+    this.onTap,
   }) : super(key: key);
   String text;
   IconData icon;
+  void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: TextStyle(color: primaryColor),
-        ),
-        Icon(
-          icon,
-          color: primaryColor,
-        )
-      ],
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: TextStyle(color: primaryColor),
+          ),
+          Icon(
+            icon,
+            color: primaryColor,
+          )
+        ],
+      ),
     );
   }
 }

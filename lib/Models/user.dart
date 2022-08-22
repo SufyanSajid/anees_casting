@@ -52,7 +52,7 @@ class Users with ChangeNotifier {
         .createRecord(collection: "users", data: payLoad);
   }
 
-  fetchAndUpdateUser() async {
+  Future<void> fetchAndUpdateUser() async {
     http.Response res =
         await FirestoreMethods().getRecords(collection: "users");
     List<dynamic> resData = jsonDecode(res.body)["documents"];

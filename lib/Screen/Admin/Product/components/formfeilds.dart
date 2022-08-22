@@ -97,11 +97,13 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
       await provider.addProduct(product: newProduct);
+      await provider.fetchAndUpdateProducts();
 
       clearControllersAndImage();
 
       setState(() {
         isLoading = false;
+        Navigator.of(context).pop();
       });
     }
   }

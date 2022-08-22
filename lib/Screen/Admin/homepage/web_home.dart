@@ -300,6 +300,9 @@ class _WebHomeState extends State<WebHome> {
         selectedIndex: selectedIndex,
         category: category,
       ),
+      onEndDrawerChanged: (value) {
+        // category = null;
+      },
       endDrawerEnableOpenDragGesture: true,
       key: _ScaffoldKey,
       backgroundColor: backgroundColor,
@@ -450,9 +453,9 @@ class BarButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            color: Color.fromRGBO(213, 178, 79, 0.3),
+            color: const Color.fromRGBO(213, 178, 79, 0.3),
             borderRadius: BorderRadius.circular(15)),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: FittedBox(
           fit: BoxFit.contain,
           child: Text(

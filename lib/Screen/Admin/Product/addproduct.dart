@@ -38,13 +38,23 @@ class _AddProductState extends State<AddProduct> {
   Category? category;
   Uint8List? image;
   File? image123;
+  String? editImage;
   String? downloadImgUrl;
   bool isLoading = false;
+  Map<String, dynamic>? args;
 
   @override
   void didChangeDependencies() {
     if (isFirst) {
       isFirst = false;
+      args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      if (args!['action'] == 'edit') {
+        Product prod = args!['product'];
+        _prodNameController.text = prod.name;
+        _prodLengthController.text = prod.length;
+        _prodWidthController.text = prod.width;
+        editImage = prod.image;
+      }
       Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
     }
     super.didChangeDependencies();
@@ -119,8 +129,6 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
 
@@ -134,7 +142,7 @@ class _AddProductState extends State<AddProduct> {
               Appbar(
                 title: 'Design',
                 subtitle:
-                    args["action"] == "add" ? 'Add New Design' : "Edit Design",
+                    args!["action"] == "add" ? 'Add New Design' : "Edit Design",
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -159,12 +167,14 @@ class _AddProductState extends State<AddProduct> {
                           width: 2,
                           style: BorderStyle.solid,
                         )),
-                    child: image != null
-                        ? Image.memory(
-                            image!,
-                            fit: BoxFit.contain,
-                          )
-                        : Container(),
+                    child: args!['action'] == 'edit'
+                        ? Image.network(editImage!)
+                        : image != null
+                            ? Image.memory(
+                                image!,
+                                fit: BoxFit.contain,
+                              )
+                            : Container(),
                   ),
                   Positioned(
                       right: 1,
@@ -255,12 +265,12 @@ class _AddProductState extends State<AddProduct> {
                       height: height(context),
                       width: width(context),
                       onTap: () {
-                        args["action"] == "add"
+                        args!["action"] == "add"
                             ? _addProduct(image)
                             : _editProduct(
                                 img: image,
-                                prodId: (args["product"] as Product).id,
-                                imageUrl: (args["product"] as Product).image);
+                                prodId: (args!["product"] as Product).id,
+                                imageUrl: (args!["product"] as Product).image);
                       },
                       title: 'Add Design')
             ],
