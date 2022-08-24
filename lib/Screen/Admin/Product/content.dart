@@ -101,6 +101,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
           context: context,
           searchConttroller: _designController,
           btnTap: () {
+            Provider.of<Products>(context, listen: false).drawerProduct = null;
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
           btnText: 'Add New Design',
@@ -132,7 +133,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width1 < 1000 ? 2 : 4,
+                    crossAxisCount: width1 < 1300 ? 4 : 4,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
                   ),
@@ -187,9 +188,9 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                       tag: products[index].id,
                                       child: Image.network(
                                         products[index].image,
-                                        fit: BoxFit.contain,
+                                        fit: BoxFit.cover,
                                         height: height(context) * 25,
-                                        width: width(context) * 100,
+                                        width: double.infinity,
                                       ),
                                     ),
                                   ),
@@ -203,14 +204,17 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        products[index].name,
-                                        style: GoogleFonts.righteous(
-                                          color: primaryColor,
-                                          fontSize: 25,
+                                      FittedBox(
+                                        child: Text(
+                                          products[index].name,
+                                          style: GoogleFonts.righteous(
+                                            color: primaryColor,
+                                            fontSize: 25,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -247,6 +251,15 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                         child: PopupItem(
                                           icon: Icons.edit_outlined,
                                           text: 'Edit',
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .setProduct(products[index]);
+
+                                            widget.scaffoldKey.currentState!
+                                                .openEndDrawer();
+                                          },
                                         ),
                                       ),
                                       PopupMenuItem(

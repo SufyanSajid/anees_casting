@@ -24,8 +24,8 @@ Widget buildFilterBar({
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //search box
-        SizedBox(
-          width: width(context) * 20,
+        Expanded(
+          flex: 2,
           child: TextField(
             style: TextStyle(color: headingColor),
             controller: searchConttroller,
@@ -47,26 +47,17 @@ Widget buildFilterBar({
         //search box
 
         Expanded(
+          flex: 8,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(
-                width: width(context) * 40,
-              ),
-              Expanded(
-                flex: 1,
-                // width: width(context) * 12,
-                child: dropDown,
-              ),
+              dropDown,
               SizedBox(
                 width: width(context) * 2,
               ),
-              Expanded(
-                flex: 1,
-                child: gradientButton(
-                  onTap: btnTap,
-                  title: btnText,
-                ),
+              gradientButton(
+                onTap: btnTap,
+                title: btnText,
               ),
             ],
           ),

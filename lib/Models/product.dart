@@ -27,6 +27,11 @@ class Product {
 
 class Products with ChangeNotifier {
   List<Product> _products = [];
+  Product? drawerProduct;
+
+  void setProduct(Product prod) {
+    drawerProduct = prod;
+  }
 
   List<Product> get products {
     return [..._products];

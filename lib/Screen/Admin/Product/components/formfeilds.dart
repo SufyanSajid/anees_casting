@@ -37,12 +37,33 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   String? downloadImgUrl;
 
   bool isLoading = false;
+  Product? drawerProduct;
+  String? prodImage;
+  @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
+    drawerProduct = Provider.of<Products>(context, listen: false).drawerProduct;
+    if (drawerProduct != null) {
+      _prodNameController.text = drawerProduct!.name;
+      _prodLengthController.text = drawerProduct!.length;
+      _prodWidthController.text = drawerProduct!.width;
+      prodUnit = drawerProduct!.unit;
+      prodImage = drawerProduct!.image;
+    } else {
+      _prodNameController.text = '';
+      _prodLengthController.text = '';
+      _prodWidthController.text = '';
+      prodUnit = 'CM';
+      prodImage = null;
+    }
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
     if (isFirst) {
       isFirst = false;
-      Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
     }
     super.didChangeDependencies();
   }
@@ -108,6 +129,46 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     }
   }
 
+  bool isProductEmpty(BuildContext context) {
+    var prod = Provider.of<Products>(context, listen: false).drawerProduct;
+    if (prod == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _editProduct(
+      {required var img,
+      required String prodId,
+      required String imageUrl}) async {
+    print('edit product');
+    setState(() {
+      isLoading = true;
+    });
+
+    if (productNotEmpty()) {
+      Product newProduct = prodObj();
+
+      newProduct.id = prodId;
+      newProduct.image = imageUrl;
+
+      var provider = Provider.of<Products>(context, listen: false);
+
+      await StorageMethods().updateImage(
+        imageURl: newProduct.image.split("?").first,
+        file: img,
+      );
+
+      await provider.updateProduct(product: newProduct);
+
+      clearControllersAndImage();
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
@@ -127,12 +188,14 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                     width: 2,
                     style: BorderStyle.solid,
                   )),
-              child: image != null
-                  ? Image.memory(
-                      image!,
-                      fit: BoxFit.contain,
-                    )
-                  : Container(),
+              child: prodImage != null
+                  ? Image.network(prodImage!)
+                  : image != null
+                      ? Image.memory(
+                          image!,
+                          fit: BoxFit.contain,
+                        )
+                      : Container(),
             ),
             Positioned(
                 right: 1,
@@ -223,10 +286,15 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                 height: height(context),
                 width: width(context),
                 onTap: () {
-                  print('shani');
-                  _addProduct(image);
+                  isProductEmpty(context)
+                      ? _addProduct(image)
+                      : _editProduct(
+                          img: image,
+                          prodId: drawerProduct!.id,
+                          imageUrl: drawerProduct!.image,
+                        );
                 },
-                title: 'Add Design',
+                title: drawerProduct != null ? 'Save Changes' : 'Add Design',
               )
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Product/components/formfeilds.dart';
 import 'package:anees_costing/Screen/Admin/users/add_user.dart';
 import 'package:anees_costing/contant.dart';
@@ -21,8 +22,17 @@ class WebDrawer extends StatelessWidget {
   int selectedIndex;
   Category? category;
 
-  bool isEmpty() {
+  bool isCategoryEmpty() {
     if (category == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isProductEmpty(BuildContext context) {
+    var prod = Provider.of<Products>(context, listen: false).drawerProduct;
+    if (prod == null) {
       return true;
     } else {
       return false;
@@ -42,13 +52,15 @@ class WebDrawer extends StatelessWidget {
             if (selectedIndex == 1)
               DrawerAppbar(
                 title: 'Design',
-                subTitle: 'Add New Design',
+                subTitle:
+                    isProductEmpty(context) ? 'Add New Design' : 'Edit Design',
                 svgIcon: 'assets/icons/daimond.svg',
               ),
             if (selectedIndex == 3)
               DrawerAppbar(
                 title: 'Category',
-                subTitle: isEmpty() ? 'Add New Category' : 'Edit Category',
+                subTitle:
+                    isCategoryEmpty() ? 'Add New Category' : 'Edit Category',
                 svgIcon: 'assets/icons/category.svg',
               ),
             if (selectedIndex == 2)

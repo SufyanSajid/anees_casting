@@ -207,8 +207,10 @@ class ActionButton extends StatelessWidget {
             icon,
             color: Colors.white,
           ),
-          label: Text(
-            title,
+          label: FittedBox(
+            child: Text(
+              title,
+            ),
           ),
         ),
       ),

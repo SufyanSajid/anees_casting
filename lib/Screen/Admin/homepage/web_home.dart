@@ -298,11 +298,8 @@ class _WebHomeState extends State<WebHome> {
     return Scaffold(
       endDrawer: WebDrawer(
         selectedIndex: selectedIndex,
-        category: category,
+        // category: category,
       ),
-      onEndDrawerChanged: (value) {
-        // category = null;
-      },
       endDrawerEnableOpenDragGesture: true,
       key: _ScaffoldKey,
       backgroundColor: backgroundColor,
@@ -311,15 +308,13 @@ class _WebHomeState extends State<WebHome> {
           //side bar area
           Expanded(
             flex: 2,
-            child: Container(
-              child: SideBar(
-                selectedIndex: selectedIndex,
-                onChanged: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
-              ),
+            child: SideBar(
+              selectedIndex: selectedIndex,
+              onChanged: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });
+              },
             ),
           ),
           //sidebar area end
