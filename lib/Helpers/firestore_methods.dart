@@ -23,7 +23,7 @@ class FirestoreMethods {
         );
 
     var res = await http.get(URL);
-    print(json.decode(res.body));
+
     return res;
   }
 
@@ -66,5 +66,29 @@ class FirestoreMethods {
     // print(res.body);
 
     return '';
+  }
+
+  getCatById({required String collection, required String catId}) async {
+    final URL = Uri.parse("${filterUrl}:runQuery");
+    var res = await http.post(
+      URL,
+      body: json.encode({
+        'structuredQuery': {
+          'from': {'collectionId': collection},
+          'where': {
+            'fieldFilter': {
+              "field": {"fieldPath": String},
+              "op": 'EQUAL',
+              "value": {'stringValue': catId}
+            }
+          }
+        }
+      }),
+    );
+    print(res.body);
+    // var resData = jsonDecode(res.body);
+    // for (var element in resData) {
+    //   print(element.runtimeType);
+    // }
   }
 }

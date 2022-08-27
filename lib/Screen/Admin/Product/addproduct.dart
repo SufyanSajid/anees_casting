@@ -183,13 +183,10 @@ class _AddProductState extends State<AddProduct> {
                           onPressed: () async {
                             FilePickerResult? result1 =
                                 await FilePicker.platform.pickFiles(
-                              withData: true,
-                            );
+                                    withData: true, allowCompression: true);
 
-                            print(result1!.files);
                             setState(() {
-                              image = result1.files.first.bytes;
-                              print(image);
+                              image = result1!.files.first.bytes;
                             });
                           },
                           icon: Icon(

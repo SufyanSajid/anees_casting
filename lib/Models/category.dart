@@ -8,15 +8,23 @@ import '../Helpers/firestore_methods.dart';
 class Category {
   String id;
   String title;
+  String parentTitle;
   String parentId;
   Category({
     required this.id,
     required this.parentId,
     required this.title,
+    required this.parentTitle,
   });
 }
 
 class Categories with ChangeNotifier {
+  Category? drawerCategory;
+
+  void setCatgeory(Category cat) {
+    drawerCategory = cat;
+  }
+
   List<Category> _categories = [];
   List<Category> _parentCategories = [];
   List<Category> _childCategories = [];
@@ -58,13 +66,11 @@ class Categories with ChangeNotifier {
       Map fields = element["fields"];
       String parentId = fields["parentId"]["stringValue"];
       String title = fields["title"]["stringValue"];
-      String id = (element["name"] as String).split("categories/").last;
+      String parentTitle = fields["title"]["stringValue"];
+      String id = (element["parentTitle"] as String).split("categories/").last;
       tempCat.add(
         Category(
-          id: id,
-          parentId: parentId,
-          title: title,
-        ),
+            id: id, parentId: parentId, title: title, parentTitle: parentTitle),
       );
     }
 

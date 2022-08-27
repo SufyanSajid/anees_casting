@@ -1,4 +1,6 @@
+import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +14,9 @@ class CategoryWebContent extends StatefulWidget {
   CategoryWebContent({
     Key? key,
     required this.scaffoldKey,
-    required this.onChanged,
   }) : super(key: key);
 
   GlobalKey<ScaffoldState> scaffoldKey;
-
-  Function(Category cat) onChanged;
 
   @override
   State<CategoryWebContent> createState() => _CategoryWebContentState();
@@ -27,6 +26,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   bool isFirst = true;
   bool isLoading = false;
   final categoryController = TextEditingController();
+  List<Category>? categories;
 
   @override
   void didChangeDependencies() {
@@ -35,24 +35,55 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
       setState(() {
         isLoading = true;
       });
-      Provider.of<Categories>(context).fetchAndUpdateCat().then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      });
+      Provider.of<Categories>(context).fetchAndUpdateCat().then(
+        (value) {
+          setState(() {
+            isLoading = false;
+          });
+        },
+      );
+      categories = Provider.of<Categories>(context, listen: false).categories;
     }
     super.didChangeDependencies();
   }
 
+  void deleteCat(String id) {
+    showCustomDialog(
+        context: context,
+        title: 'Delete',
+        btn1: 'No',
+        content: 'Do You want to delete Category?',
+        btn2: 'Yes',
+        btn1Pressed: () {
+          Navigator.of(context).pop();
+        },
+        btn2Pressed: () {
+          Navigator.of(context).pop();
+          setState(() {
+            isLoading = true;
+          });
+          FirestoreMethods()
+              .deleteRecord(collection: 'categories', prodId: id)
+              .then((value) async {
+            await Provider.of<Categories>(context, listen: false)
+                .fetchAndUpdateCat();
+            setState(() {
+              isLoading = false;
+            });
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var categories = Provider.of<Categories>(context, listen: false).categories;
     return Column(
       children: [
         buildFilterBar(
           context: context,
           searchConttroller: categoryController,
           btnTap: () {
+            Provider.of<Categories>(context, listen: false).drawerCategory =
+                null;
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
           btnText: 'Add New Category',
@@ -120,7 +151,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                           child: CircularProgressIndicator(color: primaryColor),
                         )
                       : ListView.builder(
-                          itemCount: categories.length,
+                          itemCount: categories!.length,
                           itemBuilder: (ctx, index) => Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -129,13 +160,13 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                 Expanded(
                                   flex: 4,
                                   child: RowItem(
-                                    title: categories[index].title,
+                                    title: categories![index].title,
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
                                   child: RowItem(
-                                    title: categories[index].parentId,
+                                    title: categories![index].parentId,
                                   ),
                                 ),
                                 Expanded(
@@ -144,12 +175,15 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                     color: btnbgColor.withOpacity(1),
                                     title: 'Edit',
                                     onTap: () {
-                                      setState(() {
-                                        widget.onChanged(categories[index]);
-
-                                        widget.scaffoldKey.currentState!
-                                            .openEndDrawer();
-                                      });
+                                      setState(
+                                        () {
+                                          Provider.of<Categories>(context,
+                                                  listen: false)
+                                              .setCatgeory(categories![index]);
+                                          widget.scaffoldKey.currentState!
+                                              .openEndDrawer();
+                                        },
+                                      );
                                     },
                                     icon: Icons.edit_outlined,
                                   ),
@@ -158,9 +192,10 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                   flex: 1,
                                   child: ActionButton(
                                     color: Colors.red,
-                                    title: 'Delete',
+                                    title: 'Delete Category',
                                     icon: Icons.delete,
-                                    onTap: () {},
+                                    onTap: () =>
+                                        deleteCat(categories![index].id),
                                   ),
                                 ),
                               ],

@@ -286,19 +286,12 @@ class _WebHomeState extends State<WebHome> {
       ),
       CategoryWebContent(
         scaffoldKey: _ScaffoldKey,
-        onChanged: (Category value) {
-          print('yeh ha value ${value.title}');
-          setState(() {
-            category = value;
-          });
-        },
       ),
       ActivityLogWebContent(),
     ];
     return Scaffold(
       endDrawer: WebDrawer(
         selectedIndex: selectedIndex,
-        // category: category,
       ),
       endDrawerEnableOpenDragGesture: true,
       key: _ScaffoldKey,

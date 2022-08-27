@@ -10,7 +10,7 @@ class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      mobileLayout: MobileAdminHomePage(),
+      mobileLayout: const MobileAdminHomePage(),
       webLayout: WebHome(),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Widget/dropDown.dart';
 
@@ -18,6 +20,7 @@ class UserWebContent extends StatelessWidget {
           context: context,
           searchConttroller: _usersController,
           btnTap: () {
+            Provider.of<Users>(context, listen: false).drawerUser = null;
             scaffoldKey.currentState!.openEndDrawer();
           },
           btnText: 'Add New User',
@@ -36,6 +39,7 @@ class UserWebContent extends StatelessWidget {
         ),
         ShowUsers(
           isWeb: true,
+          scaffoldKey: scaffoldKey,
         ),
       ],
     );

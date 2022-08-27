@@ -24,6 +24,10 @@ class AUser {
 
 class Users with ChangeNotifier {
   List<AUser> _users = [];
+  AUser? drawerUser;
+  void setUser(AUser user) {
+    drawerUser = user;
+  }
 
   List<AUser> get users {
     return [..._users];

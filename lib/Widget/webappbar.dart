@@ -69,10 +69,17 @@ class _WebAppbarState extends State<WebAppbar> {
                               title: 'Logout',
                               subTitle: 'Logout from Minecloud',
                               onTap: () {
-                                showLogoutDialog(
+                                showCustomDialog(
                                     context: context,
                                     title: 'Logout',
-                                    logoutap: () {
+                                    content:
+                                        'Click on the logout button to proceed',
+                                    btn1: 'Cancel',
+                                    btn1Pressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    btn2: 'Logout',
+                                    btn2Pressed: () {
                                       Provider.of<Auth>(context, listen: false)
                                           .logout();
                                       Navigator.of(context)

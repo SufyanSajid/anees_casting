@@ -19,14 +19,19 @@ Column buildTopTitle(
     children: [
       ListTile(
         leading: Image.asset('assets/images/logo.png'),
-        trailing: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.cancel),
+        trailing: Material(
+          color: Colors.transparent,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.cancel),
+          ),
         ),
         title: title != null && customTitle == null
             ? Text(
                 title,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               )
             : customTitle,
         onTap: () {
@@ -42,10 +47,14 @@ Column buildTopTitle(
   );
 }
 
-Future<void> showLogoutDialog({
+Future<void> showCustomDialog({
   required BuildContext context,
   required String title,
-  String? image,
+  required String btn1,
+  required String content,
+  required String btn2,
+  required Function()? btn1Pressed,
+  required Function()? btn2Pressed,
   Function()? logoutap,
 }) async {
   String desc = 'Remember my info?';
@@ -59,35 +68,28 @@ Future<void> showLogoutDialog({
       return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: btnbgColor.withOpacity(0.8),
+          backgroundColor: btnbgColor.withOpacity(1),
           contentPadding: EdgeInsets.zero,
           content: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            //  height: maxHeight(context) * 0.25,
-            width: width(context) * 01,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            height: height(context) * 22,
+            width: width(context) * 18,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildTopTitle(context, title: title, image: image),
+                buildTopTitle(context,
+                    title: title, image: 'assets/images/logo.png'),
                 SizedBox(height: height(context) * 01),
-                Row(
-                  children: [
-                    Checkbox(
-                        value: isCheck,
-                        onChanged: (value) {
-                          isCheck = !isCheck;
-                        }),
-                    const SizedBox(
-                      width: 15,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    content,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
                     ),
-                    Text(
-                      '$desc',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 SizedBox(height: height(context) * 1),
                 Row(
@@ -95,18 +97,16 @@ Future<void> showLogoutDialog({
                     // const SizedBox(width: 85),
                     Expanded(
                       child: DialogButton(
-                        text: 'Cancel',
-                        btncolor: btnbgColor,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        text: btn1,
+                        btncolor: Colors.grey,
+                        onPressed: btn1Pressed,
                       ),
                     ),
                     Expanded(
                       child: DialogButton(
-                        text: 'Logout',
-                        btncolor: Colors.grey,
-                        onPressed: logoutap,
+                        text: btn2,
+                        btncolor: btnbgColor,
+                        onPressed: btn2Pressed,
                       ),
                     ),
                   ],

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/category.dart';
+import '../../Screen/Admin/category/components/formfeilds.dart';
 import '../customautocomplete.dart';
 import '../input_feild.dart';
 import '../submitbutton.dart';
@@ -16,13 +17,13 @@ class WebDrawer extends StatelessWidget {
   WebDrawer({
     Key? key,
     required this.selectedIndex,
-    this.category,
   }) : super(key: key);
 
   int selectedIndex;
-  Category? category;
 
-  bool isCategoryEmpty() {
+  bool isCategoryEmpty(BuildContext context) {
+    var category =
+        Provider.of<Categories>(context, listen: false).drawerCategory;
     if (category == null) {
       return true;
     } else {
@@ -59,8 +60,9 @@ class WebDrawer extends StatelessWidget {
             if (selectedIndex == 3)
               DrawerAppbar(
                 title: 'Category',
-                subTitle:
-                    isCategoryEmpty() ? 'Add New Category' : 'Edit Category',
+                subTitle: isCategoryEmpty(context)
+                    ? 'Add New Category'
+                    : 'Edit Category',
                 svgIcon: 'assets/icons/category.svg',
               ),
             if (selectedIndex == 2)
@@ -79,116 +81,21 @@ class WebDrawer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: AddProductFeilds(),
               ),
+            if (selectedIndex == 2)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                child: AddUserFeilds(),
+              ),
             if (selectedIndex == 3)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: AddCategoryFeilds(
-                  category: category,
-                ),
-              ),
-            if (selectedIndex == 2)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: AddUserFeilds(),
+                child: AddCategoryFeilds(),
               ),
 
             //Feilds Area End
           ],
         ),
       ),
-    );
-  }
-}
-
-class AddCategoryFeilds extends StatefulWidget {
-  AddCategoryFeilds({
-    Key? key,
-    this.category,
-  }) : super(key: key);
-
-  Category? category;
-  @override
-  State<AddCategoryFeilds> createState() => _AddCategoryFeildsState();
-}
-
-class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
-  final _nameController = TextEditingController();
-
-  String? parentId;
-  bool isCatLoading = false;
-  bool isFirst = true;
-  @override
-  void initState() {
-    // TODO: implement initState
-    if (widget.category != null) {
-      _nameController.text = widget.category!.title.toString();
-    } else {
-      _nameController.text = '';
-    }
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (isFirst) {
-      isFirst = false;
-
-      Provider.of<Categories>(context).fetchAndUpdateCat();
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Category> categories =
-        Provider.of<Categories>(context, listen: false).categories;
-    List<Category> parentCategories =
-        Provider.of<Categories>(context, listen: false).parentCategories;
-    return Column(
-      children: [
-        CustomAutoComplete(
-            categories: parentCategories,
-            onChange: (Category cat) {
-              parentId = cat.id;
-            }),
-        SizedBox(
-          height: height(context) * 2,
-        ),
-        InputFeild(
-          hinntText: 'Category Name',
-          validatior: () {},
-          inputController: _nameController,
-        ),
-        SizedBox(
-          height: height(context) * 2,
-        ),
-        SubmitButton(
-            height: height(context),
-            width: width(context),
-            onTap: () async {
-              // setState(() {
-              //   isCatLoading = true;
-              // });
-              // var navi = Navigator.of(context);
-              // var provider = Provider.of<Categories>(context, listen: false);
-              // await provider.uploadCatagory(
-              //     parentId ?? "", _nameController.text.trim());
-              // await provider.fetchAndUpdateCat();
-              // setState(() {
-              //   _nameController.clear();
-              //   isCatLoading = false;
-              // });
-
-              // navi.pop();
-            },
-            title: widget.category != null ? 'Edit Category' : 'Add Category')
-      ],
     );
   }
 }

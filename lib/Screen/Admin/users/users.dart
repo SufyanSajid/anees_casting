@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '/Models/user.dart';
 import 'add_user.dart';
 import '/Widget/appbar.dart';
@@ -54,8 +56,13 @@ class UserScreen extends StatelessWidget {
 }
 
 class ShowUsers extends StatefulWidget {
-  ShowUsers({Key? key, required this.isWeb}) : super(key: key);
+  ShowUsers({
+    Key? key,
+    required this.isWeb,
+    this.scaffoldKey,
+  }) : super(key: key);
   bool isWeb;
+  GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<ShowUsers> createState() => _ShowUsersState();
@@ -64,6 +71,7 @@ class ShowUsers extends StatefulWidget {
 class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
+  List<AUser>? users;
   @override
   void didChangeDependencies() {
     if (isFirst) {
@@ -77,6 +85,7 @@ class _ShowUsersState extends State<ShowUsers> {
           isLoading = false;
         });
       });
+
       isFirst = false;
     }
     super.didChangeDependencies();
@@ -84,7 +93,7 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
-    var users = Provider.of<Users>(context, listen: true).users;
+    users = Provider.of<Users>(context, listen: false).users;
     return Expanded(
       child: isLoading
           ? Center(
@@ -93,7 +102,7 @@ class _ShowUsersState extends State<ShowUsers> {
               ),
             )
           : ListView.builder(
-              itemCount: users.length,
+              itemCount: users!.length,
               itemBuilder: (ctx, index) => Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -107,7 +116,7 @@ class _ShowUsersState extends State<ShowUsers> {
                         blurRadius: 10,
                       ),
                     ]),
-                margin: EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -141,7 +150,7 @@ class _ShowUsersState extends State<ShowUsers> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              users[index].name,
+                              users![index].name,
                               style: TextStyle(
                                 color: headingColor,
                                 fontSize: 18,
@@ -152,7 +161,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               height: height(context) * 0.5,
                             ),
                             Text(
-                              users[index].phone,
+                              users![index].phone,
                               style:
                                   TextStyle(color: contentColor, fontSize: 13),
                             ),
@@ -178,7 +187,12 @@ class _ShowUsersState extends State<ShowUsers> {
                               Icons.edit,
                             ),
                             color: contentColor,
-                            onPressed: () {},
+                            onPressed: () {
+                              Provider.of<Users>(context, listen: false)
+                                  .setUser(users![index]);
+
+                              widget.scaffoldKey!.currentState!.openEndDrawer();
+                            },
                           ),
                         ),
                         SizedBox(

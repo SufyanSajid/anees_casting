@@ -59,8 +59,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 context: context,
                 builder: (ctx) => StatefulBuilder(
                       builder: (context, setState) => Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
                         height: height(context) * 40,
                         width: width(context) * 100,
                         child: Column(

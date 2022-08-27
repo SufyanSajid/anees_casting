@@ -1,4 +1,6 @@
 import 'package:anees_costing/Helpers/firebase_auth.dart';
+import 'package:anees_costing/Models/user.dart';
+import 'package:provider/provider.dart';
 import '/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/appbar.dart';
@@ -52,6 +54,8 @@ class AddUserFeilds extends StatefulWidget {
 }
 
 class _AddUserFeildsState extends State<AddUserFeilds> {
+  AUser? drawerUser;
+  bool isFirst = true;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -92,6 +96,26 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (isFirst) {
+      isFirst = false;
+      drawerUser = Provider.of<Users>(context, listen: false).drawerUser;
+      if (drawerUser != null) {
+        _nameController.text = drawerUser!.name;
+        _emailController.text = drawerUser!.email;
+        _phoneController.text = drawerUser!.phone;
+      } else {
+        _nameController.clear();
+        _emailController.clear();
+        _passwordController.clear();
+        _phoneController.clear();
+      }
+    }
+    super.didChangeDependencies();
   }
 
   @override
