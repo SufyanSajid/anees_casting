@@ -29,74 +29,87 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   List<Category>? categories;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isFirst) {
       isFirst = false;
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Categories>(context).fetchAndUpdateCat().then(
-        (value) {
-          setState(() {
-            isLoading = false;
-          });
-        },
-      );
-      categories = Provider.of<Categories>(context, listen: false).categories;
+      if (Provider.of<Categories>(context).categories.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        await Provider.of<Categories>(context).fetchAndUpdateCat().then(
+          (value) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+        );
+      }
     }
     super.didChangeDependencies();
   }
 
-  void deleteCat(String id) {
-    showCustomDialog(
-        context: context,
-        title: 'Delete',
-        btn1: 'No',
-        content: 'Do You want to delete Category?',
-        btn2: 'Yes',
-        btn1Pressed: () {
-          Navigator.of(context).pop();
-        },
-        btn2Pressed: () {
-          Navigator.of(context).pop();
-          setState(() {
-            isLoading = true;
-          });
-          FirestoreMethods()
-              .deleteRecord(collection: 'categories', prodId: id)
-              .then((value) async {
-            await Provider.of<Categories>(context, listen: false)
-                .fetchAndUpdateCat();
+  void deleteCat(Category cat) {
+    bool isParent = false;
+    List<Category> childCat =
+        Provider.of<Categories>(context, listen: false).childCategories;
+    for (var element in childCat) {
+      if (element.parentId == cat.id) {
+        isParent = true;
+        break;
+      }
+    }
+    if (isParent) {
+      showCustomDialog(
+          context: context,
+          title: "Parent Category",
+          btn1: null,
+          content: "Parent category can't be deleted.",
+          btn2: "Ok",
+          btn1Pressed: null,
+          btn2Pressed: () => Navigator.of(context).pop());
+    } else {
+      showCustomDialog(
+          context: context,
+          title: 'Delete',
+          btn1: 'No',
+          content: 'Do You want to delete Category?',
+          btn2: 'Yes',
+          btn1Pressed: () {
+            Navigator.of(context).pop();
+          },
+          btn2Pressed: () {
+            Navigator.of(context).pop();
             setState(() {
-              isLoading = false;
+              isLoading = true;
+            });
+            FirestoreMethods()
+                .deleteRecord(collection: 'categories', prodId: cat.id)
+                .then((value) async {
+              await Provider.of<Categories>(context, listen: false)
+                  .fetchAndUpdateCat();
+              setState(() {
+                isLoading = false;
+              });
             });
           });
-        });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Category> categories = Provider.of<Categories>(context).categories;
     return Column(
       children: [
         buildFilterBar(
-          context: context,
-          searchConttroller: categoryController,
-          btnTap: () {
-            Provider.of<Categories>(context, listen: false).drawerCategory =
-                null;
-            widget.scaffoldKey.currentState!.openEndDrawer();
-          },
-          btnText: 'Add New Category',
-          dropDown: CustomDropDown(
-            onChanged: (value) {
-              print(value);
+            context: context,
+            searchConttroller: categoryController,
+            btnTap: () {
+              Provider.of<Categories>(context, listen: false).drawerCategory =
+                  null;
+              widget.scaffoldKey.currentState!.openEndDrawer();
             },
-            items: const [
-              'Asc',
-              'Dec',
-            ],
-          ),
-        ),
+            btnText: 'Add New Category',
+            dropDown: null),
         SizedBox(
           height: height(context) * 2,
         ),
@@ -130,12 +143,12 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                           title: 'Parent Category',
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: FeildName(
-                          title: 'Edit',
-                        ),
-                      ),
+                      // Expanded(
+                      //   flex: 1,
+                      //   child: FeildName(
+                      //     title: 'Edit',
+                      //   ),
+                      // ),
                       Expanded(
                         flex: 1,
                         child: FeildName(
@@ -151,7 +164,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                           child: CircularProgressIndicator(color: primaryColor),
                         )
                       : ListView.builder(
-                          itemCount: categories!.length,
+                          itemCount: categories.length,
                           itemBuilder: (ctx, index) => Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -160,42 +173,41 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                 Expanded(
                                   flex: 4,
                                   child: RowItem(
-                                    title: categories![index].title,
+                                    title: categories[index].title,
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
                                   child: RowItem(
-                                    title: categories![index].parentId,
+                                    title: categories[index].parentTitle,
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: ActionButton(
-                                    color: btnbgColor.withOpacity(1),
-                                    title: 'Edit',
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          Provider.of<Categories>(context,
-                                                  listen: false)
-                                              .setCatgeory(categories![index]);
-                                          widget.scaffoldKey.currentState!
-                                              .openEndDrawer();
-                                        },
-                                      );
-                                    },
-                                    icon: Icons.edit_outlined,
-                                  ),
-                                ),
+                                // Expanded(
+                                //   flex: 1,
+                                //   child: ActionButton(
+                                //     color: btnbgColor.withOpacity(1),
+                                //     title: 'Edit',
+                                //     onTap: () {
+                                //       setState(
+                                //         () {
+                                //           Provider.of<Categories>(context,
+                                //                   listen: false)
+                                //               .setCatgeory(categories![index]);
+                                //           widget.scaffoldKey.currentState!
+                                //               .openEndDrawer();
+                                //         },
+                                //       );
+                                //     },
+                                //     icon: Icons.edit_outlined,
+                                //   ),
+                                // ),
                                 Expanded(
                                   flex: 1,
                                   child: ActionButton(
                                     color: Colors.red,
                                     title: 'Delete Category',
                                     icon: Icons.delete,
-                                    onTap: () =>
-                                        deleteCat(categories![index].id),
+                                    onTap: () => deleteCat(categories[index]),
                                   ),
                                 ),
                               ],

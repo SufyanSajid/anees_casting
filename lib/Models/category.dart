@@ -41,11 +41,15 @@ class Categories with ChangeNotifier {
     return [..._childCategories];
   }
 
-  Future<void> uploadCatagory(String parentId, String title) async {
+  Future<void> uploadCatagory(
+      {required String parentId,
+      required String title,
+      required String parentTitle}) async {
     var payLoad = {
       "fields": {
         "title": {"stringValue": title},
-        "parentId": {"stringValue": parentId}
+        "parentId": {"stringValue": parentId},
+        "parentTitle": {"stringValue": parentTitle},
       }
     };
     var catRes = await FirestoreMethods()
@@ -58,16 +62,15 @@ class Categories with ChangeNotifier {
     List<Category> tempChildCat = [];
 
     FirestoreMethods methods = FirestoreMethods();
-    http.Response catRes =
-        await methods.getRecords(collection: "categories/?pageSize=100");
-    List<dynamic> docsData = json.decode(catRes.body)["documents"];
+    http.Response catRes = await methods.getRecords(collection: "categories");
 
+    List<dynamic> docsData = json.decode(catRes.body)["documents"];
     for (var element in docsData) {
       Map fields = element["fields"];
       String parentId = fields["parentId"]["stringValue"];
       String title = fields["title"]["stringValue"];
-      String parentTitle = fields["title"]["stringValue"];
-      String id = (element["parentTitle"] as String).split("categories/").last;
+      String parentTitle = fields["parentTitle"]["stringValue"];
+      String id = (element["name"] as String).split("categories/").last;
       tempCat.add(
         Category(
             id: id, parentId: parentId, title: title, parentTitle: parentTitle),

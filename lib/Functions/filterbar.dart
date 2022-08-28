@@ -10,8 +10,8 @@ Widget buildFilterBar({
   required TextEditingController searchConttroller,
   required,
   required void Function()? btnTap,
-  required String btnText,
-  required Widget dropDown,
+  required String? btnText,
+  required Widget? dropDown,
 }) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -51,14 +51,15 @@ Widget buildFilterBar({
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              dropDown,
+              if (dropDown != null) dropDown,
               SizedBox(
                 width: width(context) * 2,
               ),
-              gradientButton(
-                onTap: btnTap,
-                title: btnText,
-              ),
+              if (btnTap != null && btnText != null)
+                gradientButton(
+                  onTap: btnTap,
+                  title: btnText,
+                ),
             ],
           ),
         ),

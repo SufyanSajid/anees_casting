@@ -1,4 +1,7 @@
+import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Widget/customautocomplete.dart';
+import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
 import '../../../Helpers/storage_methods.dart';
-import '../../../Widget/dropDown.dart';
 
 class ProductWebContent extends StatefulWidget {
   ProductWebContent({
@@ -78,13 +80,13 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       isLoading = false;
                     });
                   },
-                  child: Text('Yes'),
+                  child: const Text('Yes'),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('No'),
+                  child: const Text('No'),
                 ),
               ],
             ));
@@ -94,9 +96,12 @@ class _ProductWebContentState extends State<ProductWebContent> {
   Widget build(BuildContext context) {
     var width1 = MediaQuery.of(context).size.width;
     products = Provider.of<Products>(context).products;
+    var categories = Provider.of<Categories>(context).categories;
+    print(categories);
     return Column(
       children: [
         //Filter bar
+
         buildFilterBar(
           context: context,
           searchConttroller: _designController,
@@ -104,17 +109,28 @@ class _ProductWebContentState extends State<ProductWebContent> {
             Provider.of<Products>(context, listen: false).drawerProduct = null;
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
-          btnText: 'Add New Design',
-          dropDown: CustomDropDown(
-            onChanged: (value) {
-              print(value);
-            },
-            items: const [
-              'By Date',
-              'By Article',
-            ],
+          btnText: 'Add',
+          dropDown: SizedBox(
+            // height: height(context),
+            width: 250,
+            child: CustomAutoComplete(onChange: (val) {}, categories: [
+              Category(
+                  id: "id",
+                  parentId: "parentId",
+                  title: "title",
+                  parentTitle: "parentTitle")
+            ]),
           ),
         ),
+        //  CustomDropDown(
+        //     onChanged: (val) {
+        //       print(val);
+        //     },
+        //     items:
+        //     catProvider.parentCategories.map((element) {
+        //       return element.title;
+        //     }).toList(),
+        //     dropDownHint: "Select Parent Cat")),
         //Filter bar
 
         //main area//

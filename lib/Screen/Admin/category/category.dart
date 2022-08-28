@@ -21,15 +21,18 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   final _nameController = TextEditingController();
 
-  String? parentId;
+  Category? parentCat;
   bool isCatLoading = false;
   bool isFirst = true;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isFirst) {
       isFirst = false;
-      Provider.of<Categories>(context).fetchAndUpdateCat();
+      if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
+        await Provider.of<Categories>(context, listen: false)
+            .fetchAndUpdateCat();
+      }
     }
     super.didChangeDependencies();
   }
@@ -43,7 +46,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
-        Provider.of<Categories>(context, listen: false).categories;
+        Provider.of<Categories>(context, listen: true).categories;
     List<Category> parentCategories =
         Provider.of<Categories>(context, listen: false).parentCategories;
 
@@ -79,7 +82,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             CustomAutoComplete(
                                 categories: parentCategories,
                                 onChange: (Category cat) {
-                                  parentId = cat.id;
+                                  parentCat = cat;
                                 }),
                             SizedBox(
                               height: height(context) * 2,
@@ -109,8 +112,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           context,
                                           listen: false);
                                       await provider.uploadCatagory(
-                                          parentId ?? "",
-                                          _nameController.text.trim());
+                                        title: _nameController.text.trim(),
+                                        parentId: parentCat == null
+                                            ? ""
+                                            : parentCat!.id,
+                                        parentTitle: parentCat == null
+                                            ? ""
+                                            : parentCat!.title,
+                                      );
                                       await provider.fetchAndUpdateCat();
                                       setState(() {
                                         _nameController.clear();
@@ -125,7 +134,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ));
           },
-          child: Icon(
+          child: const Icon(
             Icons.add,
             color: Colors.white,
           ),
@@ -170,7 +179,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               color: primaryColor,
                               style: BorderStyle.solid,
                               width: 1),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.grey,
                               offset: Offset(0, 5),

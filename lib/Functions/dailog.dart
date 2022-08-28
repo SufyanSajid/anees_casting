@@ -50,9 +50,9 @@ Column buildTopTitle(
 Future<void> showCustomDialog({
   required BuildContext context,
   required String title,
-  required String btn1,
+  required String? btn1,
   required String content,
-  required String btn2,
+  required String? btn2,
   required Function()? btn1Pressed,
   required Function()? btn2Pressed,
   Function()? logoutap,
@@ -95,20 +95,22 @@ Future<void> showCustomDialog({
                 Row(
                   children: [
                     // const SizedBox(width: 85),
-                    Expanded(
-                      child: DialogButton(
-                        text: btn1,
-                        btncolor: Colors.grey,
-                        onPressed: btn1Pressed,
+                    if (btn1 != null)
+                      Expanded(
+                        child: DialogButton(
+                          text: btn1,
+                          btncolor: Colors.grey,
+                          onPressed: btn1Pressed,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: DialogButton(
-                        text: btn2,
-                        btncolor: btnbgColor,
-                        onPressed: btn2Pressed,
+                    if (btn2 != null)
+                      Expanded(
+                        child: DialogButton(
+                          text: btn2,
+                          btncolor: btnbgColor,
+                          onPressed: btn2Pressed,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -134,7 +136,7 @@ class DialogButton extends StatelessWidget {
     Color textColor = contentColor;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: ElevatedButton.icon(
+      child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
@@ -147,10 +149,10 @@ class DialogButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), // <-- Radius
               ),
             )),
-        icon: const Icon(Icons.hide_image, size: 0),
-        label: Text(
+        // icon: const Icon(Icons.hide_image, color: Colors.transparent,),
+        child: Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: 14),
+          style: const TextStyle(color: Colors.white, fontSize: 14),
         ),
       ),
     );
