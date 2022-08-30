@@ -1,10 +1,8 @@
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
-import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
@@ -26,21 +24,29 @@ class _ProductWebContentState extends State<ProductWebContent> {
   List<Product> products = [];
   bool isFirst = true;
   bool isLoading = false;
+
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isFirst) {
+      //FirestoreMethods().getProductsByCatId();
+
       isFirst = false;
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Products>(context).fetchAndUpdateProducts().then((value) {
-        setState(
-          () {
-            isLoading = false;
-          },
-        );
-      });
+      if (Provider.of<Products>(context).products.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        await Provider.of<Products>(context)
+            .fetchAndUpdateProducts()
+            .then((value) {
+          setState(
+            () {
+              isLoading = false;
+            },
+          );
+        });
+      }
     }
+
     super.didChangeDependencies();
   }
 
@@ -92,45 +98,40 @@ class _ProductWebContentState extends State<ProductWebContent> {
             ));
   }
 
+  getSearchedProduct(String search) {
+    if (search.isEmpty) {
+      Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
+    } else {
+      Provider.of<Products>(context, listen: false).searchProduct(search);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var width1 = MediaQuery.of(context).size.width;
-    products = Provider.of<Products>(context).products;
-    var categories = Provider.of<Categories>(context).categories;
-    print(categories);
+    List<Product> products = Provider.of<Products>(context).products;
+    List<Category> categories = Provider.of<Categories>(context).categories;
+
     return Column(
       children: [
         //Filter bar
 
         buildFilterBar(
+          searchSubmitted: (val) => getSearchedProduct(val),
           context: context,
           searchConttroller: _designController,
           btnTap: () {
             Provider.of<Products>(context, listen: false).drawerProduct = null;
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
-          btnText: 'Add',
+          btnText: 'Add Product',
           dropDown: SizedBox(
             // height: height(context),
             width: 250,
-            child: CustomAutoComplete(onChange: (val) {}, categories: [
-              Category(
-                  id: "id",
-                  parentId: "parentId",
-                  title: "title",
-                  parentTitle: "parentTitle")
-            ]),
+            child:
+                CustomAutoComplete(onChange: (val) {}, categories: categories),
           ),
         ),
-        //  CustomDropDown(
-        //     onChanged: (val) {
-        //       print(val);
-        //     },
-        //     items:
-        //     catProvider.parentCategories.map((element) {
-        //       return element.title;
-        //     }).toList(),
-        //     dropDownHint: "Select Parent Cat")),
         //Filter bar
 
         //main area//
@@ -155,146 +156,241 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   ),
                   itemCount: products.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(
-                                  0.4,
-                                ),
-                                offset: const Offset(0, 5),
-                                blurRadius: 20,
-                                spreadRadius: 1,
-                              ),
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(
-                                  0.5,
-                                ),
-                                offset: -Offset(5, 0),
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                            borderRadius: customRadius),
-                        child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                            content: Hero(
-                                              tag: products[index].id,
-                                              child: Image.network(
-                                                products[index].image,
-                                              ),
-                                            ),
-                                          ));
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(),
-                                  child: ClipRRect(
-                                    borderRadius: customRadius,
-                                    child: Hero(
-                                      tag: products[index].id,
-                                      child: Image.network(
-                                        products[index].image,
-                                        fit: BoxFit.cover,
-                                        height: height(context) * 25,
-                                        width: double.infinity,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: height(context) * 1,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                    return InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            content: Hero(
+                              tag: products[index].id,
+                              child: Stack(
+                                alignment: Alignment.topCenter,
                                 children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      FittedBox(
-                                        child: Text(
-                                          products[index].name,
-                                          style: GoogleFonts.righteous(
-                                            color: primaryColor,
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: height(context) * 0.5,
-                                      ),
-                                      FittedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'Article No :',
-                                              style: TextStyle(
-                                                  color: headingColor,
-                                                  fontSize: 16),
-                                            ),
-                                            SizedBox(
-                                              width: width(context) * 0.5,
-                                            ),
-                                            Text(
-                                              products[index].name,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                  Image.network(
+                                    products[index].image,
                                   ),
-                                  PopupMenuButton(
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: headingColor,
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Table(
+                                      children: [
+                                        TableRow(children: [
+                                          Text(
+                                              "Title: ${products[index].name}"),
+                                          Text(
+                                              "Cat:  ${products[index].categoryTitle}"),
+                                          Text(
+                                              "Unit:   ${products[index].unit}")
+                                        ]),
+                                        TableRow(children: [
+                                          Text(
+                                              "Length: ${products[index].length}"),
+                                          Text(
+                                              "Width:  ${products[index].width}"),
+                                          Text(
+                                              "Date:   ${products[index].dateTime} ")
+                                        ])
+                                      ],
                                     ),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry>[
-                                      PopupMenuItem(
-                                        child: PopupItem(
-                                          icon: Icons.edit_outlined,
-                                          text: 'Edit',
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Provider.of<Products>(context,
-                                                    listen: false)
-                                                .setProduct(products[index]);
-
-                                            widget.scaffoldKey.currentState!
-                                                .openEndDrawer();
-                                          },
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: PopupItem(
-                                          icon: Icons.delete,
-                                          text: 'Delete',
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            _deleteProduct(
-                                                imgUrl: products[index].image,
-                                                prodId: products[index].id);
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  )
                                 ],
                               ),
-                            ]));
+                            ),
+                          ),
+                        );
+                      },
+                      child: GridTile(
+                        footer: Container(
+                          height: height(context) * 5,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            gradient: LinearGradient(
+                                colors: [Colors.white24, Colors.black38],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter),
+                          ),
+                          child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                products[index].name,
+                                style: const TextStyle(color: Colors.black54),
+                                textAlign: TextAlign.start,
+                              )),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(
+                                    0.4,
+                                  ),
+                                  offset: const Offset(0, 5),
+                                  blurRadius: 20,
+                                  spreadRadius: 1,
+                                ),
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(
+                                    0.5,
+                                  ),
+                                  offset: -Offset(5, 0),
+                                  blurRadius: 5,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                              borderRadius: customRadius),
+                          child: Hero(
+                            tag: products[index].id,
+                            child: Image.network(
+                              key: ValueKey(products[index].id),
+                              products[index].image,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // Container(
+                    //     padding: const EdgeInsets.all(8),
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.white,
+                    //         boxShadow: [
+                    //           BoxShadow(
+                    //             color: Colors.grey.withOpacity(
+                    //               0.4,
+                    //             ),
+                    //             offset: const Offset(0, 5),
+                    //             blurRadius: 20,
+                    //             spreadRadius: 1,
+                    //           ),
+                    //           BoxShadow(
+                    //             color: Colors.grey.withOpacity(
+                    //               0.5,
+                    //             ),
+                    //             offset: -Offset(5, 0),
+                    //             blurRadius: 5,
+                    //             spreadRadius: 1,
+                    //           ),
+                    //         ],
+                    //         borderRadius: customRadius),
+                    //     child: Column(
+                    //         mainAxisSize: MainAxisSize.min,
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //         children: [
+                    //           InkWell(
+                    //             onTap: () {
+                    //               showDialog(
+                    //                   context: context,
+                    //                   builder: (ctx) => AlertDialog(
+                    //                         content: Hero(
+                    //                           tag: products[index].id,
+                    //                           child: Image.network(
+                    //                             products[index].image,
+                    //                           ),
+                    //                         ),
+                    //                       ));
+                    //             },
+                    //             child: Container(
+                    //               decoration: const BoxDecoration(),
+                    //               child: ClipRRect(
+                    //                 borderRadius: customRadius,
+                    //                 child: Hero(
+                    //                   tag: products[index].id,
+                    //                   child: Image.network(
+                    //                     products[index].image,
+                    //                     fit: BoxFit.cover,
+                    //                     height: height(context) * 25,
+                    //                     width: double.infinity,
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           SizedBox(
+                    //             height: height(context) * 1,
+                    //           ),
+                    //           Row(
+                    //             mainAxisAlignment:
+                    //                 MainAxisAlignment.spaceBetween,
+                    //             children: [
+                    //               Column(
+                    //                 mainAxisSize: MainAxisSize.min,
+                    //                 crossAxisAlignment:
+                    //                     CrossAxisAlignment.start,
+                    //                 children: [
+                    //                   FittedBox(
+                    //                     child: Text(
+                    //                       products[index].name,
+                    //                       style: GoogleFonts.righteous(
+                    //                         color: primaryColor,
+                    //                         fontSize: 25,
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: height(context) * 0.5,
+                    //                   ),
+                    //                   FittedBox(
+                    //                     child: Row(
+                    //                       children: [
+                    //                         Text(
+                    //                           'Article No :',
+                    //                           style: TextStyle(
+                    //                               color: headingColor,
+                    //                               fontSize: 16),
+                    //                         ),
+                    //                         SizedBox(
+                    //                           width: width(context) * 0.5,
+                    //                         ),
+                    //                         Text(
+                    //                           products[index].name,
+                    //                         ),
+                    //                       ],
+                    //                     ),
+                    //                   )
+                    //                 ],
+                    //               ),
+                    //               PopupMenuButton(
+                    //                 icon: Icon(
+                    //                   Icons.more_vert,
+                    //                   color: headingColor,
+                    //                 ),
+                    //                 itemBuilder: (BuildContext context) =>
+                    //                     <PopupMenuEntry>[
+                    //                   PopupMenuItem(
+                    //                     child: PopupItem(
+                    //                       icon: Icons.edit_outlined,
+                    //                       text: 'Edit',
+                    //                       onTap: () {
+                    //                         Navigator.of(context).pop();
+                    //                         Provider.of<Products>(context,
+                    //                                 listen: false)
+                    //                             .setProduct(products[index]);
+
+                    //                         widget.scaffoldKey.currentState!
+                    //                             .openEndDrawer();
+                    //                       },
+                    //                     ),
+                    //                   ),
+                    //                   PopupMenuItem(
+                    //                     child: PopupItem(
+                    //                       icon: Icons.delete,
+                    //                       text: 'Delete',
+                    //                       onTap: () {
+                    //                         Navigator.of(context).pop();
+                    //                         _deleteProduct(
+                    //                             imgUrl: products[index].image,
+                    //                             prodId: products[index].id);
+                    //                       },
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ]));
                   },
                 ),
         )

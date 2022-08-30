@@ -34,6 +34,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
     return Column(
       children: [
         buildFilterBar(
+          searchSubmitted: () {},
           context: context,
           searchConttroller: activityController,
           btnTap: () {},

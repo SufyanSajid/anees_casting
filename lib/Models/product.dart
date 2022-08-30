@@ -13,6 +13,7 @@ class Product {
   String unit;
   String image;
   String dateTime;
+  String categoryTitle;
 
   Product(
       {required this.id,
@@ -21,6 +22,7 @@ class Product {
       required this.width,
       required this.unit,
       required this.categoryId,
+      required this.categoryTitle,
       required this.image,
       required this.dateTime});
 }
@@ -41,6 +43,7 @@ class Products with ChangeNotifier {
     var payLoad = {
       "fields": {
         "catId": {"stringValue": product.categoryId},
+        "catTitle": {"stringValue": product.categoryTitle},
         "imageUrl": {"stringValue": product.image},
         "productName": {"stringValue": product.name},
         "productWidth": {"stringValue": product.width},
@@ -62,6 +65,7 @@ class Products with ChangeNotifier {
     for (var element in docsData) {
       Map fields = element["fields"];
       String catId = fields["catId"]["stringValue"];
+      String catTitle = fields["catTitle"]["stringValue"];
       String imageUrl = fields["imageUrl"]["stringValue"];
       String productName = fields["productName"]["stringValue"];
       String productWidth = fields["productWidth"]["stringValue"];
@@ -77,6 +81,49 @@ class Products with ChangeNotifier {
           width: productWidth,
           unit: productUnit,
           categoryId: catId,
+          categoryTitle: catTitle,
+          image: imageUrl,
+          dateTime: time));
+    }
+
+    _products = tempProds;
+
+    notifyListeners();
+  }
+
+  Future<void> searchProduct(String title) async {
+    List<Product> tempProds = [];
+    String prodRes = await FirestoreMethods().searchProduct(title);
+
+    List<dynamic> docsData = json.decode(prodRes);
+
+    print(docsData);
+
+    for (var element in docsData) {
+      if (element['document'] == null) {
+        break;
+      }
+
+      Map fields = element['document']["fields"];
+      String catId = fields["catId"]["stringValue"];
+      String catTitle = fields["catTitle"]["stringValue"];
+      String imageUrl = fields["imageUrl"]["stringValue"];
+      String productName = fields["productName"]["stringValue"];
+      String productWidth = fields["productWidth"]["stringValue"];
+      String productUnit = fields["productUnit"]["stringValue"];
+      String productLength = fields["productLength"]["stringValue"];
+      String id =
+          (element['document']["name"] as String).split("products/").last;
+      String time = element['document']["updateTime"];
+
+      tempProds.add(Product(
+          id: id,
+          name: productName,
+          length: productLength,
+          width: productWidth,
+          unit: productUnit,
+          categoryId: catId,
+          categoryTitle: catTitle,
           image: imageUrl,
           dateTime: time));
     }
@@ -119,6 +166,7 @@ class Products with ChangeNotifier {
     var payLoad = {
       "fields": {
         "catId": {"stringValue": product.categoryId},
+        "catTitle": {"stringValue": product.categoryTitle},
         "imageUrl": {"stringValue": product.image},
         "productName": {"stringValue": product.name},
         "productWidth": {"stringValue": product.width},
@@ -128,6 +176,5 @@ class Products with ChangeNotifier {
     };
     http.Response res = await FirestoreMethods().updateRecords(
         collection: "products", data: payLoad, prodId: product.id);
-    print(res.body.toString());
   }
 }

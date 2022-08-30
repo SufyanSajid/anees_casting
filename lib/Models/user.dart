@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:anees_costing/Helpers/firebase_auth.dart';
+
 import '/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -54,6 +56,7 @@ class Users with ChangeNotifier {
 
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "users", data: payLoad);
+    print(res);
   }
 
   Future<void> fetchAndUpdateUser() async {
@@ -84,5 +87,18 @@ class Users with ChangeNotifier {
     _users = tempUsers;
 
     notifyListeners();
+  }
+
+  Future<void> deleteUser(AUser user) async {
+    var res = await FirestoreMethods()
+        .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
+    print("Storage");
+    print(res.statusCode);
+    print(res.toString());
+    print(res.body);
+
+    // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
+
+    // print(res.body);
   }
 }

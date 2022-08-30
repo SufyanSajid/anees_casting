@@ -75,6 +75,7 @@ class _AddProductState extends State<AddProduct> {
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
         categoryId: category!.id,
+        categoryTitle: category!.title,
         image: downloadImgUrl!,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
@@ -285,6 +286,7 @@ class _AddProductState extends State<AddProduct> {
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
         categoryId: category!.id,
+        categoryTitle: category!.title,
         image: "",
         dateTime: "");
   }

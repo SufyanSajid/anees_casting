@@ -15,7 +15,6 @@ class FirebaseAuth {
     required String phone,
     required String password,
   }) async {
-    print('shani');
     final url = Uri.parse(signUpUrl);
     var body = jsonEncode({
       'email': email,
@@ -35,11 +34,11 @@ class FirebaseAuth {
         phone: phone);
   }
 
-  deletUser(authId) async {
+  Future<http.Response> deletUser(authId) async {
     var URL = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts/$authId/:delete?key=$APIkey');
     http.Response delRes = await http.delete(URL);
 
-    print(delRes.body.toString());
+    return delRes;
   }
 }

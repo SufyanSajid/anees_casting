@@ -1,11 +1,9 @@
 import 'dart:io';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../contant.dart';
-
 
 class AdaptiveDiaglog extends StatelessWidget {
   BuildContext ctx;
@@ -32,24 +30,24 @@ class AdaptiveDiaglog extends StatelessWidget {
         ? CupertinoAlertDialog(
             title: Text(
               title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             content: Text(content!),
             actions: [
               CupertinoDialogAction(
+                onPressed: yesPressed as Function()?,
                 child: Text(
                   btnYes,
                   style: TextStyle(color: primaryColor),
                 ),
-                onPressed: yesPressed as Function()?,
               ),
               if (btnNO != '')
                 CupertinoDialogAction(
+                  onPressed: noPressed as Function()?,
                   child: Text(
                     btnNO,
                     style: TextStyle(color: primaryColor),
                   ),
-                  onPressed: noPressed as Function()?,
                 ),
             ],
           )
@@ -67,19 +65,19 @@ class AdaptiveDiaglog extends StatelessWidget {
             ),
             actions: [
               TextButton(
+                onPressed: yesPressed as Function()?,
                 child: Text(
                   btnYes,
                   style: TextStyle(color: primaryColor),
                 ),
-                onPressed: yesPressed as Function()?,
               ),
               if (btnNO != '')
                 TextButton(
+                  onPressed: noPressed as Function()?,
                   child: Text(
                     btnNO,
                     style: TextStyle(color: primaryColor),
                   ),
-                  onPressed: noPressed as Function()?,
                 ),
             ],
           );

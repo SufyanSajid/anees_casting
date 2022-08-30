@@ -53,19 +53,38 @@ class FirestoreMethods {
     var res = await http.post(URL,
         body: json.encode({
           'structuredQuery': {
-            'from': {'collectionId': 'products'},
+            'from': {'collectionId': 'categories'},
             'where': {
               'fieldFilter': {
-                "field": {"fieldPath": 'catId'},
-                "op": 'EQUAL',
-                "value": {'stringValue': '3i3fCjKHWRD4RAipYYiW'}
+                "field": {"fieldPath": 'title'},
+                "op": 'LESS_THAN',
+                "value": {'stringValue': 'onz'}
               }
             }
           }
         }));
-    // print(res.body);
+    print(res.body);
 
     return '';
+  }
+
+  Future<String> searchProduct(String title) async {
+    final URL = Uri.parse("${filterUrl}:runQuery");
+    var res = await http.post(URL,
+        body: json.encode({
+          'structuredQuery': {
+            'from': {'collectionId': 'products'},
+            'where': {
+              'fieldFilter': {
+                "field": {"fieldPath": 'productName'},
+                "op": 'EQUAL',
+                "value": {'stringValue': title}
+              }
+            }
+          }
+        }));
+
+    return res.body;
   }
 
   getCatById({required String collection, required String catId}) async {

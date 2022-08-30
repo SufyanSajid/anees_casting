@@ -86,4 +86,19 @@ class Categories with ChangeNotifier {
     _childCategories = tempChildCat;
     notifyListeners();
   }
+
+  // Add new items in categories list
+
+  bool isCatExist({required String title, required String parentTitle}) {
+    bool catExist = false;
+
+    for (var element in _categories) {
+      if (element.title == title && element.parentTitle == parentTitle) {
+        catExist = true;
+        break;
+      }
+    }
+
+    return catExist;
+  }
 }

@@ -1,3 +1,6 @@
+import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Widget/adaptiveDialog.dart';
+import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +22,7 @@ class AddCategoryFeilds extends StatefulWidget {
 class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
   final _nameController = TextEditingController();
 
+  String? parentTitle;
   String? parentId;
   bool isCatLoading = false;
   bool isFirst = true;
@@ -36,33 +40,57 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
   }
 
   @override
-  void didChangeDependencies() {
-    if (isFirst) {
-      isFirst = false;
-
-      Provider.of<Categories>(context).fetchAndUpdateCat();
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  _uploadCat() async {
+    var navi = Navigator.of(context);
+    var provider = Provider.of<Categories>(context, listen: false);
+
+    if (provider.isCatExist(
+        title: _nameController.text.trim(), parentTitle: parentTitle ?? "")) {
+      showCustomDialog(
+          context: context,
+          title: "Alert",
+          btn1: null,
+          content: "Category already exist",
+          btn2: "OK",
+          btn1Pressed: null,
+          btn2Pressed: () => Navigator.of(context).pop());
+    } else {
+      setState(() {
+        isCatLoading = true;
+      });
+
+      await provider.uploadCatagory(
+          title: _nameController.text.trim(),
+          parentId: parentId ?? "",
+          parentTitle: parentTitle ?? "");
+
+      await provider.fetchAndUpdateCat();
+      setState(() {
+        _nameController.clear();
+        isCatLoading = false;
+      });
+
+      navi.pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
-    List<Category> parentCategories =
-        Provider.of<Categories>(context, listen: false).parentCategories;
+
     return Column(
       children: [
         CustomAutoComplete(
-            categories: parentCategories,
+            categories: categories,
             onChange: (Category cat) {
               parentId = cat.id;
+              parentTitle = cat.title;
             }),
         SizedBox(
           height: height(context) * 2,
@@ -75,26 +103,17 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
         SizedBox(
           height: height(context) * 2,
         ),
-        SubmitButton(
-            height: height(context),
-            width: width(context),
-            onTap: () async {
-              // setState(() {
-              //   isCatLoading = true;
-              // });
-              // var navi = Navigator.of(context);
-              // var provider = Provider.of<Categories>(context, listen: false);
-              // await provider.uploadCatagory(
-              //     parentId ?? "", _nameController.text.trim());
-              // await provider.fetchAndUpdateCat();
-              // setState(() {
-              //   _nameController.clear();
-              //   isCatLoading = false;
-              // });
-
-              // navi.pop();
-            },
-            title: category != null ? 'Edit Category' : 'Add Category')
+        isCatLoading
+            ? CircularProgressIndicator(
+                color: primaryColor,
+              )
+            : SubmitButton(
+                height: height(context),
+                width: width(context),
+                onTap: () {
+                  _uploadCat();
+                },
+                title: category != null ? 'Edit Category' : 'Add Category')
       ],
     );
   }

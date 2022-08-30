@@ -1,14 +1,12 @@
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Functions/filterbar.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/category.dart';
-import '../../../Widget/dropDown.dart';
 
 class CategoryWebContent extends StatefulWidget {
   CategoryWebContent({
@@ -72,7 +70,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
           context: context,
           title: 'Delete',
           btn1: 'No',
-          content: 'Do You want to delete Category?',
+          content: 'Do You want to "${cat.title}" Category?',
           btn2: 'Yes',
           btn1Pressed: () {
             Navigator.of(context).pop();
@@ -101,6 +99,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
     return Column(
       children: [
         buildFilterBar(
+            searchSubmitted: () {},
             context: context,
             searchConttroller: categoryController,
             btnTap: () {
@@ -201,13 +200,23 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                 //     icon: Icons.edit_outlined,
                                 //   ),
                                 // ),
-                                Expanded(
-                                  flex: 1,
-                                  child: ActionButton(
-                                    color: Colors.red,
-                                    title: 'Delete Category',
-                                    icon: Icons.delete,
-                                    onTap: () => deleteCat(categories[index]),
+                                InkWell(
+                                  onTap: () => deleteCat(categories[index]),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0, 5),
+                                              blurRadius: 5),
+                                        ]),
+                                    padding: const EdgeInsets.all(10),
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -242,12 +251,12 @@ class ActionButton extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
-        margin: EdgeInsets.only(right: 30),
+        margin: const EdgeInsets.only(right: 30),
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             primary: color,
-            minimumSize: Size(0, 45),
-            maximumSize: Size(0, 45),
+            minimumSize: const Size(0, 45),
+            maximumSize: const Size(0, 45),
           ),
           onPressed: onTap,
           icon: Icon(

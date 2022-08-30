@@ -63,6 +63,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
   String role = "Customer";
   bool isLoading = false;
+
   _sigUpUser() async {
     setState(() {
       isLoading = true;

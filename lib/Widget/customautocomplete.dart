@@ -24,7 +24,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
   void didChangeDependencies() async {
     if (isFirst) {}
     isFirst = false;
-    // TODO: implement didChangeDependencies
+    if (Provider.of<Categories>(context).categories.isEmpty) {}
     super.didChangeDependencies();
   }
 
@@ -33,7 +33,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
     // TextEditingValue textEditingValue = TextEditingValue(text: widget.town);
 
     var height = MediaQuery.of(context).size.height / 100;
-    var width = MediaQuery.of(context).size.width / 100;
+    // var width = MediaQuery.of(context).size.width / 100;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
 
     return Autocomplete(
@@ -48,13 +48,10 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               .contains(textEditingValue.text.toLowerCase());
         });
       },
-      onSelected: (value) {
-        print('yeh ha on selectedValue ${value}');
-      },
+      onSelected: (value) {},
       fieldViewBuilder: (BuildContext context, TextEditingController controller,
           FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
         return Container(
-          margin: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -100,21 +97,29 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
         return Align(
           alignment: Alignment.topLeft,
           child: Material(
+            color: Colors.transparent,
+            // child:
+            //  Container(
+            //   height: height * 33,
+            //   margin: const EdgeInsets.only(
+            //     right: 40,
+            //   ),
+            //   width: width * 100,
+            //   decoration: BoxDecoration(
+            //     color: primaryColor,
+            //     borderRadius: const BorderRadius.only(
+            //       bottomLeft: Radius.circular(20),
+            //       bottomRight: Radius.circular(20),
+            //       topRight: Radius.circular(20),
+            //     ),
+            //   ),
             child: Container(
-              height: height * 33,
-              margin: const EdgeInsets.only(
-                right: 40,
-              ),
-              width: width * 100,
+              width: 250,
               decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-              ),
+                  borderRadius: customRadius, color: primaryColor),
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                shrinkWrap: true,
+                // padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 itemCount: options.length,
                 itemBuilder: (BuildContext context, int index) {
                   final Category option = options.elementAt(index);
@@ -126,7 +131,10 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
                       widget.onChange(option);
                     },
                     child: ListTile(
-                      title: Text(option.title,
+                      title: Text(
+                          option.parentId == ""
+                              ? option.title
+                              : "${option.title} - ${option.parentTitle}",
                           style: const TextStyle(color: Colors.white)),
                     ),
                   );
@@ -134,6 +142,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               ),
             ),
           ),
+          // ),
         );
       },
     );

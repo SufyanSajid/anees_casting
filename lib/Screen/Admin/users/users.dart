@@ -1,3 +1,4 @@
+import 'package:anees_costing/Functions/dailog.dart';
 import 'package:flutter/foundation.dart';
 
 import '/Models/user.dart';
@@ -44,7 +45,7 @@ class UserScreen extends StatelessWidget {
               SizedBox(
                 height: height(context) * 2,
               ),
-              ShowUsers(
+              const ShowUsers(
                 isWeb: false,
               ),
             ],
@@ -56,13 +57,13 @@ class UserScreen extends StatelessWidget {
 }
 
 class ShowUsers extends StatefulWidget {
-  ShowUsers({
+  const ShowUsers({
     Key? key,
     required this.isWeb,
     this.scaffoldKey,
   }) : super(key: key);
-  bool isWeb;
-  GlobalKey<ScaffoldState>? scaffoldKey;
+  final bool isWeb;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<ShowUsers> createState() => _ShowUsersState();
@@ -72,28 +73,58 @@ class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
   List<AUser>? users;
+  bool isDeleting = false;
+
   @override
   void didChangeDependencies() {
     if (isFirst) {
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Users>(context, listen: false)
-          .fetchAndUpdateUser()
-          .then((value) {
+      if (Provider.of<Users>(context, listen: false).users.isEmpty) {
         setState(() {
-          isLoading = false;
+          isLoading = true;
         });
-      });
+        Provider.of<Users>(context, listen: false)
+            .fetchAndUpdateUser()
+            .then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
 
       isFirst = false;
     }
     super.didChangeDependencies();
   }
 
+  _deletUser({required AUser user}) {
+    isDeleting
+        ? CircularProgressIndicator(
+            color: primaryColor,
+          )
+        : showCustomDialog(
+            context: context,
+            title: "Delet",
+            btn1: "No",
+            content: "Do you wanna delete \"${user.name}\" user",
+            btn2: "Yes",
+            btn1Pressed: () => Navigator.of(context).pop(),
+            btn2Pressed: () async {
+              setState(() {
+                isDeleting = true;
+              });
+              BuildContext ctx = context;
+              await Provider.of<Users>(context, listen: false).deleteUser(user);
+              await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
+              setState(() {
+                isDeleting = false;
+              });
+              Navigator.of(ctx).pop();
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
-    users = Provider.of<Users>(context, listen: false).users;
+    List<AUser> users = Provider.of<Users>(context, listen: false).users;
     return Expanded(
       child: isLoading
           ? Center(
@@ -102,7 +133,7 @@ class _ShowUsersState extends State<ShowUsers> {
               ),
             )
           : ListView.builder(
-              itemCount: users!.length,
+              itemCount: users.length,
               itemBuilder: (ctx, index) => Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -112,7 +143,7 @@ class _ShowUsersState extends State<ShowUsers> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.6),
-                        offset: Offset(0, 5),
+                        offset: const Offset(0, 5),
                         blurRadius: 10,
                       ),
                     ]),
@@ -150,7 +181,7 @@ class _ShowUsersState extends State<ShowUsers> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              users![index].name,
+                              users[index].name,
                               style: TextStyle(
                                 color: headingColor,
                                 fontSize: 18,
@@ -161,7 +192,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               height: height(context) * 0.5,
                             ),
                             Text(
-                              users![index].phone,
+                              users[index].phone,
                               style:
                                   TextStyle(color: contentColor, fontSize: 13),
                             ),
@@ -183,13 +214,13 @@ class _ShowUsersState extends State<ShowUsers> {
                               ]),
                           padding: const EdgeInsets.all(8),
                           child: IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.edit,
                             ),
                             color: contentColor,
                             onPressed: () {
                               Provider.of<Users>(context, listen: false)
-                                  .setUser(users![index]);
+                                  .setUser(users[index]);
 
                               widget.scaffoldKey!.currentState!.openEndDrawer();
                             },
@@ -198,27 +229,26 @@ class _ShowUsersState extends State<ShowUsers> {
                         SizedBox(
                           width: width(context) * 6,
                         ),
-                        InkWell(
-                          //    onTap:
-                          //     FirebaseAuth().deletUser(users[index].authId),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(0, 5),
-                                      blurRadius: 5),
-                                ]),
-                            padding: const EdgeInsets.all(8),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                              ),
+                        Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0, 5),
+                                    blurRadius: 5),
+                              ]),
+                          padding: const EdgeInsets.all(8),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.delete,
                               color: Colors.red,
-                              onPressed: () {},
                             ),
+                            color: contentColor,
+                            onPressed: () {
+                              _deletUser(user: users[index]);
+                            },
                           ),
                         ),
                       ],

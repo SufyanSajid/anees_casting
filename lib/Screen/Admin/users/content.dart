@@ -1,6 +1,8 @@
 import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
+import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ class UserWebContent extends StatelessWidget {
     return Column(
       children: [
         buildFilterBar(
+            searchSubmitted: () {},
             context: context,
             searchConttroller: _usersController,
             btnTap: () {
@@ -27,7 +30,7 @@ class UserWebContent extends StatelessWidget {
               onChanged: (val) {
                 print(val);
               },
-              items: ["Hi", "bye"],
+              items: const ["Hi", "bye"],
             )),
         SizedBox(
           height: height(context) * 4,

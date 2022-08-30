@@ -41,7 +41,6 @@ class _ProductScreenState extends State<ProductScreen> {
           isLoading = false;
         });
       });
-      FirestoreMethods().getProductsByCatId();
     }
     super.didChangeDependencies();
   }
