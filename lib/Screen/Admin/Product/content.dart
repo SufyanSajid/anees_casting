@@ -3,6 +3,7 @@ import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
@@ -24,6 +25,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
   List<Product> products = [];
   bool isFirst = true;
   bool isLoading = false;
+  String? catId;
 
   @override
   void didChangeDependencies() async {
@@ -102,8 +104,14 @@ class _ProductWebContentState extends State<ProductWebContent> {
     if (search.isEmpty) {
       Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
     } else {
-      Provider.of<Products>(context, listen: false).searchProduct(search);
+      Provider.of<Products>(context, listen: false)
+          .searchProduct(search, 'productName');
     }
+  }
+
+  getProductsByCatId(String catId) async {
+    await Provider.of<Products>(context, listen: false)
+        .searchProduct(catId, 'catId');
   }
 
   @override
@@ -128,8 +136,11 @@ class _ProductWebContentState extends State<ProductWebContent> {
           dropDown: SizedBox(
             // height: height(context),
             width: 250,
-            child:
-                CustomAutoComplete(onChange: (val) {}, categories: categories),
+            child: CustomAutoComplete(
+                onChange: (Category val) {
+                  getProductsByCatId(val.id);
+                },
+                categories: categories),
           ),
         ),
         //Filter bar
@@ -200,24 +211,71 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       },
                       child: GridTile(
                         footer: Container(
-                          height: height(context) * 5,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            gradient: LinearGradient(
-                                colors: [Colors.white24, Colors.black38],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter),
-                          ),
-                          child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                products[index].name,
-                                style: const TextStyle(color: Colors.black54),
-                                textAlign: TextAlign.start,
-                              )),
-                        ),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: height(context) * 5,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              gradient: LinearGradient(
+                                  colors: [Colors.white24, Colors.black38],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    products[index].name,
+                                    style: GoogleFonts.righteous(
+                                      color: Colors.black54,
+                                      fontSize: 25,
+                                    ),
+                                    // style: const TextStyle(
+                                    //     color: Colors.black54),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                PopupMenuButton(
+                                  icon: Icon(
+                                    Icons.more_vert,
+                                    color: headingColor,
+                                  ),
+                                  itemBuilder: (BuildContext context) =>
+                                      <PopupMenuEntry>[
+                                    PopupMenuItem(
+                                      child: PopupItem(
+                                        icon: Icons.edit_outlined,
+                                        text: 'Edit',
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          Provider.of<Products>(context,
+                                                  listen: false)
+                                              .setProduct(products[index]);
+
+                                          widget.scaffoldKey.currentState!
+                                              .openEndDrawer();
+                                        },
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      child: PopupItem(
+                                        icon: Icons.delete,
+                                        text: 'Delete',
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          _deleteProduct(
+                                              imgUrl: products[index].image,
+                                              prodId: products[index].id);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
