@@ -68,7 +68,7 @@ class FirestoreMethods {
     return '';
   }
 
-  Future<String> searchProduct(String title) async {
+  Future<String> searchProduct(String title, String field) async {
     final URL = Uri.parse("${filterUrl}:runQuery");
     var res = await http.post(URL,
         body: json.encode({
@@ -76,7 +76,7 @@ class FirestoreMethods {
             'from': {'collectionId': 'products'},
             'where': {
               'fieldFilter': {
-                "field": {"fieldPath": 'productName'},
+                "field": {"fieldPath": field},
                 "op": 'EQUAL',
                 "value": {'stringValue': title}
               }

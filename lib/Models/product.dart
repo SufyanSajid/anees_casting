@@ -91,9 +91,9 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchProduct(String title) async {
+  Future<void> searchProduct(String title, String field) async {
     List<Product> tempProds = [];
-    String prodRes = await FirestoreMethods().searchProduct(title);
+    String prodRes = await FirestoreMethods().searchProduct(title, field);
 
     List<dynamic> docsData = json.decode(prodRes);
 

@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/logs/content.dart';
@@ -7,6 +8,7 @@ import 'package:anees_costing/Widget/drawer/web_drawer.dart';
 import 'package:anees_costing/Widget/webappbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../Widget/grad_button.dart';
 import '../../../Widget/sidebar.dart';
@@ -20,8 +22,19 @@ class WebHome extends StatefulWidget {
 
 class _WebHomeState extends State<WebHome> {
   int selectedIndex = 0;
+  bool isFirst = true;
   final GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
-  Category? category;
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      isFirst = false;
+      if (Provider.of<Categories>(context).categories.isEmpty) {
+        Provider.of<Categories>(context).fetchAndUpdateCat();
+      }
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
