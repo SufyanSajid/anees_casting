@@ -147,7 +147,7 @@ class _WebHomeState extends State<WebHome> {
 
         //activity logs
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           width: width(context) * 100,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -164,7 +164,7 @@ class _WebHomeState extends State<WebHome> {
                     color: primaryColor,
                     fontWeight: FontWeight.bold),
               ),
-              gradientButton(
+              GradientButton(
                 title: 'View All',
                 onTap: () {
                   setState(() {

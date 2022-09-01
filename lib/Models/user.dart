@@ -90,12 +90,14 @@ class Users with ChangeNotifier {
   }
 
   Future<void> deleteUser(AUser user) async {
-    var res = await FirestoreMethods()
-        .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
-    print("Storage");
-    print(res.statusCode);
-    print(res.toString());
-    print(res.body);
+    var res = await FirebaseAuth().deletUser("fl4tlZn5GlSzjHVQj4g3iKtB7vI3");
+
+    // var res = await FirestoreMethods()
+    // .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
+    // print("Storage");
+    // print(res.statusCode);
+    // print(res.);
+    // print(res.body);
 
     // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
 

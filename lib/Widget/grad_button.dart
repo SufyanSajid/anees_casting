@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../contant.dart';
 
-class gradientButton extends StatelessWidget {
-  gradientButton({
+class GradientButton extends StatelessWidget {
+  GradientButton({
     Key? key,
     required this.onTap,
     required this.title,

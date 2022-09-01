@@ -73,16 +73,15 @@ class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
   List<AUser>? users;
-  bool isDeleting = false;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isFirst) {
       if (Provider.of<Users>(context, listen: false).users.isEmpty) {
         setState(() {
           isLoading = true;
         });
-        Provider.of<Users>(context, listen: false)
+        await Provider.of<Users>(context, listen: false)
             .fetchAndUpdateUser()
             .then((value) {
           setState(() {
@@ -96,30 +95,22 @@ class _ShowUsersState extends State<ShowUsers> {
     super.didChangeDependencies();
   }
 
-  _deletUser({required AUser user}) {
-    isDeleting
-        ? CircularProgressIndicator(
-            color: primaryColor,
-          )
-        : showCustomDialog(
-            context: context,
-            title: "Delet",
-            btn1: "No",
-            content: "Do you wanna delete \"${user.name}\" user",
-            btn2: "Yes",
-            btn1Pressed: () => Navigator.of(context).pop(),
-            btn2Pressed: () async {
-              setState(() {
-                isDeleting = true;
-              });
-              BuildContext ctx = context;
-              await Provider.of<Users>(context, listen: false).deleteUser(user);
-              await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
-              setState(() {
-                isDeleting = false;
-              });
-              Navigator.of(ctx).pop();
-            });
+  _deletUser({required AUser user, required BuildContext ctx}) {
+    showCustomDialog(
+        context: ctx,
+        title: "Delete",
+        btn1: "No",
+        content: "Do you wanna delete \"${user.name}\" user",
+        btn2: "Yes",
+        btn1Pressed: () => Navigator.of(context).pop(),
+        btn2Pressed: () async {
+          var provider = Provider.of<Users>(ctx, listen: false);
+          var navigator = Navigator.of(ctx);
+          provider.deleteUser(user);
+          provider.fetchAndUpdateUser();
+
+          navigator.pop();
+        });
   }
 
   @override
@@ -247,7 +238,7 @@ class _ShowUsersState extends State<ShowUsers> {
                             ),
                             color: contentColor,
                             onPressed: () {
-                              _deletUser(user: users[index]);
+                              _deletUser(user: users[index], ctx: context);
                             },
                           ),
                         ),

@@ -144,7 +144,6 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       {required var img,
       required String prodId,
       required String imageUrl}) async {
-    print('edit product');
     setState(() {
       isLoading = true;
     });

@@ -1,20 +1,23 @@
-import 'package:anees_costing/Functions/dailog.dart';
-import 'package:anees_costing/Functions/filterbar.dart';
-import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/contant.dart';
+import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Functions/filterbar.dart';
+import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/contant.dart';
+
 import '../../../Models/category.dart';
+import '../../../Widget/grad_button.dart';
 
 class CategoryWebContent extends StatefulWidget {
-  CategoryWebContent({
+  const CategoryWebContent({
     Key? key,
     required this.scaffoldKey,
   }) : super(key: key);
 
-  GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   State<CategoryWebContent> createState() => _CategoryWebContentState();
@@ -24,17 +27,20 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   bool isFirst = true;
   bool isLoading = false;
   final categoryController = TextEditingController();
-  List<Category>? categories;
+  List<Category> categories = [];
+  List<Category> searchedCat = [];
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
       isFirst = false;
-      if (Provider.of<Categories>(context).categories.isEmpty) {
+      if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
         setState(() {
           isLoading = true;
         });
-        await Provider.of<Categories>(context).fetchAndUpdateCat().then(
+        await Provider.of<Categories>(context, listen: false)
+            .fetchAndUpdateCat()
+            .then(
           (value) {
             setState(() {
               isLoading = false;
@@ -93,22 +99,60 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
     }
   }
 
+  refreshSearchedCats(Category val) {
+    Provider.of<Categories>(context, listen: false).getCategoriesByTitle(val);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Category> categories = Provider.of<Categories>(context).categories;
+    print("Main Build");
+    categories = Provider.of<Categories>(context, listen: false).categories;
+    searchedCat =
+        Provider.of<Categories>(context, listen: false).searchedCategories;
+    if (searchedCat.isNotEmpty) {
+      categories = searchedCat;
+      Provider.of<Categories>(context, listen: false).resetSearchedCats();
+    }
+
     return Column(
       children: [
-        buildFilterBar(
-            searchSubmitted: () {},
-            context: context,
-            searchConttroller: categoryController,
-            btnTap: () {
-              Provider.of<Categories>(context, listen: false).drawerCategory =
-                  null;
-              widget.scaffoldKey.currentState!.openEndDrawer();
-            },
-            btnText: 'Add New Category',
-            dropDown: null),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: shadow,
+            borderRadius: customRadius,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: WebAutoComplete(
+                        onRefresh: () {
+                          setState(() {});
+                        },
+                        onChange: (val) {
+                          refreshSearchedCats(val);
+                        },
+                        categories: categories),
+                  ),
+                ],
+              ),
+              GradientButton(
+                onTap: () {
+                  Provider.of<Categories>(context, listen: false)
+                      .drawerCategory = null;
+                  widget.scaffoldKey.currentState!.openEndDrawer();
+                },
+                title: "Add New Category",
+              ),
+            ],
+          ),
+        ),
         SizedBox(
           height: height(context) * 2,
         ),
@@ -122,41 +166,14 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             ),
             child: Column(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-                  decoration: BoxDecoration(
-                      color: btnbgColor.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 4,
-                        child: FeildName(
-                          title: 'Name',
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: FeildName(
-                          title: 'Parent Category',
-                        ),
-                      ),
-                      // Expanded(
-                      //   flex: 1,
-                      //   child: FeildName(
-                      //     title: 'Edit',
-                      //   ),
-                      // ),
-                      Expanded(
-                        flex: 1,
-                        child: FeildName(
-                          title: 'Delete',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                RowDetail(
+                    first: const HeadingName(title: "Name"),
+                    second: const HeadingName(title: "Parent Category"),
+                    third: TextButton(
+                      child: const HeadingName(title: "Delete"),
+                      onPressed: () {},
+                    ),
+                    isHeading: true),
                 Expanded(
                   child: isLoading
                       ? Center(
@@ -164,64 +181,33 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                         )
                       : ListView.builder(
                           itemCount: categories.length,
-                          itemBuilder: (ctx, index) => Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: RowItem(
-                                    title: categories[index].title,
+                          itemBuilder: (ctx, index) => RowDetail(
+                              first: RowItem(
+                                title: categories[index].title,
+                              ),
+                              second: RowItem(
+                                title: categories[index].parentTitle,
+                              ),
+                              third: InkWell(
+                                onTap: () => deleteCat(categories[index]),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.grey,
+                                            offset: Offset(0, 5),
+                                            blurRadius: 5),
+                                      ]),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: RowItem(
-                                    title: categories[index].parentTitle,
-                                  ),
-                                ),
-                                // Expanded(
-                                //   flex: 1,
-                                //   child: ActionButton(
-                                //     color: btnbgColor.withOpacity(1),
-                                //     title: 'Edit',
-                                //     onTap: () {
-                                //       setState(
-                                //         () {
-                                //           Provider.of<Categories>(context,
-                                //                   listen: false)
-                                //               .setCatgeory(categories![index]);
-                                //           widget.scaffoldKey.currentState!
-                                //               .openEndDrawer();
-                                //         },
-                                //       );
-                                //     },
-                                //     icon: Icons.edit_outlined,
-                                //   ),
-                                // ),
-                                InkWell(
-                                  onTap: () => deleteCat(categories[index]),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.grey,
-                                              offset: Offset(0, 5),
-                                              blurRadius: 5),
-                                        ]),
-                                    padding: const EdgeInsets.all(10),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
+                              isHeading: false),
                         ),
                 ),
               ],
@@ -233,53 +219,12 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   }
 }
 
-class ActionButton extends StatelessWidget {
-  ActionButton({
-    Key? key,
-    required this.title,
-    required this.color,
-    required this.onTap,
-    required this.icon,
-  }) : super(key: key);
-  Color color;
-  String title;
-  Function()? onTap;
-  IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        margin: const EdgeInsets.only(right: 30),
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            primary: color,
-            minimumSize: const Size(0, 45),
-            maximumSize: const Size(0, 45),
-          ),
-          onPressed: onTap,
-          icon: Icon(
-            icon,
-            color: Colors.white,
-          ),
-          label: FittedBox(
-            child: Text(
-              title,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FeildName extends StatelessWidget {
-  FeildName({
+class HeadingName extends StatelessWidget {
+  const HeadingName({
     Key? key,
     required this.title,
   }) : super(key: key);
-  String title;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +232,7 @@ class FeildName extends StatelessWidget {
       title,
       textAlign: TextAlign.left,
       style: GoogleFonts.righteous(
-        fontSize: 16,
+        fontSize: 18,
         color: primaryColor,
       ),
     );
@@ -295,22 +240,64 @@ class FeildName extends StatelessWidget {
 }
 
 class RowItem extends StatelessWidget {
-  RowItem({
+  const RowItem({
     Key? key,
     required this.title,
   }) : super(key: key);
-  String title;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: headingColor,
+      ),
+    );
+  }
+}
+
+class RowDetail extends StatelessWidget {
+  final Widget first;
+  final Widget second;
+  final Widget third;
+  final bool isHeading;
+  const RowDetail(
+      {Key? key,
+      required this.first,
+      required this.second,
+      required this.third,
+      required this.isHeading})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          color: headingColor,
-        ),
-      ),
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+            color: isHeading ? btnbgColor.withOpacity(0.5) : Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                offset: const Offset(0, 5),
+                blurRadius: 10,
+              ),
+            ]),
+        margin: const EdgeInsets.only(bottom: 20),
+        child: Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            TableRow(children: [first, second, third])
+          ],
+        )
+
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [first, second, third],
+        // ),
+        );
   }
 }

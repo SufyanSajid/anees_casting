@@ -35,9 +35,11 @@ class FirebaseAuth {
   }
 
   Future<http.Response> deletUser(authId) async {
+    print("delete");
     var URL = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts/$authId/:delete?key=$APIkey');
-    http.Response delRes = await http.delete(URL);
+    http.Response delRes = await http.post(URL);
+    print("Delete auth ${delRes.body}");
 
     return delRes;
   }

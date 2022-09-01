@@ -28,6 +28,7 @@ class Categories with ChangeNotifier {
   List<Category> _categories = [];
   List<Category> _parentCategories = [];
   List<Category> _childCategories = [];
+  List<Category> _searchedCategories = [];
 
   List<Category> get categories {
     return [..._categories];
@@ -39,6 +40,10 @@ class Categories with ChangeNotifier {
 
   List<Category> get childCategories {
     return [..._childCategories];
+  }
+
+  List<Category> get searchedCategories {
+    return [..._searchedCategories];
   }
 
   Future<void> uploadCatagory(
@@ -100,5 +105,21 @@ class Categories with ChangeNotifier {
     }
 
     return catExist;
+  }
+
+  getCategoriesByTitle(Category cat) {
+    List<Category> tempCat = [];
+    for (var element in _categories) {
+      if (element.title == cat.title) {
+        tempCat.add(element);
+      }
+    }
+    _searchedCategories = tempCat;
+    // notifyListeners();
+  }
+
+  resetSearchedCats() {
+    _searchedCategories = [];
+    // notifyListeners();
   }
 }

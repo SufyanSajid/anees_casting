@@ -15,6 +15,7 @@ class AddUser extends StatelessWidget {
 
   const AddUser({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -37,7 +38,7 @@ class AddUser extends StatelessWidget {
               SizedBox(
                 height: height(context) * 2,
               ),
-              AddUserFeilds(),
+              const AddUserFeilds(),
             ],
           ),
         ),
@@ -63,6 +64,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
   String role = "Customer";
   bool isLoading = false;
+  bool isPassSecure = true;
 
   _sigUpUser() async {
     setState(() {
@@ -205,8 +207,13 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
           height: height(context) * 2,
         ),
         InputFeild(
-            secure: true,
-            suffix: Icons.password_outlined,
+            secure: isPassSecure ? true : false,
+            suffix: isPassSecure ? Icons.visibility_outlined : Icons.visibility,
+            suffixPress: () {
+              setState(() {
+                isPassSecure = !isPassSecure;
+              });
+            },
             hinntText: 'Password',
             validatior: () {},
             inputController: _passwordController),

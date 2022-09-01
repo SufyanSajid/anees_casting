@@ -59,7 +59,7 @@ Widget buildFilterBar(
                 width: width(context) * 2,
               ),
               if (btnTap != null && btnText != null)
-                gradientButton(
+                GradientButton(
                   onTap: btnTap,
                   title: btnText,
                 ),
