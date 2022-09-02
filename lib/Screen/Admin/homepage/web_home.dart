@@ -1,5 +1,6 @@
 import 'package:anees_costing/Models/categories_count.dart';
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/products_counts.dart';
 import 'package:anees_costing/Models/users_count.dart';
@@ -28,9 +29,7 @@ class _WebHomeState extends State<WebHome> {
   bool isFirst = true;
   bool isLoading = false;
   GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
-  int? usersCount;
-  int? productsCount;
-  int? catsCount;
+  Count? counts;
 
   @override
   void didChangeDependencies() async {
@@ -42,23 +41,14 @@ class _WebHomeState extends State<WebHome> {
             .fetchAndUpdateCat();
       }
 
-      Provider.of<UsersCount>(context, listen: false)
-          .fetchtAndUpdateUsersCount();
-
-      Provider.of<ProductsCount>(context, listen: false)
-          .fetchAndGetProductsCount();
-
-      Provider.of<CategoriesCount>(context, listen: false)
-          .fetchtAndUpdateCategoriesCount();
+      Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
     }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    usersCount = Provider.of<UsersCount>(context).getUserCount;
-    productsCount = Provider.of<ProductsCount>(context).getProductsCount;
-    catsCount = Provider.of<CategoriesCount>(context).getCategoriesCount;
+    counts = Provider.of<Counts>(context).getCount;
 
     Widget homeContent = Column(
       children: [
@@ -136,7 +126,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Designs',
-                value: productsCount == null ? "0" : "$productsCount",
+                value: counts == null ? "" : "${counts!.productsCount}",
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -146,7 +136,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Users',
-                value: usersCount == null ? "0" : "$usersCount",
+                value: counts == null ? "" : "${counts!.usersCount}",
                 icon: Icons.groups_outlined,
               ),
             ),
@@ -156,7 +146,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Categories',
-                value: catsCount == null ? "0" : "$catsCount",
+                value: counts == null ? "" : "${counts!.catsCount}",
                 icon: Icons.diamond_outlined,
               ),
             ),
