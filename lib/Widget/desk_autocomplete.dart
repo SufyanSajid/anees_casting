@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,12 +10,14 @@ class WebAutoComplete extends StatefulWidget {
       {Key? key,
       required this.onChange,
       required this.categories,
-      required this.onRefresh})
+      required this.onRefresh,
+      required this.users})
       : super(key: key);
 
   final Function onChange;
   final Function onRefresh;
-  final List<Category> categories;
+  final List<Category>? categories;
+  final List<AUser>? users;
 
   @override
   State<WebAutoComplete> createState() => _WebAutoCompleteState();
@@ -35,11 +38,20 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
               if (textEditingValue.text == '') {
                 return const Iterable<String>.empty();
               }
-              return widget.categories.where((Category option) {
-                return option.title
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              });
+
+              if (widget.categories != null) {
+                return widget.categories!.where((Category option) {
+                  return option.title
+                      .toLowerCase()
+                      .contains(textEditingValue.text.toLowerCase());
+                });
+              } else {
+                return widget.users!.where((AUser option) {
+                  return option.name
+                      .toLowerCase()
+                      .contains(textEditingValue.text.toLowerCase());
+                });
+              }
             },
             onSelected: (value) {},
             fieldViewBuilder: (BuildContext context,
@@ -58,7 +70,7 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 0),
-                      hintText: 'Select Category',
+                      hintText: 'Search',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -86,24 +98,42 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
                       shrinkWrap: true,
                       itemCount: options.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final Category option = options.elementAt(index);
+                        if (widget.categories != null) {
+                          final Category option = options.elementAt(index);
 
-                        return GestureDetector(
-                          onTap: () {
-                            isRefreshed = false;
-                            onSelected(option.title);
+                          return GestureDetector(
+                            onTap: () {
+                              isRefreshed = false;
+                              onSelected(option.title);
 
-                            widget.onChange(option);
-                            options = const Iterable.empty();
-                          },
-                          child: ListTile(
-                            title: Text(
-                                option.parentId == ""
-                                    ? option.title
-                                    : "${option.title} - ${option.parentTitle}",
-                                style: const TextStyle(color: Colors.white)),
-                          ),
-                        );
+                              widget.onChange(option);
+                              options = const Iterable.empty();
+                            },
+                            child: ListTile(
+                              title: Text(
+                                  option.parentId == ""
+                                      ? option.title
+                                      : "${option.title} - ${option.parentTitle}",
+                                  style: const TextStyle(color: Colors.white)),
+                            ),
+                          );
+                        } else {
+                          final AUser option = options.elementAt(index);
+
+                          return GestureDetector(
+                            onTap: () {
+                              isRefreshed = false;
+                              onSelected(option.name);
+
+                              widget.onChange(option);
+                              options = const Iterable.empty();
+                            },
+                            child: ListTile(
+                              title: Text(option.name,
+                                  style: const TextStyle(color: Colors.white)),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),

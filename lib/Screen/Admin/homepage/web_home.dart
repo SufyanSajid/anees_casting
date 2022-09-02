@@ -1,5 +1,8 @@
+import 'package:anees_costing/Models/categories_count.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Models/products_counts.dart';
+import 'package:anees_costing/Models/users_count.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/logs/content.dart';
@@ -23,21 +26,40 @@ class WebHome extends StatefulWidget {
 class _WebHomeState extends State<WebHome> {
   int selectedIndex = 0;
   bool isFirst = true;
-  final GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
+  bool isLoading = false;
+  GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
+  int? usersCount;
+  int? productsCount;
+  int? catsCount;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isFirst) {
       isFirst = false;
-      if (Provider.of<Categories>(context).categories.isEmpty) {
-        Provider.of<Categories>(context).fetchAndUpdateCat();
+
+      if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
+        await Provider.of<Categories>(context, listen: false)
+            .fetchAndUpdateCat();
       }
+
+      Provider.of<UsersCount>(context, listen: false)
+          .fetchtAndUpdateUsersCount();
+
+      Provider.of<ProductsCount>(context, listen: false)
+          .fetchAndGetProductsCount();
+
+      Provider.of<CategoriesCount>(context, listen: false)
+          .fetchtAndUpdateCategoriesCount();
     }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    usersCount = Provider.of<UsersCount>(context).getUserCount;
+    productsCount = Provider.of<ProductsCount>(context).getProductsCount;
+    catsCount = Provider.of<CategoriesCount>(context).getCategoriesCount;
+
     Widget homeContent = Column(
       children: [
         //home bar
@@ -114,7 +136,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Designs',
-                value: '50000',
+                value: productsCount == null ? "0" : "$productsCount",
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -124,7 +146,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Users',
-                value: '212',
+                value: usersCount == null ? "0" : "$usersCount",
                 icon: Icons.groups_outlined,
               ),
             ),
@@ -134,7 +156,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Categories',
-                value: '50',
+                value: catsCount == null ? "0" : "$catsCount",
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -302,6 +324,7 @@ class _WebHomeState extends State<WebHome> {
       ),
       ActivityLogWebContent(),
     ];
+
     return Scaffold(
       endDrawer: WebDrawer(
         selectedIndex: selectedIndex,

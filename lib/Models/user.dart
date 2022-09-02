@@ -26,13 +26,20 @@ class AUser {
 
 class Users with ChangeNotifier {
   List<AUser> _users = [];
+  List<AUser> _searchedUsers = [];
+
   AUser? drawerUser;
+
   void setUser(AUser user) {
     drawerUser = user;
   }
 
   List<AUser> get users {
     return [..._users];
+  }
+
+  List<AUser> get searchedUsers {
+    return [..._searchedUsers];
   }
 
   Future<void> createUser({
@@ -102,5 +109,20 @@ class Users with ChangeNotifier {
     // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
 
     // print(res.body);
+  }
+
+  getUsersByUser(AUser user) {
+    List<AUser> temUsers = [];
+    for (var element in _users) {
+      if (element.name == user.name) {
+        temUsers.add(element);
+      }
+    }
+    _searchedUsers = temUsers;
+    // notifyListeners();
+  }
+
+  resetSearchedUser() {
+    _searchedUsers = [];
   }
 }

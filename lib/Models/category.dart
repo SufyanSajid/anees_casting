@@ -57,7 +57,7 @@ class Categories with ChangeNotifier {
         "parentTitle": {"stringValue": parentTitle},
       }
     };
-    var catRes = await FirestoreMethods()
+    await FirestoreMethods()
         .createRecord(collection: "categories", data: payLoad);
   }
 

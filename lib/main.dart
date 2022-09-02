@@ -1,5 +1,8 @@
 import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/categories_count.dart';
+import 'package:anees_costing/Models/products_counts.dart';
+import 'package:anees_costing/Models/users_count.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:flutter/foundation.dart';
 
@@ -51,6 +54,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Logs(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => UsersCount(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ProductsCount(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => CategoriesCount(),
         ),
       ],
       child: MaterialApp(

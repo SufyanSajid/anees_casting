@@ -8,14 +8,44 @@ import '/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   static const routeName = '/userscreen';
   const UserScreen({Key? key}) : super(key: key);
 
-  // _deleteUser({required String authId, required String docId}) {}
+  @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  bool isFirst = true;
+  List<AUser> users = [];
+  bool isLoading = false;
+
+  @override
+  void didChangeDependencies() async {
+    if (isFirst) {
+      if (Provider.of<Users>(context, listen: false).users.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        await Provider.of<Users>(context, listen: false)
+            .fetchAndUpdateUser()
+            .then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+
+      isFirst = false;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    users = Provider.of<Users>(context, listen: false).users;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryColor,
@@ -45,9 +75,16 @@ class UserScreen extends StatelessWidget {
               SizedBox(
                 height: height(context) * 2,
               ),
-              const ShowUsers(
-                isWeb: false,
-              ),
+              isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
+                    )
+                  : ShowUsers(
+                      users: users,
+                      isWeb: false,
+                    ),
             ],
           ),
         ),
@@ -60,10 +97,12 @@ class ShowUsers extends StatefulWidget {
   const ShowUsers({
     Key? key,
     required this.isWeb,
+    required this.users,
     this.scaffoldKey,
   }) : super(key: key);
   final bool isWeb;
   final GlobalKey<ScaffoldState>? scaffoldKey;
+  final List<AUser> users;
 
   @override
   State<ShowUsers> createState() => _ShowUsersState();
@@ -72,28 +111,6 @@ class ShowUsers extends StatefulWidget {
 class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
-  List<AUser>? users;
-
-  @override
-  void didChangeDependencies() async {
-    if (isFirst) {
-      if (Provider.of<Users>(context, listen: false).users.isEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        await Provider.of<Users>(context, listen: false)
-            .fetchAndUpdateUser()
-            .then((value) {
-          setState(() {
-            isLoading = false;
-          });
-        });
-      }
-
-      isFirst = false;
-    }
-    super.didChangeDependencies();
-  }
 
   _deletUser({required AUser user, required BuildContext ctx}) {
     showCustomDialog(
@@ -115,7 +132,6 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
-    List<AUser> users = Provider.of<Users>(context, listen: false).users;
     return Expanded(
       child: isLoading
           ? Center(
@@ -124,7 +140,7 @@ class _ShowUsersState extends State<ShowUsers> {
               ),
             )
           : ListView.builder(
-              itemCount: users.length,
+              itemCount: widget.users.length,
               itemBuilder: (ctx, index) => Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -172,7 +188,7 @@ class _ShowUsersState extends State<ShowUsers> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              users[index].name,
+                              widget.users[index].name,
                               style: TextStyle(
                                 color: headingColor,
                                 fontSize: 18,
@@ -183,7 +199,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               height: height(context) * 0.5,
                             ),
                             Text(
-                              users[index].phone,
+                              widget.users[index].phone,
                               style:
                                   TextStyle(color: contentColor, fontSize: 13),
                             ),
@@ -211,7 +227,7 @@ class _ShowUsersState extends State<ShowUsers> {
                             color: contentColor,
                             onPressed: () {
                               Provider.of<Users>(context, listen: false)
-                                  .setUser(users[index]);
+                                  .setUser(widget.users[index]);
 
                               widget.scaffoldKey!.currentState!.openEndDrawer();
                             },
@@ -238,7 +254,8 @@ class _ShowUsersState extends State<ShowUsers> {
                             ),
                             color: contentColor,
                             onPressed: () {
-                              _deletUser(user: users[index], ctx: context);
+                              _deletUser(
+                                  user: widget.users[index], ctx: context);
                             },
                           ),
                         ),

@@ -14,12 +14,12 @@ import '../input_feild.dart';
 import '../submitbutton.dart';
 
 class WebDrawer extends StatelessWidget {
-  WebDrawer({
+  const WebDrawer({
     Key? key,
     required this.selectedIndex,
   }) : super(key: key);
 
-  int selectedIndex;
+  final int selectedIndex;
 
   bool isCategoryEmpty(BuildContext context) {
     var category =
@@ -101,16 +101,16 @@ class WebDrawer extends StatelessWidget {
 }
 
 class DrawerAppbar extends StatelessWidget {
-  DrawerAppbar({
+  const DrawerAppbar({
     Key? key,
     required this.title,
     required this.subTitle,
     required this.svgIcon,
   }) : super(key: key);
 
-  String svgIcon;
-  String title;
-  String subTitle;
+  final String svgIcon;
+  final String title;
+  final String subTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,7 @@ class DrawerAppbar extends StatelessWidget {
                 flex: 1,
                 child: Container(
                   height: height(context) * 0.1,
-                  color: Color.fromRGBO(197, 154, 120, 1),
+                  color: const Color.fromRGBO(197, 154, 120, 1),
                 ),
               ),
               Expanded(

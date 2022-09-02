@@ -106,7 +106,6 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
 
   @override
   Widget build(BuildContext context) {
-    print("Main Build");
     categories = Provider.of<Categories>(context, listen: false).categories;
     searchedCat =
         Provider.of<Categories>(context, listen: false).searchedCategories;
@@ -132,13 +131,15 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                   SizedBox(
                     width: 250,
                     child: WebAutoComplete(
-                        onRefresh: () {
-                          setState(() {});
-                        },
-                        onChange: (val) {
-                          refreshSearchedCats(val);
-                        },
-                        categories: categories),
+                      onRefresh: () {
+                        setState(() {});
+                      },
+                      onChange: (val) {
+                        refreshSearchedCats(val);
+                      },
+                      categories: categories,
+                      users: null,
+                    ),
                   ),
                 ],
               ),
