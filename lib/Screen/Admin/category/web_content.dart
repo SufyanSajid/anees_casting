@@ -1,10 +1,10 @@
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'package:anees_costing/Functions/dailog.dart';
-import 'package:anees_costing/Functions/filterbar.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/contant.dart';
 
@@ -89,6 +89,8 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             FirestoreMethods()
                 .deleteRecord(collection: 'categories', prodId: cat.id)
                 .then((value) async {
+              Provider.of<Counts>(context, listen: false)
+                  .decreaseCount(category: 1);
               await Provider.of<Categories>(context, listen: false)
                   .fetchAndUpdateCat();
               setState(() {

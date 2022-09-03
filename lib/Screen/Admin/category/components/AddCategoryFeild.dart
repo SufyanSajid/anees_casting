@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import '../../../../Widget/submitbutton.dart';
 import '../../../../contant.dart';
 
 class AddCategoryFeilds extends StatefulWidget {
-  AddCategoryFeilds({
+  const AddCategoryFeilds({
     Key? key,
   }) : super(key: key);
 
@@ -27,10 +28,10 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
   bool isCatLoading = false;
   bool isFirst = true;
   Category? category;
+
   @override
   void initState() {
     category = Provider.of<Categories>(context, listen: false).drawerCategory;
-    // TODO: implement initState
     if (category != null) {
       _nameController.text = category!.title.toString();
     } else {
@@ -47,9 +48,10 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
 
   _uploadCat() async {
     var navi = Navigator.of(context);
-    var provider = Provider.of<Categories>(context, listen: false);
+    var catProvider = Provider.of<Categories>(context, listen: false);
+    var countProvider = Provider.of<Counts>(context, listen: false);
 
-    if (provider.isCatExist(
+    if (catProvider.isCatExist(
         title: _nameController.text.trim(), parentTitle: parentTitle ?? "")) {
       showCustomDialog(
           context: context,
@@ -64,12 +66,13 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
         isCatLoading = true;
       });
 
-      await provider.uploadCatagory(
+      await catProvider.uploadCatagory(
           title: _nameController.text.trim(),
           parentId: parentId ?? "",
           parentTitle: parentTitle ?? "");
 
-      await provider.fetchAndUpdateCat();
+      await catProvider.fetchAndUpdateCat();
+      countProvider.increaseCount(category: 1);
       setState(() {
         _nameController.clear();
         isCatLoading = false;

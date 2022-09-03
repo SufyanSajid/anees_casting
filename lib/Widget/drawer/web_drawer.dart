@@ -1,5 +1,5 @@
 import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Screen/Admin/Product/components/formfeilds.dart';
+import 'package:anees_costing/Screen/Admin/Product/components/add_product_field.dart';
 import 'package:anees_costing/Screen/Admin/users/add_user.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/category.dart';
-import '../../Screen/Admin/category/components/formfeilds.dart';
+import '../../Screen/Admin/category/components/AddCategoryFeild.dart';
 import '../customautocomplete.dart';
 import '../input_feild.dart';
 import '../submitbutton.dart';
@@ -66,7 +66,7 @@ class WebDrawer extends StatelessWidget {
                 svgIcon: 'assets/icons/category.svg',
               ),
             if (selectedIndex == 2)
-              DrawerAppbar(
+              const DrawerAppbar(
                 title: 'Users',
                 subTitle: 'Add New Users',
                 svgIcon: 'assets/icons/profile.svg',
@@ -87,8 +87,8 @@ class WebDrawer extends StatelessWidget {
                 child: AddUserFeilds(),
               ),
             if (selectedIndex == 3)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
                 child: AddCategoryFeilds(),
               ),
 

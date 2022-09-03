@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:anees_costing/Models/counts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,8 @@ import '../../../../Widget/submitbutton.dart';
 import '../../../../contant.dart';
 
 class AddProductFeilds extends StatefulWidget {
+  const AddProductFeilds({Key? key}) : super(key: key);
+
   @override
   State<AddProductFeilds> createState() => _AddProductFeildsState();
 }
@@ -38,24 +41,24 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
 
   bool isLoading = false;
   Product? drawerProduct;
-  String? prodImage;
+  String? prodImageUrl;
+
   @override
   void initState() {
-    // TODO: implement initState
-    Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
+    // Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
     drawerProduct = Provider.of<Products>(context, listen: false).drawerProduct;
     if (drawerProduct != null) {
       _prodNameController.text = drawerProduct!.name;
       _prodLengthController.text = drawerProduct!.length;
       _prodWidthController.text = drawerProduct!.width;
       prodUnit = drawerProduct!.unit;
-      prodImage = drawerProduct!.image;
+      prodImageUrl = drawerProduct!.image;
     } else {
       _prodNameController.text = '';
       _prodLengthController.text = '';
       _prodWidthController.text = '';
       prodUnit = 'CM';
-      prodImage = null;
+      prodImageUrl = null;
     }
     super.initState();
   }
@@ -105,7 +108,8 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       setState(() {
         isLoading = true;
       });
-      var provider = Provider.of<Products>(context, listen: false);
+      var productProvider = Provider.of<Products>(context, listen: false);
+      var countProvider = Provider.of<Counts>(context, listen: false);
       downloadImgUrl =
           await StorageMethods().uploadImage(file: img, collection: "products");
       Product newProduct = Product(
@@ -119,8 +123,9 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         image: downloadImgUrl!,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
-      await provider.addProduct(product: newProduct);
-      await provider.fetchAndUpdateProducts();
+      await productProvider.addProduct(product: newProduct);
+      await productProvider.fetchAndUpdateProducts();
+      countProvider.increaseCount(product: 1);
 
       clearControllersAndImage();
 
@@ -131,43 +136,48 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     }
   }
 
-  bool isProductEmpty(BuildContext context) {
-    var prod = Provider.of<Products>(context, listen: false).drawerProduct;
-    if (prod == null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // bool isProductEmpty(BuildContext context) {
+  //   var prod = Provider.of<Products>(context, listen: false).drawerProduct;
+  //   if (prod == null) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   _editProduct(
       {required var img,
       required String prodId,
       required String imageUrl}) async {
-    setState(() {
-      isLoading = true;
-    });
-
     if (productNotEmpty()) {
+      setState(() {
+        isLoading = true;
+      });
+
       Product newProduct = prodObj();
+      var navigator = Navigator.of(context);
 
       newProduct.id = prodId;
       newProduct.image = imageUrl;
 
       var provider = Provider.of<Products>(context, listen: false);
 
-      await StorageMethods().updateImage(
+      String newImageUrl = await StorageMethods().updateImage(
         imageURl: newProduct.image.split("?").first,
         file: img,
       );
 
+      newProduct.image = newImageUrl;
+
       await provider.updateProduct(product: newProduct);
+      await provider.fetchAndUpdateProducts();
 
       clearControllersAndImage();
+      setState(() {
+        isLoading = false;
+      });
+      navigator.pop();
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -189,8 +199,8 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                     width: 2,
                     style: BorderStyle.solid,
                   )),
-              child: prodImage != null
-                  ? Image.network(prodImage!)
+              child: prodImageUrl != null
+                  ? Image.network(prodImageUrl!)
                   : image != null
                       ? Image.memory(
                           image!,
@@ -207,6 +217,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                           .pickFiles(withData: true, type: FileType.image);
 
                       setState(() {
+                        prodImageUrl = null;
                         image = result1?.files.first.bytes;
                       });
                     },
@@ -284,7 +295,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                 height: height(context),
                 width: width(context),
                 onTap: () {
-                  isProductEmpty(context)
+                  drawerProduct == null
                       ? _addProduct(image)
                       : _editProduct(
                           img: image,

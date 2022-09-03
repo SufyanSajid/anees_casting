@@ -1,6 +1,6 @@
 import 'package:anees_costing/Helpers/firebase_auth.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
-import 'package:anees_costing/Models/users_count.dart';
 import 'package:provider/provider.dart';
 import '/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -84,8 +84,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     _clearControllersAndRole();
 
     showSnackBar(ctx, "User is added");
-
-    Provider.of<UsersCount>(ctx, listen: false).increaseUsersCount();
+    Provider.of<Counts>(context, listen: false).increaseCount(user: 1);
     await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
     setState(() {
       isLoading = false;

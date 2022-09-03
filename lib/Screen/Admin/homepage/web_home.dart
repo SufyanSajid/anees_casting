@@ -1,9 +1,5 @@
-import 'package:anees_costing/Models/categories_count.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
-import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Models/products_counts.dart';
-import 'package:anees_costing/Models/users_count.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/logs/content.dart';
@@ -181,7 +177,6 @@ class _WebHomeState extends State<WebHome> {
                 onTap: () {
                   setState(() {
                     selectedIndex = 4;
-                    print(4);
                   });
                 },
               ),

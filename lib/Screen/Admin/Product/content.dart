@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/contant.dart';
@@ -77,12 +78,16 @@ class _ProductWebContentState extends State<ProductWebContent> {
                     setState(() {
                       isLoading = true;
                     });
-                    var provider =
+                    var productProvider =
                         Provider.of<Products>(context, listen: false);
+                    var countProvider =
+                        Provider.of<Counts>(context, listen: false);
+
                     await StorageMethods().deleteImage(imgUrl: imgUrl);
 
-                    await provider.deleteProduct(prodId);
-                    await provider.fetchAndUpdateProducts();
+                    await productProvider.deleteProduct(prodId);
+                    countProvider.decreaseCount(product: 1);
+                    await productProvider.fetchAndUpdateProducts();
 
                     setState(() {
                       isLoading = false;

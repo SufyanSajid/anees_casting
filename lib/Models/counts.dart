@@ -41,19 +41,106 @@ class Counts with ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> increaseUsersCount() async {
-  //   var payLoad = {
-  //     "fields": {
-  //       "catId": {"stringValue": (_userCount! + 1).toString()},
-  //     }
-  //   };
+  Future<void> increaseCount(
+      {int user = 0, int product = 0, int category = 0}) async {
+    var payLoad = {
+      "fields": {
+        "users": {"stringValue": (_counts!.usersCount + user).toString()},
+        "categories": {
+          "stringValue": (_counts!.catsCount + category).toString()
+        },
+        "products": {
+          "stringValue": (_counts!.productsCount + product).toString()
+        },
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.usersCount += user;
+    _counts!.catsCount += category;
+    _counts!.productsCount += product;
 
-  //   await FirestoreMethods().updateRecords(
-  //       collection: "users count", data: payLoad, prodId: "usersCount");
+    notifyListeners();
+  }
 
-  //   _userCount = _userCount! + 1;
-  //   notifyListeners();
-  // }
+  Future<void> decreaseCount(
+      {int user = 0, int product = 0, int category = 0}) async {
+    var payLoad = {
+      "fields": {
+        "users": {"stringValue": (_counts!.usersCount - user).toString()},
+        "categories": {
+          "stringValue": (_counts!.catsCount - category).toString()
+        },
+        "products": {
+          "stringValue": (_counts!.productsCount - product).toString()
+        },
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.usersCount -= user;
+    _counts!.catsCount -= category;
+    _counts!.productsCount -= product;
+
+    notifyListeners();
+  }
+
+  Future<void> _increaseUser() async {}
+
+  Future<void> _increaseProduct() async {
+    var payLoad = {
+      "fields": {
+        "products": {"stringValue": (_counts!.productsCount + 1).toString()},
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.productsCount += 1;
+  }
+
+  Future<void> _increaseCats() async {
+    var payLoad = {
+      "fields": {
+        "categories": {"stringValue": (_counts!.catsCount + 1).toString()},
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.catsCount += 1;
+  }
+
+  Future<void> _decreaseUser() async {
+    var payLoad = {
+      "fields": {
+        "users": {"stringValue": (_counts!.usersCount - 1).toString()},
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.usersCount -= 1;
+  }
+
+  Future<void> _decreaseProduct() async {
+    var payLoad = {
+      "fields": {
+        "products": {"stringValue": (_counts!.productsCount - 1).toString()},
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.productsCount -= 1;
+  }
+
+  Future<void> _decreaseCats() async {
+    var payLoad = {
+      "fields": {
+        "categories": {"stringValue": (_counts!.catsCount - 1).toString()},
+      }
+    };
+    await FirestoreMethods()
+        .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
+    _counts!.catsCount -= 1;
+  }
 
   // Future<void> decreaseUsers() async {
   //   var payLoad = {
