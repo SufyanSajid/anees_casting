@@ -27,6 +27,14 @@ class FirestoreMethods {
     return res;
   }
 
+  // For pagination
+
+  Future<http.Response> getChunkRecords({required String collection}) async {
+    var url = Uri.parse("$baseUrl$collection?pageSize=2&pageToken=");
+    http.Response res = await http.get(url);
+    return res;
+  }
+
   Future<http.Response> updateRecords(
       {required String collection,
       required var data,

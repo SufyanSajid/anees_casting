@@ -91,6 +91,13 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getPaginationProducts() async {
+    http.Response res =
+        await FirestoreMethods().getChunkRecords(collection: "products");
+    print(jsonDecode(res.body)["nextPageToken"]);
+    print(res.body);
+  }
+
   Future<void> searchProduct(String title, String field) async {
     List<Product> tempProds = [];
     String prodRes = await FirestoreMethods().searchProduct(title, field);

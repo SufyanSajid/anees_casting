@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
 import 'package:anees_costing/contant.dart';
@@ -60,6 +61,12 @@ class _UserWebContentState extends State<UserWebContent> {
 
     return Column(
       children: [
+        ElevatedButton(
+            onPressed: () {
+              Provider.of<Products>(context, listen: false)
+                  .getPaginationProducts();
+            },
+            child: Text("Pagination")),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
           decoration: BoxDecoration(
