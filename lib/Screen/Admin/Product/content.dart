@@ -300,75 +300,145 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                               Product productToSend =
                                                   products[index];
                                               return AlertDialog(
-                                                title: Text("Select Users"),
+                                                title: Center(
+                                                  child: Text(
+                                                    'Select Users',
+                                                    style:
+                                                        GoogleFonts.righteous(
+                                                      color: headingColor,
+                                                      fontSize: 30,
+                                                    ),
+                                                  ),
+                                                ),
                                                 content: StatefulBuilder(
                                                     builder:
                                                         (context, setState) {
-                                                  return Column(
-                                                    children: [
-                                                      TextField(
-                                                        onChanged: (val) {
-                                                          setState(() {
-                                                            filteredUser = users
-                                                                .where(
-                                                                  (element) => element
-                                                                      .name
-                                                                      .toLowerCase()
-                                                                      .contains(
-                                                                          val.toLowerCase()),
-                                                                )
-                                                                .toList();
-                                                          });
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            width(context) * 60,
-                                                        height:
-                                                            height(context) *
-                                                                70,
-                                                        child: ListView.builder(
-                                                            itemCount:
-                                                                filteredUser
-                                                                        .isEmpty
-                                                                    ? users
-                                                                        .length
-                                                                    : filteredUser
-                                                                        .length,
-                                                            itemBuilder:
-                                                                (ctx, index) {
-                                                              return ListTile(
-                                                                onTap: () {
-                                                                  Provider.of<SentProducts>(
-                                                                          ctx,
-                                                                          listen:
-                                                                              false)
-                                                                      .addProduct(
-                                                                          product:
-                                                                              productToSend,
-                                                                          userId:
-                                                                              users[index].id);
-                                                                  Navigator.of(
-                                                                          ctx)
-                                                                      .pop();
-                                                                },
-                                                                title: Text(filteredUser
-                                                                        .isEmpty
-                                                                    ? users[index]
-                                                                        .name
-                                                                    : filteredUser[
-                                                                            index]
-                                                                        .name),
-                                                              );
-                                                            }),
-                                                      )
-                                                    ],
+                                                  return Container(
+                                                    height:
+                                                        height(context) * 50,
+                                                    width: width(context) * 50,
+                                                    child: Column(
+                                                      children: [
+                                                        TextField(
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Search User',
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                      color:
+                                                                          primaryColor,
+                                                                      width: 1,
+                                                                      style: BorderStyle
+                                                                          .solid,
+                                                                    ),
+                                                                  ),
+                                                                  border:
+                                                                      const OutlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      width: 1,
+                                                                      style: BorderStyle
+                                                                          .solid,
+                                                                    ),
+                                                                  ),
+                                                                  focusColor:
+                                                                      primaryColor,
+                                                                  fillColor:
+                                                                      primaryColor,
+                                                                  prefixIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    color:
+                                                                        primaryColor,
+                                                                  )),
+                                                          onChanged: (val) {
+                                                            setState(() {
+                                                              filteredUser =
+                                                                  users
+                                                                      .where(
+                                                                        (element) => element
+                                                                            .name
+                                                                            .toLowerCase()
+                                                                            .contains(val.toLowerCase()),
+                                                                      )
+                                                                      .toList();
+                                                            });
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height:
+                                                              height(context) *
+                                                                  2,
+                                                        ),
+                                                        Expanded(
+                                                          child:
+                                                              ListView.builder(
+                                                                  itemCount: filteredUser
+                                                                          .isEmpty
+                                                                      ? users
+                                                                          .length
+                                                                      : filteredUser
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (ctx,
+                                                                          index) {
+                                                                    return Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          bottom:
+                                                                              10),
+                                                                      decoration: BoxDecoration(
+                                                                          color: primaryColor.withOpacity(
+                                                                              0.5),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(5)),
+                                                                      child:
+                                                                          ListTile(
+                                                                        title:
+                                                                            Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.person_outline,
+                                                                              color: primaryColor,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width(context) * 1,
+                                                                            ),
+                                                                            Text(
+                                                                              filteredUser.isEmpty ? users[index].name : filteredUser[index].name,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        trailing: IconButton(
+                                                                            onPressed: () {
+                                                                              Provider.of<SentProducts>(ctx, listen: false).addProduct(product: productToSend, userId: users[index].id);
+                                                                              Navigator.of(ctx).pop();
+                                                                            },
+                                                                            icon: Icon(
+                                                                              Icons.send_outlined,
+                                                                              color: primaryColor,
+                                                                            )),
+                                                                      ),
+                                                                    );
+                                                                  }),
+                                                        )
+                                                      ],
+                                                    ),
                                                   );
                                                 }),
                                               );
                                             });
                                       },
-                                      icon: Icon(Icons.send))
+                                      icon: Icon(
+                                        Icons.send,
+                                        color: primaryColor,
+                                      ))
                                 ],
                               ),
                             ],

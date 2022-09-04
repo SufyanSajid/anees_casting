@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:flutter/foundation.dart';
 
@@ -219,63 +220,97 @@ class _ShowUsersState extends State<ShowUsers> {
                     ),
                     Row(
                       children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0, 5),
-                                    blurRadius: 5),
-                              ]),
-                          padding: const EdgeInsets.all(8),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                            ),
-                            color: contentColor,
-                            onPressed: () {
-                              Provider.of<Users>(context, listen: false)
-                                  .setUser(widget.users[index]);
-
-                              widget.scaffoldKey!.currentState!.openEndDrawer();
-                            },
-                          ),
+                        Text(
+                          widget.users[index].isBlocked ? 'Blocked' : 'Active',
+                          style: TextStyle(
+                              color: widget.users[index].isBlocked
+                                  ? Colors.red
+                                  : Colors.green),
                         ),
                         SizedBox(
-                          width: width(context) * 6,
+                          width: width(context) * 3,
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0, 5),
-                                    blurRadius: 5),
-                              ]),
-                          padding: const EdgeInsets.all(8),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            color: contentColor,
-                            onPressed: () {
-                              _blockUser(
-                                  user: widget.users[index],
-                                  ctx: context,
-                                  block: widget.users[index].isBlocked
-                                      ? false
-                                      : true);
-                              setState(() {});
-                            },
-                          ),
+                        Switch(
+                          value: widget.users[index].isBlocked,
+                          activeColor: Colors.red,
+                          inactiveTrackColor: Colors.green,
+                          thumbColor: MaterialStateProperty.all(Colors.white),
+                          onChanged: (value) async {
+                            print(value);
+                            var provider =
+                                Provider.of<Users>(ctx, listen: false);
+
+                            await provider.blockUser(
+                                user: widget.users[index], block: value);
+
+                            setState(() {
+                              widget.users[index].isBlocked =
+                                  !widget.users[index].isBlocked;
+                            });
+                            await provider.fetchAndUpdateUser();
+                          },
                         ),
                       ],
                     ),
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //       decoration: const BoxDecoration(
+                    //           color: Colors.white,
+                    //           shape: BoxShape.circle,
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //                 color: Colors.grey,
+                    //                 offset: Offset(0, 5),
+                    //                 blurRadius: 5),
+                    //           ]),
+                    //       padding: const EdgeInsets.all(8),
+                    //       child: IconButton(
+                    //         icon: const Icon(
+                    //           Icons.edit,
+                    //         ),
+                    //         color: contentColor,
+                    //         onPressed: () {
+                    //           Provider.of<Users>(context, listen: false)
+                    //               .setUser(widget.users[index]);
+
+                    //           widget.scaffoldKey!.currentState!.openEndDrawer();
+                    //         },
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: width(context) * 6,
+                    //     ),
+                    //     Container(
+                    //       decoration: const BoxDecoration(
+                    //           color: Colors.white,
+                    //           shape: BoxShape.circle,
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //                 color: Colors.grey,
+                    //                 offset: Offset(0, 5),
+                    //                 blurRadius: 5),
+                    //           ]),
+                    //       padding: const EdgeInsets.all(8),
+                    //       child: IconButton(
+                    //         icon: const Icon(
+                    //           Icons.delete,
+                    //           color: Colors.red,
+                    //         ),
+                    //         color: contentColor,
+                    //         onPressed: () {
+                    //           _blockUser(
+                    //               user: widget.users[index],
+                    //               ctx: context,
+                    //               block: widget.users[index].isBlocked
+                    //                   ? false
+                    //                   : true);
+                    //           setState(() {});
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -283,3 +318,113 @@ class _ShowUsersState extends State<ShowUsers> {
     );
   }
 }
+
+
+
+
+
+
+
+
+// Container(
+//               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+//               margin: const EdgeInsets.only(
+//                 bottom: 10,
+//               ),
+//               decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   boxShadow: [
+//                     const BoxShadow(
+//                       color: Color.fromRGBO(94, 89, 89, 0.11),
+//                       offset: Offset(0, 10),
+//                       blurRadius: 20,
+//                     ),
+//                     BoxShadow(
+//                       color: Color.fromRGBO(94, 89, 89, 0.11),
+//                       offset: -Offset(0, 10),
+//                       blurRadius: 20,
+//                     ),
+//                   ],
+//                   borderRadius: BorderRadius.circular(15)),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Container(
+//                         height: height(context) * 6,
+//                         width: height(context) * 6,
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 5, horizontal: 5),
+//                         decoration: BoxDecoration(
+//                             border: Border.all(
+//                                 style: BorderStyle.solid,
+//                                 width: 2,
+//                                 color: primaryColor),
+//                             borderRadius: BorderRadius.circular(50)),
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.circular(50),
+//                           child: Image.network(
+//                             'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+//                             height: height(context) * 10,
+//                             width: height(context) * 10,
+//                             fit: BoxFit.cover,
+//                           ),
+//                         ),
+//                       ),
+//                       SizedBox(
+//                         width: width(context) * 3,
+//                       ),
+//                       Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             'Sufyan Sajid',
+//                             style: TextStyle(color: primaryColor, fontSize: 16),
+//                           ),
+//                           SizedBox(
+//                             height: height(context) * 0.3,
+//                           ),
+//                           Text(
+//                             'Booker',
+//                             style:
+//                                 TextStyle(color: secondaryColor, fontSize: 14),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                   Row(
+//                     children: [
+//                       const Text(
+//                         'Active',
+//                         style: TextStyle(color: Colors.green),
+//                       ),
+//                       SizedBox(
+//                         width: width(context) * 3,
+//                       ),
+//                       Switch(
+//                         value: false,
+//                         activeColor: Colors.green,
+//                         inactiveTrackColor: Colors.red,
+//                         thumbColor: MaterialStateProperty.all(Colors.white),
+//                         onChanged: (value) async {
+//                           print(value);
+//                           int status;
+
+//                           if (value == true) {
+//                             status = 1;
+//                           } else {
+//                             status = 0;
+//                           }
+
+//                           // setState(() {
+//                           //   users[index].isActive = !users[index].isActive;
+//                           // });
+//                         },
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),

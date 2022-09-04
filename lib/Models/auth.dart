@@ -49,6 +49,32 @@ class Auth with ChangeNotifier {
     return '';
   }
 
+  Future<bool> isBlocked(String authId) async {
+    final URL = Uri.parse(
+        "https://firestore.googleapis.com/v1/projects/aneescasting-ec184/databases/(default)/documents:runQuery");
+    var res = await http.post(URL,
+        body: json.encode({
+          'structuredQuery': {
+            'from': {'collectionId': 'users'},
+            'where': {
+              'fieldFilter': {
+                "field": {"fieldPath": "authId"},
+                "op": 'EQUAL',
+                "value": {'stringValue': authId}
+              }
+            }
+          }
+        }));
+
+    List<dynamic> docsData = json.decode(res.body);
+
+    if (docsData[0]["document"] == null) {
+      return true;
+    }
+
+    return docsData[0]["document"]["fields"]["isBlocked"]["booleanValue"];
+  }
+
   Future<void> _authentication(
       String email, String password, String urlSegment) async {
     try {
