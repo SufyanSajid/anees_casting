@@ -110,4 +110,23 @@ class FirestoreMethods {
     //   print(element.runtimeType);
     // }
   }
+
+  Future<http.Response> updateSingleField(
+      {required String collection,
+      required String documentId,
+      required String fieldName,
+      required var bodyData}) async {
+// http.patch(`https://firestore.googleapis.com/v1/projects/aneescasting-ec184/databases/(default)/documents/sentproductsrecord/<DOCID>?updateMask.fieldPaths=catId&updateMask.fieldPaths=catTitle`,
+
+    var url = Uri.parse(
+        "$baseUrl$collection/$documentId?updateMask.fieldPaths=$fieldName");
+    // var body = jsonEncode({
+    //   "fields": {
+    //     "catId": {"stringValue": "newcatId"},
+    //     "catTitle": {"stringValue": "newnewn"},
+    //   }
+    // });
+    http.Response res = await http.patch(url, body: bodyData);
+    return res;
+  }
 }

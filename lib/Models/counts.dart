@@ -141,18 +141,4 @@ class Counts with ChangeNotifier {
         .updateRecords(collection: "counts", data: payLoad, prodId: "counts");
     _counts!.catsCount -= 1;
   }
-
-  // Future<void> decreaseUsers() async {
-  //   var payLoad = {
-  //     "fields": {
-  //       "catId": {"stringValue": (_userCount! - 1).toString()},
-  //     }
-  //   };
-
-  //   await FirestoreMethods().updateRecords(
-  //       collection: "users count", data: payLoad, prodId: "usersCount");
-
-  //   _userCount = _userCount! - 1;
-  //   notifyListeners();
-  // }
 }

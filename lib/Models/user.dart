@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:anees_costing/Helpers/firebase_auth.dart';
-
 import '/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,15 +11,16 @@ class AUser {
   String email;
   String role;
   String phone;
+  bool isBlocked;
 
-  AUser({
-    required this.id,
-    required this.authId,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.role,
-  });
+  AUser(
+      {required this.id,
+      required this.authId,
+      required this.name,
+      required this.email,
+      required this.phone,
+      required this.role,
+      required this.isBlocked});
 }
 
 class Users with ChangeNotifier {
@@ -58,12 +57,12 @@ class Users with ChangeNotifier {
         "email": {"stringValue": email},
         "role": {"stringValue": role},
         "image": {"stringValue": image},
+        "isBlocked": {"booleanValue": false},
       }
     };
 
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "users", data: payLoad);
-    print(res);
   }
 
   Future<void> fetchAndUpdateUser() async {
@@ -79,16 +78,17 @@ class Users with ChangeNotifier {
       String email = fields["email"]["stringValue"];
       String phone = fields["phone"]["stringValue"];
       String role = fields["role"]["stringValue"];
+      bool isBlocked = fields["isBlocked"]["booleanValue"];
       String id = (element["name"] as String).split("users/").last;
 
       tempUsers.add(AUser(
-        id: id,
-        authId: authId,
-        name: name,
-        email: email,
-        phone: phone,
-        role: role,
-      ));
+          id: id,
+          authId: authId,
+          name: name,
+          email: email,
+          phone: phone,
+          role: role,
+          isBlocked: isBlocked));
     }
 
     _users = tempUsers;
@@ -96,8 +96,18 @@ class Users with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteUser(AUser user) async {
-    var res = await FirebaseAuth().deletUser("fl4tlZn5GlSzjHVQj4g3iKtB7vI3");
+  Future<void> blockUser({required AUser user, required bool block}) async {
+    var body = jsonEncode({
+      "fields": {
+        "isBlocked": {"booleanValue": block ? true : false},
+      }
+    });
+    http.Response res = await FirestoreMethods().updateSingleField(
+        collection: "users",
+        documentId: user.id,
+        fieldName: "isBlocked",
+        bodyData: body);
+    // var res = await FirebaseAuth().deletUser("fl4tlZn5GlSzjHVQj4g3iKtB7vI3");
 
     // var res = await FirestoreMethods()
     // .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
@@ -108,7 +118,7 @@ class Users with ChangeNotifier {
 
     // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
 
-    // print(res.body);
+    print(res.body);
   }
 
   getUsersByUser(AUser user) {

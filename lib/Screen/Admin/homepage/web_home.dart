@@ -122,7 +122,8 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Designs',
-                value: counts == null ? "" : "${counts!.productsCount}",
+                value:
+                    counts == null ? "waiting..." : "${counts!.productsCount}",
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -132,7 +133,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Users',
-                value: counts == null ? "" : "${counts!.usersCount}",
+                value: counts == null ? "waiting..." : "${counts!.usersCount}",
                 icon: Icons.groups_outlined,
               ),
             ),
@@ -142,7 +143,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Categories',
-                value: counts == null ? "" : "${counts!.catsCount}",
+                value: counts == null ? "waiting..." : "${counts!.catsCount}",
                 icon: Icons.diamond_outlined,
               ),
             ),

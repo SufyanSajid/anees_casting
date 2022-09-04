@@ -50,7 +50,7 @@ class _UserWebContentState extends State<UserWebContent> {
   @override
   Widget build(BuildContext context) {
     print("main build");
-    users = Provider.of<Users>(context, listen: false).users;
+    users = Provider.of<Users>(context, listen: true).users;
     searchedUsers = Provider.of<Users>(context, listen: false).searchedUsers;
 
     if (searchedUsers.isNotEmpty) {

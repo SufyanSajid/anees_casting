@@ -97,8 +97,6 @@ class Products with ChangeNotifier {
 
     List<dynamic> docsData = json.decode(prodRes);
 
-    print(docsData);
-
     for (var element in docsData) {
       if (element['document'] == null) {
         break;
@@ -176,5 +174,22 @@ class Products with ChangeNotifier {
     };
     http.Response res = await FirestoreMethods().updateRecords(
         collection: "products", data: payLoad, prodId: product.id);
+  }
+
+  Future<void> sendProductToUser(
+      {required Product product, required String userId}) async {
+    var payLoad = {
+      "fields": {
+        "catId": {"stringValue": product.categoryId},
+        "catTitle": {"stringValue": product.categoryTitle},
+        "imageUrl": {"stringValue": product.image},
+        "productName": {"stringValue": product.name},
+        "productWidth": {"stringValue": product.width},
+        "productUnit": {"stringValue": product.unit},
+        "productLength": {"stringValue": product.length},
+      }
+    };
+    http.Response res = await FirestoreMethods()
+        .createRecord(collection: "sentproductsrecord/", data: payLoad);
   }
 }

@@ -1,7 +1,10 @@
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Models/sent_products.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
+import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,10 +26,19 @@ class ProductWebContent extends StatefulWidget {
 
 class _ProductWebContentState extends State<ProductWebContent> {
   final _designController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   List<Product> products = [];
+  List<AUser> filteredUser = [];
+
   bool isFirst = true;
   bool isLoading = false;
   String? catId;
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() async {
@@ -122,8 +134,9 @@ class _ProductWebContentState extends State<ProductWebContent> {
   @override
   Widget build(BuildContext context) {
     var width1 = MediaQuery.of(context).size.width;
-    List<Product> products = Provider.of<Products>(context).products;
+    products = Provider.of<Products>(context).products;
     List<Category> categories = Provider.of<Categories>(context).categories;
+    List<AUser> users = Provider.of<Users>(context).users;
 
     return Column(
       children: [
@@ -216,71 +229,151 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       },
                       child: GridTile(
                         footer: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            height: height(context) * 5,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                              gradient: LinearGradient(
-                                  colors: [Colors.white24, Colors.black38],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(
-                                    products[index].name,
-                                    style: GoogleFonts.righteous(
-                                      color: Colors.black54,
-                                      fontSize: 25,
-                                    ),
-                                    // style: const TextStyle(
-                                    //     color: Colors.black54),
-                                    textAlign: TextAlign.start,
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          height: height(context) * 5,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            gradient: LinearGradient(
+                                colors: [Colors.white24, Colors.black38],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  products[index].name,
+                                  style: GoogleFonts.righteous(
+                                    color: Colors.black54,
+                                    fontSize: 25,
                                   ),
+                                  textAlign: TextAlign.start,
                                 ),
-                                PopupMenuButton(
-                                  icon: Icon(
-                                    Icons.more_vert,
-                                    color: headingColor,
-                                  ),
-                                  itemBuilder: (BuildContext context) =>
-                                      <PopupMenuEntry>[
-                                    PopupMenuItem(
-                                      child: PopupItem(
-                                        icon: Icons.edit_outlined,
-                                        text: 'Edit',
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                          Provider.of<Products>(context,
-                                                  listen: false)
-                                              .setProduct(products[index]);
+                              ),
+                              Row(
+                                children: [
+                                  PopupMenuButton(
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      color: primaryColor.withOpacity(0.8),
+                                    ),
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry>[
+                                      PopupMenuItem(
+                                        child: PopupItem(
+                                          icon: Icons.edit_outlined,
+                                          text: 'Edit',
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            Provider.of<Products>(context,
+                                                    listen: false)
+                                                .setProduct(products[index]);
 
-                                          widget.scaffoldKey.currentState!
-                                              .openEndDrawer();
-                                        },
+                                            widget.scaffoldKey.currentState!
+                                                .openEndDrawer();
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    PopupMenuItem(
-                                      child: PopupItem(
-                                        icon: Icons.delete,
-                                        text: 'Delete',
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                          _deleteProduct(
-                                              imgUrl: products[index].image,
-                                              prodId: products[index].id);
-                                        },
+                                      PopupMenuItem(
+                                        child: PopupItem(
+                                          icon: Icons.delete,
+                                          text: 'Delete',
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            _deleteProduct(
+                                                imgUrl: products[index].image,
+                                                prodId: products[index].id);
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
+                                    ],
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              Product productToSend =
+                                                  products[index];
+                                              return AlertDialog(
+                                                title: Text("Select Users"),
+                                                content: StatefulBuilder(
+                                                    builder:
+                                                        (context, setState) {
+                                                  return Column(
+                                                    children: [
+                                                      TextField(
+                                                        onChanged: (val) {
+                                                          setState(() {
+                                                            filteredUser = users
+                                                                .where(
+                                                                  (element) => element
+                                                                      .name
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          val.toLowerCase()),
+                                                                )
+                                                                .toList();
+                                                          });
+                                                        },
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            width(context) * 60,
+                                                        height:
+                                                            height(context) *
+                                                                70,
+                                                        child: ListView.builder(
+                                                            itemCount:
+                                                                filteredUser
+                                                                        .isEmpty
+                                                                    ? users
+                                                                        .length
+                                                                    : filteredUser
+                                                                        .length,
+                                                            itemBuilder:
+                                                                (ctx, index) {
+                                                              return ListTile(
+                                                                onTap: () {
+                                                                  Provider.of<SentProducts>(
+                                                                          ctx,
+                                                                          listen:
+                                                                              false)
+                                                                      .addProduct(
+                                                                          product:
+                                                                              productToSend,
+                                                                          userId:
+                                                                              users[index].id);
+                                                                  Navigator.of(
+                                                                          ctx)
+                                                                      .pop();
+                                                                },
+                                                                title: Text(filteredUser
+                                                                        .isEmpty
+                                                                    ? users[index]
+                                                                        .name
+                                                                    : filteredUser[
+                                                                            index]
+                                                                        .name),
+                                                              );
+                                                            }),
+                                                      )
+                                                    ],
+                                                  );
+                                                }),
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(Icons.send))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,

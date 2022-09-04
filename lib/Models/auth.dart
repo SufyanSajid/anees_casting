@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,8 +68,8 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         // throw HttpException(responseData['error']['message']);
-        print(responseData['error']['message'].toString());
       }
+
       currentUser = CurrentUser(
           id: responseData['localId'],
           token: responseData['idToken'],
@@ -76,15 +77,7 @@ class Auth with ChangeNotifier {
           expiryDate: DateTime.now().add(
             Duration(seconds: int.parse(responseData['expiresIn'])),
           ));
-      // _token = responseData['idToken'];
-      // _userId = responseData['localId'];
-      // _expiryDate = DateTime.now().add(
-      //   Duration(
-      //     seconds: int.parse(
-      //       responseData['expiresIn'],
-      //     ),
-      //   ),
-      // );
+
       autologout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();

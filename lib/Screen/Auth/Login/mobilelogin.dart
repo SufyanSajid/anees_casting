@@ -1,5 +1,8 @@
 // import 'package:chiarra_fazzini/Models/auth.dart';
+import 'dart:convert';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../../../Models/auth.dart';
 import '../../../Widget/adaptiveDialog.dart';
@@ -133,19 +136,46 @@ class _LoginFeildsState extends State<LoginFeilds> {
 
   bool isLoading = false;
 
+  Future<bool> _isBlocked(String authId) async {
+    final URL = Uri.parse(
+        "https://firestore.googleapis.com/v1/projects/aneescasting-ec184/databases/(default)/documents:runQuery");
+    var res = await http.post(URL,
+        body: json.encode({
+          'structuredQuery': {
+            'from': {'collectionId': 'users'},
+            'where': {
+              'fieldFilter': {
+                "field": {"fieldPath": "authId"},
+                "op": 'EQUAL',
+                "value": {'stringValue': authId}
+              }
+            }
+          }
+        }));
+
+    List<dynamic> docsData = json.decode(res.body);
+
+    if (docsData[0]["document"] == null) {
+      return true;
+    }
+
+    return docsData[0]["document"]["fields"]["isBlocked"]["booleanValue"];
+  }
+
   void _submit() async {
-    print('sufyan');
     setState(() {
       isLoading = true;
     });
-    Provider.of<Auth>(context, listen: false)
+    await Provider.of<Auth>(context, listen: false)
         .login(_emailController.text.trim(), _passController.text.trim())
         .then((value) async {
-      setState(() {
-        isLoading = false;
-      });
       CurrentUser currentUser =
           Provider.of<Auth>(context, listen: false).currentUser!;
+      bool isBlocked = await _isBlocked(currentUser.id);
+
+      if (isBlocked) {
+        print("Blocked");
+      }
       Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
     }).catchError((error) {
       setState(() {
@@ -162,6 +192,13 @@ class _LoginFeildsState extends State<LoginFeilds> {
                 Navigator.of(context).pop();
               }));
     });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
   }
 
   @override

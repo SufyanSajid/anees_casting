@@ -23,7 +23,7 @@ class FirebaseAuth {
     });
     final response = await http.post(url, body: body);
     var extractedData = json.decode(response.body);
-
+    print(extractedData["localId"]);
     await Users().createUser(
         authId: extractedData["localId"],
         name: name,

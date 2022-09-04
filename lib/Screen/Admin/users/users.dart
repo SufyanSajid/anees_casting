@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/sent_products.dart';
 import 'package:flutter/foundation.dart';
 
 import '/Models/user.dart';
@@ -22,29 +23,8 @@ class _UserScreenState extends State<UserScreen> {
   bool isLoading = false;
 
   @override
-  void didChangeDependencies() async {
-    if (isFirst) {
-      if (Provider.of<Users>(context, listen: false).users.isEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        await Provider.of<Users>(context, listen: false)
-            .fetchAndUpdateUser()
-            .then((value) {
-          setState(() {
-            isLoading = false;
-          });
-        });
-      }
-
-      isFirst = false;
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    users = Provider.of<Users>(context, listen: false).users;
+    users = Provider.of<Users>(context, listen: true).users;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -112,22 +92,50 @@ class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
 
-  _deletUser({required AUser user, required BuildContext ctx}) {
+  @override
+  void didChangeDependencies() async {
+    if (isFirst) {
+      if (Provider.of<Users>(context, listen: false).users.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+        await Provider.of<Users>(context, listen: false)
+            .fetchAndUpdateUser()
+            .then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+
+      isFirst = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  _blockUser(
+      {required AUser user, required BuildContext ctx, required bool block}) {
+    String blockMsg = block ? "Block" : "UnBlock";
     showCustomDialog(
         context: ctx,
-        title: "Delete",
+        title: blockMsg,
         btn1: "No",
-        content: "Do you wanna delete \"${user.name}\" user",
+        content: "Do you wanna $blockMsg \"${user.name}\" user",
         btn2: "Yes",
         btn1Pressed: () => Navigator.of(context).pop(),
         btn2Pressed: () async {
           var provider = Provider.of<Users>(ctx, listen: false);
           var navigator = Navigator.of(ctx);
-          provider.deleteUser(user);
-          provider.fetchAndUpdateUser();
+          await provider.blockUser(user: user, block: block ? true : false);
+          await provider.fetchAndUpdateUser();
 
           navigator.pop();
         });
+  }
+
+  getUserProduct(String userId) async {
+    await Provider.of<SentProducts>(context, listen: false)
+        .fetchSentProducts(userId: userId);
   }
 
   @override
@@ -145,7 +153,9 @@ class _ShowUsersState extends State<ShowUsers> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: widget.users[index].isBlocked
+                        ? Colors.grey[200]
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -254,8 +264,13 @@ class _ShowUsersState extends State<ShowUsers> {
                             ),
                             color: contentColor,
                             onPressed: () {
-                              _deletUser(
-                                  user: widget.users[index], ctx: context);
+                              _blockUser(
+                                  user: widget.users[index],
+                                  ctx: context,
+                                  block: widget.users[index].isBlocked
+                                      ? false
+                                      : true);
+                              setState(() {});
                             },
                           ),
                         ),
