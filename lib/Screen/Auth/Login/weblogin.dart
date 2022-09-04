@@ -17,7 +17,7 @@ class WebLogin extends StatelessWidget {
             Expanded(
               flex: 4,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
                 padding:

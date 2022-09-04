@@ -1,6 +1,9 @@
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class SideBar extends StatefulWidget {
@@ -27,6 +30,10 @@ class _SideBarState extends State<SideBar> {
   int select = 0;
   @override
   Widget build(BuildContext context) {
+    var currentUser = Provider.of<Auth>(
+      context,
+    ).currentUser;
+    print('role ${currentUser!.role}');
     select = widget.selectedIndex;
     return Drawer(
       backgroundColor: Colors.white,
@@ -67,6 +74,7 @@ class _SideBarState extends State<SideBar> {
                     isSelected: select == 1,
                   ),
                 ),
+                // if (currentUser!.role!.toLowerCase() == 'admin')
                 InkWell(
                   onTap: () {
                     setState(() {

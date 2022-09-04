@@ -136,32 +136,6 @@ class _LoginFeildsState extends State<LoginFeilds> {
 
   bool isLoading = false;
 
-  Future<bool> _isBlocked(String authId) async {
-    final URL = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/aneescasting-ec184/databases/(default)/documents:runQuery");
-    var res = await http.post(URL,
-        body: json.encode({
-          'structuredQuery': {
-            'from': {'collectionId': 'users'},
-            'where': {
-              'fieldFilter': {
-                "field": {"fieldPath": "authId"},
-                "op": 'EQUAL',
-                "value": {'stringValue': authId}
-              }
-            }
-          }
-        }));
-
-    List<dynamic> docsData = json.decode(res.body);
-
-    if (docsData[0]["document"] == null) {
-      return true;
-    }
-
-    return docsData[0]["document"]["fields"]["isBlocked"]["booleanValue"];
-  }
-
   void _submit() async {
     setState(() {
       isLoading = true;
@@ -171,10 +145,26 @@ class _LoginFeildsState extends State<LoginFeilds> {
         .then((value) async {
       CurrentUser currentUser =
           Provider.of<Auth>(context, listen: false).currentUser!;
-      bool isBlocked = await _isBlocked(currentUser.id);
+      bool isBlocked = await Provider.of<Auth>(context, listen: false)
+          .isBlocked(currentUser.id);
 
       if (isBlocked) {
-        print("Blocked");
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: 'Blocked',
+                content:
+                    'You are blocked. Please contact Anees Casting for further details.',
+                btnYes: 'Okay',
+                yesPressed: () async {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  Provider.of<Auth>(context, listen: false).logout();
+                  Navigator.of(context).pop();
+                }));
+        return;
       }
       Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
     }).catchError((error) {
