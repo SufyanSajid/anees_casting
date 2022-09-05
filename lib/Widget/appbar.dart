@@ -46,13 +46,13 @@ class Appbar extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Icon(
                   leadingIcon,
-                  color: primaryColor,
+                  color: btnbgColor.withOpacity(1),
                 ),
               ),
             ),
             SvgPicture.asset(
               svgIcon,
-              color: primaryColor,
+              color: btnbgColor.withOpacity(1),
             ),
             InkWell(
               onTap: tarilingTap,
@@ -69,7 +69,7 @@ class Appbar extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Icon(
                   tarilingIcon,
-                  color: primaryColor,
+                  color: btnbgColor.withOpacity(1),
                 ),
               ),
             ),
@@ -98,7 +98,7 @@ class Appbar extends StatelessWidget {
                     flex: 1,
                     child: Container(
                       height: height(context) * 0.1,
-                      color: Color.fromRGBO(197, 154, 120, 1),
+                      color: btnbgColor.withOpacity(1),
                     ),
                   ),
                   Expanded(
@@ -114,7 +114,7 @@ class Appbar extends StatelessWidget {
                     flex: 1,
                     child: Container(
                       height: height(context) * 0.1,
-                      color: Color.fromRGBO(197, 154, 120, 1),
+                      color: btnbgColor.withOpacity(1),
                     ),
                   ),
                 ],

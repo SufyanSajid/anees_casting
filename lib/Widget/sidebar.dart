@@ -74,20 +74,20 @@ class _SideBarState extends State<SideBar> {
                     isSelected: select == 1,
                   ),
                 ),
-                // if (currentUser!.role!.toLowerCase() == 'admin')
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      widget.onChanged(2);
-                      select = 2;
-                    });
-                  },
-                  child: SideBarItem(
-                    title: 'Users',
-                    icon: Icons.groups_outlined,
-                    isSelected: select == 2,
+                if (currentUser.role!.toLowerCase() == 'admin')
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.onChanged(2);
+                        select = 2;
+                      });
+                    },
+                    child: SideBarItem(
+                      title: 'Users',
+                      icon: Icons.groups_outlined,
+                      isSelected: select == 2,
+                    ),
                   ),
-                ),
                 InkWell(
                   onTap: () {
                     setState(() {
@@ -101,19 +101,20 @@ class _SideBarState extends State<SideBar> {
                     isSelected: select == 3,
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      widget.onChanged(4);
-                      select = 4;
-                    });
-                  },
-                  child: SideBarItem(
-                    title: 'Logs',
-                    icon: Icons.recycling,
-                    isSelected: select == 4,
+                if (currentUser.role!.toLowerCase() == 'admin')
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.onChanged(4);
+                        select = 4;
+                      });
+                    },
+                    child: SideBarItem(
+                      title: 'Logs',
+                      icon: Icons.recycling,
+                      isSelected: select == 4,
+                    ),
                   ),
-                ),
               ],
             ),
             Column(

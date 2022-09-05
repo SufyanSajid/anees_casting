@@ -1,4 +1,6 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -109,6 +111,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   @override
   Widget build(BuildContext context) {
     categories = Provider.of<Categories>(context, listen: false).categories;
+    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     searchedCat =
         Provider.of<Categories>(context, listen: false).searchedCategories;
     if (searchedCat.isNotEmpty) {
@@ -119,7 +122,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: shadow,
@@ -130,29 +133,27 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             children: [
               Row(
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: WebAutoComplete(
-                      onRefresh: () {
-                        setState(() {});
-                      },
-                      onChange: (val) {
-                        refreshSearchedCats(val);
-                      },
-                      categories: categories,
-                      users: null,
-                    ),
+                  WebAutoComplete(
+                    onRefresh: () {
+                      setState(() {});
+                    },
+                    onChange: (val) {
+                      refreshSearchedCats(val);
+                    },
+                    categories: categories,
+                    users: null,
                   ),
                 ],
               ),
-              GradientButton(
-                onTap: () {
-                  Provider.of<Categories>(context, listen: false)
-                      .drawerCategory = null;
-                  widget.scaffoldKey.currentState!.openEndDrawer();
-                },
-                title: "Add New Category",
-              ),
+              if (currentUser!.role!.toLowerCase() == 'admin')
+                GradientButton(
+                  onTap: () {
+                    Provider.of<Categories>(context, listen: false)
+                        .drawerCategory = null;
+                    widget.scaffoldKey.currentState!.openEndDrawer();
+                  },
+                  title: "Add New Category",
+                ),
             ],
           ),
         ),
@@ -192,7 +193,24 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                 title: categories[index].parentTitle,
                               ),
                               third: InkWell(
-                                onTap: () => deleteCat(categories[index]),
+                                onTap: () {
+                                  if (currentUser.role!.toLowerCase() !=
+                                      'admin') {
+                                    showDialog(
+                                        context: context,
+                                        builder: (ctx) => AdaptiveDiaglog(
+                                            ctx: ctx,
+                                            title: 'Access Denied',
+                                            content:
+                                                'Only admin can delete Categories',
+                                            btnYes: 'Okay',
+                                            yesPressed: () {
+                                              Navigator.of(context).pop();
+                                            }));
+                                  } else {
+                                    deleteCat(categories[index]);
+                                  }
+                                },
                                 child: Container(
                                   decoration: const BoxDecoration(
                                       color: Colors.white,

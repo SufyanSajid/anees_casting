@@ -28,14 +28,24 @@ class _UserScreenState extends State<UserScreen> {
     users = Provider.of<Users>(context, listen: true).users;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryColor,
-        onPressed: () {
-          Navigator.of(context).pushNamed(AddUser.routeName);
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                btnbgColor.withOpacity(1),
+                btnbgColor.withOpacity(1),
+              ],
+            ),
+            shape: BoxShape.circle),
+        child: FloatingActionButton(
+          backgroundColor: btnbgColor.withOpacity(0.4),
+          onPressed: () {
+            Navigator.of(context).pushNamed(AddUser.routeName);
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
       ),
       backgroundColor: backgroundColor,
@@ -180,7 +190,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               border: Border.all(
                                   style: BorderStyle.solid,
                                   width: 2,
-                                  color: primaryColor),
+                                  color: btnbgColor.withOpacity(1)),
                               borderRadius: BorderRadius.circular(50)),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(50),

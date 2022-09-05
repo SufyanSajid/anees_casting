@@ -16,12 +16,13 @@ Widget buildListTile(
       ),
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+        style: const TextStyle(
+            fontWeight: FontWeight.w300, fontSize: 13, color: Colors.white),
       ),
       subtitle: Text(subTitle,
           style: TextStyle(
               color: Colors.white.withOpacity(
-                0.5,
+                0.8,
               ),
               fontSize: 10)),
       trailing: Icon(

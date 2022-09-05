@@ -22,14 +22,13 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
     var width = MediaQuery.of(context).size.width / 100;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
     return Container(
-    
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
       padding: const EdgeInsets.symmetric(
         horizontal: 25,
       ),
       height: height * 6,
       decoration: BoxDecoration(
-          gradient: primaryGradient, borderRadius: BorderRadius.circular(50)),
+          gradient: customGradient, borderRadius: BorderRadius.circular(50)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

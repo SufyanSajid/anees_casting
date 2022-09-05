@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:async';
-
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/cupertino.dart';
@@ -93,12 +92,24 @@ class Auth with ChangeNotifier {
 
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
+        print('error in login model');
         // throw HttpException(responseData['error']['message']);
       }
+      var userResponse = await FirestoreMethods().searchDocumnent(
+          collection: 'users',
+          field: 'authId',
+          fieldValue: responseData['localId']);
+      // print(userResponse.body);
+      var extractedUser = json.decode(userResponse.body) as List<dynamic>;
+      String? userRole;
+      extractedUser.forEach((element) {
+        userRole = element['document']['fields']['role']['stringValue'];
+      });
 
       currentUser = CurrentUser(
           id: responseData['localId'],
           token: responseData['idToken'],
+          role: userRole,
           email: responseData['email'],
           expiryDate: DateTime.now().add(
             Duration(seconds: int.parse(responseData['expiresIn'])),
@@ -109,6 +120,7 @@ class Auth with ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
         'token': currentUser!.token,
+        'role': currentUser!.role,
         'userId': currentUser!.id,
         'expiryDate': currentUser!.expiryDate.toIso8601String(),
         'email': currentUser!.email,
@@ -140,8 +152,10 @@ class Auth with ChangeNotifier {
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
+
     currentUser = CurrentUser(
         id: extractedUserData['userId'] as String,
+        role: extractedUserData['role'] as String,
         token: extractedUserData['token'] as String,
         expiryDate: expiryDate,
         email: extractedUserData['email']);

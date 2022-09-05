@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
@@ -137,6 +138,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
     products = Provider.of<Products>(context).products;
     List<Category> categories = Provider.of<Categories>(context).categories;
     List<AUser> users = Provider.of<Users>(context).users;
+    var currentUser = Provider.of<Auth>(context).currentUser;
 
     return Column(
       children: [
@@ -144,6 +146,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
         buildFilterBar(
           searchSubmitted: (val) => getSearchedProduct(val),
+          currentUser: currentUser,
           context: context,
           searchConttroller: _designController,
           btnTap: () {
@@ -256,42 +259,44 @@ class _ProductWebContentState extends State<ProductWebContent> {
                               ),
                               Row(
                                 children: [
-                                  PopupMenuButton(
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: primaryColor.withOpacity(0.8),
-                                    ),
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry>[
-                                      PopupMenuItem(
-                                        child: PopupItem(
-                                          icon: Icons.edit_outlined,
-                                          text: 'Edit',
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Provider.of<Products>(context,
-                                                    listen: false)
-                                                .setProduct(products[index]);
+                                  if (currentUser!.role!.toLowerCase() ==
+                                      'admin')
+                                    PopupMenuButton(
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        color: primaryColor.withOpacity(0.8),
+                                      ),
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry>[
+                                        PopupMenuItem(
+                                          child: PopupItem(
+                                            icon: Icons.edit_outlined,
+                                            text: 'Edit',
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              Provider.of<Products>(context,
+                                                      listen: false)
+                                                  .setProduct(products[index]);
 
-                                            widget.scaffoldKey.currentState!
-                                                .openEndDrawer();
-                                          },
+                                              widget.scaffoldKey.currentState!
+                                                  .openEndDrawer();
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: PopupItem(
-                                          icon: Icons.delete,
-                                          text: 'Delete',
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            _deleteProduct(
-                                                imgUrl: products[index].image,
-                                                prodId: products[index].id);
-                                          },
+                                        PopupMenuItem(
+                                          child: PopupItem(
+                                            icon: Icons.delete,
+                                            text: 'Delete',
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              _deleteProduct(
+                                                  imgUrl: products[index].image,
+                                                  prodId: products[index].id);
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
                                   IconButton(
                                       onPressed: () {
                                         showDialog(

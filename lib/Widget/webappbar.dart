@@ -48,26 +48,9 @@ class _WebAppbarState extends State<WebAppbar> {
                       showPopupMenu(context: context, popups: [
                         PopupMenuItem(
                           child: buildListTile(
-                            leadingIcon: Icons.person_outline,
-                            title: 'Plan Details',
-                            subTitle: 'View Your Plan and Account Details',
-                            onTap: () {},
-                          ),
-                        ),
-                        PopupMenuItem(
-                          child: buildListTile(
-                            leadingIcon: Icons.desktop_windows,
-                            title: 'Manage Devices',
-                            subTitle: 'Manage your connected devices',
-                            trailing: Icons.launch,
-                            onTap: () {},
-                          ),
-                        ),
-                        PopupMenuItem(
-                          child: buildListTile(
                               leadingIcon: Icons.logout_outlined,
                               title: 'Logout',
-                              subTitle: 'Logout from Minecloud',
+                              subTitle: 'Logout from Aness casting',
                               onTap: () {
                                 showCustomDialog(
                                     context: context,
@@ -142,6 +125,9 @@ class _WebAppbarState extends State<WebAppbar> {
                           ),
                         ],
                       )),
+                ),
+                Container(
+                  width: width(context) * 2,
                 ),
               ],
             ),
