@@ -99,7 +99,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 40),
             decoration: BoxDecoration(
-              gradient: primaryGradient,
+              gradient: customGradient,
               borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(

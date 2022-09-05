@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ Widget buildFilterBar(
     required void Function()? btnTap,
     required String? btnText,
     required Widget? dropDown,
+    CurrentUser? currentUser,
     required Function searchSubmitted}) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
@@ -58,11 +60,12 @@ Widget buildFilterBar(
               SizedBox(
                 width: width(context) * 2,
               ),
-              if (btnTap != null && btnText != null)
-                GradientButton(
-                  onTap: btnTap,
-                  title: btnText,
-                ),
+              if (currentUser!.role!.toLowerCase() == 'admin')
+                if (btnTap != null && btnText != null)
+                  GradientButton(
+                    onTap: btnTap,
+                    title: btnText,
+                  ),
             ],
           ),
         ),

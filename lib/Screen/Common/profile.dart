@@ -44,7 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
         key: _scaffoldKey,
         drawer: AppDrawer(),
-        
         backgroundColor: backgroundColor,
         body: SafeArea(
           child: Column(
@@ -73,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: primaryColor.withOpacity(0.5),
+                          color: btnbgColor.withOpacity(1),
                           width: 2,
                           style: BorderStyle.solid,
                         )),
@@ -87,16 +86,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      right: 0,
-                      bottom: -10,
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_a_photo_outlined,
-                            color: primaryColor,
-                            size: 30,
-                          )))
+                  // Positioned(
+                  //     right: 0,
+                  //     bottom: -10,
+                  //     child: IconButton(
+                  //         onPressed: () {},
+                  //         icon: Icon(
+                  //           Icons.add_a_photo_outlined,
+                  //           color: primaryColor,
+                  //           size: 30,
+                  //         )))
                 ],
               ),
               SizedBox(
@@ -135,8 +134,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: width * 35,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            gradient: index==0?primaryGradient:LinearGradient(colors: [Colors.transparent,Colors.transparent]),
-                              
+                              gradient: index == 0
+                                  ? customGradient
+                                  : LinearGradient(colors: [
+                                      Colors.transparent,
+                                      Colors.transparent
+                                    ]),
                               borderRadius: BorderRadius.circular(30),
                               boxShadow: const [
                                 BoxShadow(
@@ -165,7 +168,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: width * 35,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                                gradient: index==1?primaryGradient:LinearGradient(colors: [Colors.transparent,Colors.transparent]),
+                              gradient: index == 1
+                                  ? customGradient
+                                  : LinearGradient(colors: [
+                                      Colors.transparent,
+                                      Colors.transparent
+                                    ]),
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                             child: Text(
@@ -234,9 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               )
                             : SubmitButton(
-                                onTap: () {
-                                  
-                                },
+                                onTap: () {},
                                 height: height,
                                 width: width,
                                 title: 'Change Name'),
@@ -295,9 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: AdaptiveIndecator(color: primaryColor),
                               )
                             : SubmitButton(
-                                onTap: () {
-                                  
-                                },
+                                onTap: () {},
                                 height: height,
                                 width: width,
                                 title: 'Change Password'),

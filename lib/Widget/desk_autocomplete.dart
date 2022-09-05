@@ -32,7 +32,7 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
     return Row(
       children: [
         SizedBox(
-          width: 190,
+          width: width(context) * 16,
           child: Autocomplete(
             optionsBuilder: (TextEditingValue textEditingValue) {
               if (textEditingValue.text == '') {
@@ -142,6 +142,9 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
               );
             },
           ),
+        ),
+        SizedBox(
+          width: 20,
         ),
         Material(
           color: Colors.white,

@@ -53,10 +53,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: Container(
-        decoration:
-            BoxDecoration(gradient: primaryGradient, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                btnbgColor.withOpacity(1),
+                btnbgColor.withOpacity(1),
+              ],
+            ),
+            shape: BoxShape.circle),
         child: FloatingActionButton(
-          backgroundColor: Colors.transparent,
+          backgroundColor: btnbgColor.withOpacity(0.4),
           onPressed: () {
             showBottomSheet(
                 context: context,
