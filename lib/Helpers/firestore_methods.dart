@@ -76,9 +76,6 @@ class FirestoreMethods {
     return '';
   }
 
-<<<<<<< HEAD
-  Future<http.Response> searchProduct(String title, String field) async {
-=======
   Future<http.Response> searchDocumnent(
       {required String collection,
       required String field,
@@ -101,8 +98,7 @@ class FirestoreMethods {
     return res;
   }
 
-  Future<String> searchProduct(String title, String field) async {
->>>>>>> sufyan
+  Future<http.Response> searchProduct(String title, String field) async {
     final URL = Uri.parse("${filterUrl}:runQuery");
     var res = await http.post(URL,
         body: json.encode({
