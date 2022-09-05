@@ -14,8 +14,8 @@ Widget buildFilterBar(
     required void Function()? btnTap,
     required String? btnText,
     required Widget? dropDown,
-    CurrentUser? currentUser,
     required Function searchSubmitted}) {
+  var currentUser = Provider.of<Auth>(context).currentUser;
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
     decoration: BoxDecoration(

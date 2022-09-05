@@ -146,7 +146,6 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
         buildFilterBar(
           searchSubmitted: (val) => getSearchedProduct(val),
-          currentUser: currentUser,
           context: context,
           searchConttroller: _designController,
           btnTap: () {
