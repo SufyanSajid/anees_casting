@@ -107,6 +107,17 @@ class Categories with ChangeNotifier {
     return catExist;
   }
 
+  Category? getCategoryById(String id) {
+    for (var element in _categories) {
+      if (element.id == id) {
+        print(element);
+        return element;
+      }
+    }
+    print("No Elemtne");
+    return null;
+  }
+
   getCategoriesByTitle(Category cat) {
     List<Category> tempCat = [];
     for (var element in _categories) {

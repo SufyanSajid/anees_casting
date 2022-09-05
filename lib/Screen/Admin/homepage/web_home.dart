@@ -1,5 +1,6 @@
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/category/web_content.dart';
 import 'package:anees_costing/Screen/Admin/logs/content.dart';
@@ -26,18 +27,22 @@ class _WebHomeState extends State<WebHome> {
   bool isLoading = false;
   GlobalKey<ScaffoldState> _ScaffoldKey = GlobalKey();
   Count? counts;
+  int usersCount = 0;
+  int categoriesCount = 0;
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
       isFirst = false;
+      BuildContext ctx = context;
 
-      if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
-        await Provider.of<Categories>(context, listen: false)
-            .fetchAndUpdateCat();
+      if (Provider.of<Categories>(ctx, listen: false).categories.isEmpty) {
+        await Provider.of<Categories>(ctx, listen: false).fetchAndUpdateCat();
       }
-
-      Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
+      if (Provider.of<Users>(ctx, listen: false).users.isEmpty) {
+        await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
+      }
+      Provider.of<Counts>(ctx, listen: false).fetchtAndUpdateCount();
     }
     super.didChangeDependencies();
   }
@@ -45,6 +50,8 @@ class _WebHomeState extends State<WebHome> {
   @override
   Widget build(BuildContext context) {
     counts = Provider.of<Counts>(context).getCount;
+    usersCount = Provider.of<Users>(context).users.length;
+    categoriesCount = Provider.of<Categories>(context).categories.length;
 
     Widget homeContent = Column(
       children: [
@@ -133,7 +140,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Users',
-                value: counts == null ? "waiting..." : "${counts!.usersCount}",
+                value: usersCount.toString(),
                 icon: Icons.groups_outlined,
               ),
             ),
@@ -143,7 +150,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Categories',
-                value: counts == null ? "waiting..." : "${counts!.catsCount}",
+                value: categoriesCount.toString(),
                 icon: Icons.diamond_outlined,
               ),
             ),

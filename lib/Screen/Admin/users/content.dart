@@ -61,12 +61,6 @@ class _UserWebContentState extends State<UserWebContent> {
 
     return Column(
       children: [
-        ElevatedButton(
-            onPressed: () {
-              Provider.of<Products>(context, listen: false)
-                  .getPaginationProducts();
-            },
-            child: Text("Pagination")),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
           decoration: BoxDecoration(

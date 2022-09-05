@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -79,13 +82,16 @@ class _AddProductState extends State<AddProduct> {
         image: downloadImgUrl!,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
-      await provider.addProduct(product: newProduct);
+      await provider.addProduct(product: newProduct, context: context);
 
       clearControllersAndImage();
 
       setState(() {
         isLoading = false;
       });
+    } else {
+      print("hi");
+      showSnackBar(context, "Please fill all fields");
     }
   }
 
@@ -306,6 +312,17 @@ class _AddProductState extends State<AddProduct> {
         _prodWidthController.text.isNotEmpty) {
       return true;
     } else {
+      print("Hello");
+      showCustomDialog(
+          context: context,
+          title: "Empty Fields",
+          btn1: "OK",
+          content: "Please fill all the fields",
+          btn2: null,
+          btn1Pressed: () {
+            Navigator.of(context).pop();
+          },
+          btn2Pressed: null);
       return false;
     }
   }

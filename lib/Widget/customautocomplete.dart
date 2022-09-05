@@ -5,13 +5,16 @@ import 'package:provider/provider.dart';
 import '../contant.dart';
 
 class CustomAutoComplete extends StatefulWidget {
-  CustomAutoComplete({
-    required this.onChange,
-    required this.categories,
-  });
+  const CustomAutoComplete(
+      {Key? key,
+      required this.onChange,
+      required this.categories,
+      this.firstSelction})
+      : super(key: key);
 
   final Function onChange;
   final List<Category> categories;
+  final String? firstSelction;
 
   @override
   State<CustomAutoComplete> createState() => _CustomAutoCompleteState();
@@ -66,7 +69,9 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               controller: controller,
               decoration: InputDecoration(
                   label: Text(
-                    'Select Category',
+                    widget.firstSelction == null
+                        ? 'Select Category'
+                        : widget.firstSelction!,
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,

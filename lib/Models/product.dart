@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,7 +40,8 @@ class Products with ChangeNotifier {
     return [..._products];
   }
 
-  Future<void> addProduct({required Product product}) async {
+  Future<void> addProduct(
+      {required Product product, required BuildContext context}) async {
     var payLoad = {
       "fields": {
         "catId": {"stringValue": product.categoryId},
@@ -51,6 +53,13 @@ class Products with ChangeNotifier {
         "productLength": {"stringValue": product.length},
       }
     };
+
+    bool isProductExist =
+        await _isProductExist(title: product.name, field: "productName");
+
+    if (isProductExist) {
+      showSnackBar(context, "Product Already exist");
+    }
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "products", data: payLoad);
   }
@@ -100,9 +109,10 @@ class Products with ChangeNotifier {
 
   Future<void> searchProduct(String title, String field) async {
     List<Product> tempProds = [];
-    String prodRes = await FirestoreMethods().searchProduct(title, field);
+    http.Response prodRes =
+        await FirestoreMethods().searchProduct(title, field);
 
-    List<dynamic> docsData = json.decode(prodRes);
+    List<dynamic> docsData = json.decode(prodRes.body);
 
     for (var element in docsData) {
       if (element['document'] == null) {
@@ -136,6 +146,21 @@ class Products with ChangeNotifier {
     _products = tempProds;
 
     notifyListeners();
+  }
+
+  Future<bool> _isProductExist(
+      {required String title, required String field}) async {
+    http.Response prodRes =
+        await FirestoreMethods().searchProduct(title, field);
+
+    List<dynamic> docsData = json.decode(prodRes.body);
+
+    for (var element in docsData) {
+      if (element['document'] == null) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // Future<void> updatProduct(

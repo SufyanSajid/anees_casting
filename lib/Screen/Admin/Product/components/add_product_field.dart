@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,17 +45,23 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   bool isLoading = false;
   Product? drawerProduct;
   String? prodImageUrl;
+  String? selectedCatTitle;
 
   @override
   void initState() {
-    // Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
+    // Provider.of<Categories>(cont
+    //ext, listen: false).fetchAndUpdateCat();
     drawerProduct = Provider.of<Products>(context, listen: false).drawerProduct;
     if (drawerProduct != null) {
+      category = Provider.of<Categories>(context, listen: false)
+          .getCategoryById(drawerProduct!.categoryId);
+
       _prodNameController.text = drawerProduct!.name;
       _prodLengthController.text = drawerProduct!.length;
       _prodWidthController.text = drawerProduct!.width;
       prodUnit = drawerProduct!.unit;
       prodImageUrl = drawerProduct!.image;
+      selectedCatTitle = drawerProduct!.categoryTitle;
     } else {
       _prodNameController.text = '';
       _prodLengthController.text = '';
@@ -98,7 +107,23 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         _prodLengthController.text.isNotEmpty &&
         _prodWidthController.text.isNotEmpty) {
       return true;
+    } else if (drawerProduct != null &&
+        category != null &&
+        _prodNameController.text.isNotEmpty &&
+        _prodLengthController.text.isNotEmpty &&
+        _prodWidthController.text.isNotEmpty) {
+      return true;
     } else {
+      showCustomDialog(
+          context: context,
+          title: "Empty Fields",
+          btn1: "Ok",
+          content: "Please Fill all Fields",
+          btn2: null,
+          btn1Pressed: () {
+            Navigator.of(context).pop();
+          },
+          btn2Pressed: null);
       return false;
     }
   }
@@ -123,7 +148,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         image: downloadImgUrl!,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
-      await productProvider.addProduct(product: newProduct);
+      await productProvider.addProduct(product: newProduct, context: context);
       await productProvider.fetchAndUpdateProducts();
       countProvider.increaseCount(product: 1);
 
@@ -146,7 +171,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   // }
 
   _editProduct(
-      {required var img,
+      {required Uint8List? img,
       required String prodId,
       required String imageUrl}) async {
     if (productNotEmpty()) {
@@ -162,12 +187,13 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
 
       var provider = Provider.of<Products>(context, listen: false);
 
-      String newImageUrl = await StorageMethods().updateImage(
-        imageURl: newProduct.image.split("?").first,
-        file: img,
-      );
-
-      newProduct.image = newImageUrl;
+      if (image != null) {
+        String newImageUrl = await StorageMethods().updateImage(
+          imageURl: newProduct.image.split("?").first,
+          file: img,
+        );
+        newProduct.image = newImageUrl;
+      }
 
       await provider.updateProduct(product: newProduct);
       await provider.fetchAndUpdateProducts();
@@ -217,7 +243,6 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                           .pickFiles(withData: true, type: FileType.image);
 
                       setState(() {
-                        prodImageUrl = null;
                         image = result1?.files.first.bytes;
                       });
                     },
@@ -236,6 +261,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
           onChange: (Category cat) {
             category = cat;
           },
+          firstSelction: selectedCatTitle,
         ),
         SizedBox(
           height: height(context) * 2,
