@@ -73,18 +73,15 @@ class _UserWebContentState extends State<UserWebContent> {
             children: [
               Row(
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: WebAutoComplete(
-                      onRefresh: () {
-                        setState(() {});
-                      },
-                      onChange: (val) {
-                        refreshSearchedUsers(val);
-                      },
-                      categories: null,
-                      users: users,
-                    ),
+                  WebAutoComplete(
+                    onRefresh: () {
+                      setState(() {});
+                    },
+                    onChange: (val) {
+                      refreshSearchedUsers(val);
+                    },
+                    categories: null,
+                    users: users,
                   ),
                 ],
               ),

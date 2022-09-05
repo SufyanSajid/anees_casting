@@ -26,6 +26,7 @@ class AUser {
 class Users with ChangeNotifier {
   List<AUser> _users = [];
   List<AUser> _searchedUsers = [];
+  List<AUser> _customers = [];
 
   AUser? drawerUser;
 
@@ -39,6 +40,10 @@ class Users with ChangeNotifier {
 
   List<AUser> get searchedUsers {
     return [..._searchedUsers];
+  }
+
+  List<AUser> get customers {
+    return [..._customers];
   }
 
   Future<void> createUser({
@@ -71,6 +76,8 @@ class Users with ChangeNotifier {
     List<dynamic> resData = jsonDecode(res.body)["documents"];
 
     List<AUser> tempUsers = [];
+    List<AUser> tempCustomers = [];
+
     for (var element in resData) {
       Map fields = element["fields"];
       String authId = fields["authId"]["stringValue"];
@@ -81,17 +88,24 @@ class Users with ChangeNotifier {
       bool isBlocked = fields["isBlocked"]["booleanValue"];
       String id = (element["name"] as String).split("users/").last;
 
-      tempUsers.add(AUser(
+      AUser user = AUser(
           id: id,
           authId: authId,
           name: name,
           email: email,
           phone: phone,
           role: role,
-          isBlocked: isBlocked));
+          isBlocked: isBlocked);
+
+      tempUsers.add(user);
+
+      if (role == "Customer") {
+        tempCustomers.add(user);
+      }
     }
 
     _users = tempUsers;
+    _customers = tempCustomers;
 
     notifyListeners();
   }

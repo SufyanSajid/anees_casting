@@ -137,7 +137,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
     var width1 = MediaQuery.of(context).size.width;
     products = Provider.of<Products>(context).products;
     List<Category> categories = Provider.of<Categories>(context).categories;
-    List<AUser> users = Provider.of<Users>(context).users;
+    List<AUser> customers = Provider.of<Users>(context).customers;
     var currentUser = Provider.of<Auth>(context).currentUser;
 
     return Column(
@@ -364,7 +364,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                                           onChanged: (val) {
                                                             setState(() {
                                                               filteredUser =
-                                                                  users
+                                                                  customers
                                                                       .where(
                                                                         (element) => element
                                                                             .name
@@ -383,9 +383,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                                         Expanded(
                                                           child:
                                                               ListView.builder(
-                                                                  itemCount: filteredUser
-                                                                          .isEmpty
-                                                                      ? users
+                                                                  itemCount: filteredUser.isEmpty
+                                                                      ? customers
                                                                           .length
                                                                       : filteredUser
                                                                           .length,
@@ -415,13 +414,13 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                                                               width: width(context) * 1,
                                                                             ),
                                                                             Text(
-                                                                              filteredUser.isEmpty ? users[index].name : filteredUser[index].name,
+                                                                              filteredUser.isEmpty ? customers[index].name : filteredUser[index].name,
                                                                             ),
                                                                           ],
                                                                         ),
                                                                         trailing: IconButton(
                                                                             onPressed: () {
-                                                                              Provider.of<SentProducts>(ctx, listen: false).addProduct(product: productToSend, userId: users[index].id);
+                                                                              Provider.of<SentProducts>(ctx, listen: false).addProduct(product: productToSend, userId: customers[index].id);
                                                                               Navigator.of(ctx).pop();
                                                                             },
                                                                             icon: Icon(
