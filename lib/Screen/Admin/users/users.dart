@@ -220,7 +220,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               height: height(context) * 0.5,
                             ),
                             Text(
-                              widget.users[index].phone,
+                              widget.users[index].role,
                               style:
                                   TextStyle(color: contentColor, fontSize: 13),
                             ),

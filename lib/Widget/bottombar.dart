@@ -1,4 +1,7 @@
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../contant.dart';
 
@@ -20,6 +23,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
+    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -43,17 +47,18 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
             fillIcon: Icons.grid_view,
             isActive: widget.selectedIndex == 0,
           ),
-          NavbarItem(
-            onTap: () {
-              setState(() {
-                widget.onTap(1);
-                widget.selectedIndex = 1;
-              });
-            },
-            icon: Icons.analytics_outlined,
-            fillIcon: Icons.analytics,
-            isActive: widget.selectedIndex == 1,
-          ),
+          if (currentUser!.role!.toLowerCase() == 'admin')
+            NavbarItem(
+              onTap: () {
+                setState(() {
+                  widget.onTap(1);
+                  widget.selectedIndex = 1;
+                });
+              },
+              icon: Icons.analytics_outlined,
+              fillIcon: Icons.analytics,
+              isActive: widget.selectedIndex == 1,
+            ),
           NavbarItem(
             onTap: () {
               setState(() {

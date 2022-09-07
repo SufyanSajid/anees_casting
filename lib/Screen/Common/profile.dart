@@ -1,7 +1,9 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/drawer.dart';
@@ -37,9 +39,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
+    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    print(currentUser!.name);
+    _emailController.text = currentUser.email;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
     return Scaffold(
         key: _scaffoldKey,
@@ -102,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: height * 1.5,
               ),
               Text(
-                'Sufyan Sajid',
+                currentUser.name!,
                 style: GoogleFonts.righteous(
                   color: headingColor,
                   fontSize: 20,
@@ -110,7 +122,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(
-                height: height * 5,
+                height: height * 0.2,
+              ),
+              Text(
+                '( ${currentUser.role} )',
+                style: TextStyle(color: contentColor, fontSize: 12),
+              ),
+              SizedBox(
+                height: height * 4,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 60),

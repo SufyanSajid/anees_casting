@@ -67,7 +67,8 @@ class Users with ChangeNotifier {
     };
 
     http.Response res = await FirestoreMethods()
-        .createRecord(collection: "users", data: payLoad);
+        .updateRecords(collection: 'users', data: payLoad, prodId: authId);
+    // .createRecord(collection: "users/$authId", data: payLoad);
   }
 
   Future<void> fetchAndUpdateUser() async {

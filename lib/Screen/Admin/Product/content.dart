@@ -4,6 +4,7 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:anees_costing/contant.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
 import '../../../Helpers/storage_methods.dart';
+import '../../../Widget/send_button.dart';
 
 class ProductWebContent extends StatefulWidget {
   ProductWebContent({
@@ -34,6 +36,9 @@ class _ProductWebContentState extends State<ProductWebContent> {
   bool isFirst = true;
   bool isLoading = false;
   String? catId;
+  bool isSending = false;
+  bool isSended = false;
+  String? receiverId;
 
   @override
   void dispose() {
@@ -296,152 +301,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                         ),
                                       ],
                                     ),
-                                  IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              Product productToSend =
-                                                  products[index];
-                                              return AlertDialog(
-                                                title: Center(
-                                                  child: Text(
-                                                    'Select Users',
-                                                    style:
-                                                        GoogleFonts.righteous(
-                                                      color: headingColor,
-                                                      fontSize: 30,
-                                                    ),
-                                                  ),
-                                                ),
-                                                content: StatefulBuilder(
-                                                    builder:
-                                                        (context, setState) {
-                                                  return Container(
-                                                    height:
-                                                        height(context) * 50,
-                                                    width: width(context) * 50,
-                                                    child: Column(
-                                                      children: [
-                                                        TextField(
-                                                          decoration:
-                                                              InputDecoration(
-                                                                  hintText:
-                                                                      'Search User',
-                                                                  focusedBorder:
-                                                                      OutlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(
-                                                                      color:
-                                                                          primaryColor,
-                                                                      width: 1,
-                                                                      style: BorderStyle
-                                                                          .solid,
-                                                                    ),
-                                                                  ),
-                                                                  border:
-                                                                      const OutlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(
-                                                                      color: Colors
-                                                                          .grey,
-                                                                      width: 1,
-                                                                      style: BorderStyle
-                                                                          .solid,
-                                                                    ),
-                                                                  ),
-                                                                  focusColor:
-                                                                      primaryColor,
-                                                                  fillColor:
-                                                                      primaryColor,
-                                                                  prefixIcon:
-                                                                      Icon(
-                                                                    Icons
-                                                                        .person,
-                                                                    color:
-                                                                        primaryColor,
-                                                                  )),
-                                                          onChanged: (val) {
-                                                            setState(() {
-                                                              filteredUser =
-                                                                  customers
-                                                                      .where(
-                                                                        (element) => element
-                                                                            .name
-                                                                            .toLowerCase()
-                                                                            .contains(val.toLowerCase()),
-                                                                      )
-                                                                      .toList();
-                                                            });
-                                                          },
-                                                        ),
-                                                        SizedBox(
-                                                          height:
-                                                              height(context) *
-                                                                  2,
-                                                        ),
-                                                        Expanded(
-                                                          child:
-                                                              ListView.builder(
-                                                                  itemCount: filteredUser.isEmpty
-                                                                      ? customers
-                                                                          .length
-                                                                      : filteredUser
-                                                                          .length,
-                                                                  itemBuilder:
-                                                                      (ctx,
-                                                                          index) {
-                                                                    return Container(
-                                                                      margin: const EdgeInsets
-                                                                              .only(
-                                                                          bottom:
-                                                                              10),
-                                                                      decoration: BoxDecoration(
-                                                                          color: primaryColor.withOpacity(
-                                                                              0.5),
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(5)),
-                                                                      child:
-                                                                          ListTile(
-                                                                        title:
-                                                                            Row(
-                                                                          children: [
-                                                                            Icon(
-                                                                              Icons.person_outline,
-                                                                              color: primaryColor,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: width(context) * 1,
-                                                                            ),
-                                                                            Text(
-                                                                              filteredUser.isEmpty ? customers[index].name : filteredUser[index].name,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        trailing: IconButton(
-                                                                            onPressed: () {
-                                                                              Provider.of<SentProducts>(ctx, listen: false).addProduct(product: productToSend, userId: customers[index].id);
-                                                                              Navigator.of(ctx).pop();
-                                                                            },
-                                                                            icon: Icon(
-                                                                              Icons.send_outlined,
-                                                                              color: primaryColor,
-                                                                            )),
-                                                                      ),
-                                                                    );
-                                                                  }),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  );
-                                                }),
-                                              );
-                                            });
-                                      },
-                                      icon: Icon(
-                                        Icons.send,
-                                        color: primaryColor,
-                                      ))
+                                  SendProductButton(prod: products[index])
                                 ],
                               ),
                             ],

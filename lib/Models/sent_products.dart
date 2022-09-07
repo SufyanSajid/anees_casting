@@ -54,6 +54,8 @@ class SentProducts with ChangeNotifier {
     };
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "users/$userId/products", data: payLoad);
+
+    print(res.body);
   }
 
   Future<List<SentProduct>> fetchSentProducts({required String userId}) async {

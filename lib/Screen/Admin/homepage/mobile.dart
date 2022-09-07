@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Admin/category/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/product.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
@@ -6,6 +7,7 @@ import 'package:anees_costing/Widget/bottombar.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../contant.dart';
 
@@ -22,6 +24,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   int selectIndex = 0;
   @override
   Widget build(BuildContext context) {
+    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
     var homePage = SafeArea(
@@ -190,137 +193,140 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'App User',
-                  style:
-                      GoogleFonts.righteous(fontSize: 18, color: primaryColor),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'View All',
-                    style:
-                        GoogleFonts.ubuntu(fontSize: 15, color: secondaryColor),
+          if (currentUser!.role!.toLowerCase() == 'admin')
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'App User',
+                    style: GoogleFonts.righteous(
+                        fontSize: 18, color: primaryColor),
                   ),
-                ),
-              ],
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'View All',
+                      style: GoogleFonts.ubuntu(
+                          fontSize: 15, color: secondaryColor),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
           SizedBox(
             height: height * 0.5,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 4,
-              itemBuilder: (ctx, index) => Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromRGBO(94, 89, 89, 0.11),
-                        offset: Offset(0, 10),
-                        blurRadius: 20,
-                      ),
-                      BoxShadow(
-                        color: Color.fromRGBO(94, 89, 89, 0.11),
-                        offset: -Offset(0, 10),
-                        blurRadius: 20,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(15)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: height * 6,
-                          width: height * 6,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 5),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  style: BorderStyle.solid,
-                                  width: 2,
-                                  color: primaryColor),
-                              borderRadius: BorderRadius.circular(50)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(
-                              'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
-                              height: height * 10,
-                              width: height * 10,
-                              fit: BoxFit.cover,
+          if (currentUser.role!.toLowerCase() == 'admin')
+            Expanded(
+              child: ListView.builder(
+                itemCount: 4,
+                itemBuilder: (ctx, index) => Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  margin:
+                      const EdgeInsets.only(bottom: 10, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        const BoxShadow(
+                          color: Color.fromRGBO(94, 89, 89, 0.11),
+                          offset: Offset(0, 10),
+                          blurRadius: 20,
+                        ),
+                        BoxShadow(
+                          color: Color.fromRGBO(94, 89, 89, 0.11),
+                          offset: -Offset(0, 10),
+                          blurRadius: 20,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: height * 6,
+                            width: height * 6,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    style: BorderStyle.solid,
+                                    width: 2,
+                                    color: primaryColor),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(
+                                'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                                height: height * 10,
+                                width: height * 10,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: width * 3,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Sufyan Sajid',
-                              style:
-                                  TextStyle(color: primaryColor, fontSize: 16),
-                            ),
-                            SizedBox(
-                              height: height * 0.3,
-                            ),
-                            Text(
-                              'Booker',
-                              style: TextStyle(
-                                  color: secondaryColor, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Active',
-                          style: TextStyle(color: Colors.green),
-                        ),
-                        SizedBox(
-                          width: width * 3,
-                        ),
-                        Switch(
-                          value: false,
-                          activeColor: Colors.green,
-                          inactiveTrackColor: Colors.red,
-                          thumbColor: MaterialStateProperty.all(Colors.white),
-                          onChanged: (value) async {
-                            print(value);
-                            int status;
+                          SizedBox(
+                            width: width * 3,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sufyan Sajid',
+                                style: TextStyle(
+                                    color: primaryColor, fontSize: 16),
+                              ),
+                              SizedBox(
+                                height: height * 0.3,
+                              ),
+                              Text(
+                                'Booker',
+                                style: TextStyle(
+                                    color: secondaryColor, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                            'Active',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                          SizedBox(
+                            width: width * 3,
+                          ),
+                          Switch(
+                            value: false,
+                            activeColor: Colors.green,
+                            inactiveTrackColor: Colors.red,
+                            thumbColor: MaterialStateProperty.all(Colors.white),
+                            onChanged: (value) async {
+                              print(value);
+                              int status;
 
-                            if (value == true) {
-                              status = 1;
-                            } else {
-                              status = 0;
-                            }
+                              if (value == true) {
+                                status = 1;
+                              } else {
+                                status = 0;
+                              }
 
-                            // setState(() {
-                            //   users[index].isActive = !users[index].isActive;
-                            // });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                              // setState(() {
+                              //   users[index].isActive = !users[index].isActive;
+                              // });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

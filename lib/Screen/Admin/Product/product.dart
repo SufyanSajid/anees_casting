@@ -1,5 +1,9 @@
 import 'package:anees_costing/Functions/showloader.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Screen/Admin/Product/content.dart';
+import 'package:anees_costing/Widget/send_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/Helpers/storage_methods.dart';
 import 'addproduct.dart';
@@ -104,6 +108,7 @@ class _ProductScreenState extends State<ProductScreen> {
     List<Product> products = Provider.of<Products>(context).products;
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
+    var currentUser = Provider.of<Auth>(context).currentUser;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -180,7 +185,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         itemCount: products.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
@@ -207,41 +213,68 @@ class _ProductScreenState extends State<ProductScreen> {
                                 SizedBox(
                                   height: height(context) * 0.5,
                                 ),
-                                // Text(
-                                //   products[index].name,
-                                //   style: GoogleFonts.righteous(
-                                //     color: headingColor,
-                                //     fontWeight: FontWeight.w500,
-                                //     fontSize: 20,
-                                //   ),
-                                // ),
+
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        _deleteProduct(
-                                            imgUrl: products[index].image,
-                                            prodId: products[index].id);
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
+                                    Text(
+                                      products[index].name,
+                                      style: GoogleFonts.righteous(
+                                        color: headingColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
                                       ),
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, AddProduct.routeName,
-                                            arguments: {
-                                              "action": "edit",
-                                              "product": products[index]
-                                            });
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.grey,
-                                      ),
-                                    )
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        if (currentUser!.role!.toLowerCase() ==
+                                            'admin')
+                                          PopupMenuButton(
+                                            icon: Icon(
+                                              Icons.more_vert,
+                                              color:
+                                                  primaryColor.withOpacity(0.8),
+                                            ),
+                                            itemBuilder:
+                                                (BuildContext context) =>
+                                                    <PopupMenuEntry>[
+                                              PopupMenuItem(
+                                                child: PopupItem(
+                                                  icon: Icons.edit_outlined,
+                                                  text: 'Edit',
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                    Navigator.pushNamed(context,
+                                                        AddProduct.routeName,
+                                                        arguments: {
+                                                          "action": "edit",
+                                                          "product":
+                                                              products[index]
+                                                        });
+                                                  },
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                child: PopupItem(
+                                                  icon: Icons.delete,
+                                                  text: 'Delete',
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                    _deleteProduct(
+                                                        imgUrl: products[index]
+                                                            .image,
+                                                        prodId:
+                                                            products[index].id);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        SendProductButton(prod: products[index])
+                                      ],
+                                    ),
                                   ],
                                 ),
                                 // SizedBox(
@@ -279,14 +312,17 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).pushNamed(AddProduct.routeName, arguments: {
-            "action": "add",
-          });
-        },
-      ),
+      floatingActionButton: currentUser!.role!.toLowerCase() == 'admin'
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(AddProduct.routeName, arguments: {
+                  "action": "add",
+                });
+              },
+            )
+          : null,
     );
   }
 }
