@@ -1,6 +1,7 @@
 // import 'package:chiarra_fazzini/Models/auth.dart';
 import 'dart:convert';
 
+import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -166,7 +167,12 @@ class _LoginFeildsState extends State<LoginFeilds> {
                 }));
         return;
       }
-      Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
+      if (currentUser.role!.toLowerCase() == 'customer') {
+        Navigator.of(context)
+            .pushReplacementNamed(CustomerProductScreen.routeName);
+      } else {
+        Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
+      }
     }).catchError((error) {
       setState(() {
         isLoading = false;

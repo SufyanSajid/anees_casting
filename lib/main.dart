@@ -3,6 +3,7 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
+import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
 
 import './Models/category.dart';
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.ubuntuTextTheme(),
         ),
         routes: {
-          '/': (ctx) => const SplashScreen(),
+          '/': (ctx) => SplashScreen(),
           LoginScreen.routeName: (ctx) => const LoginScreen(),
           AdminHomePage.routeName: (ctx) => const AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
           ProductScreen.routeName: (ctx) => ProductScreen(),
           AddProduct.routeName: (ctx) => const AddProduct(),
           AddUser.routeName: (ctx) => const AddUser(),
+          CustomerProductScreen.routeName: (ctx) => CustomerProductScreen(),
         },
       ),
     );

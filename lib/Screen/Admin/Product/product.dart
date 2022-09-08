@@ -2,6 +2,8 @@ import 'package:anees_costing/Functions/showloader.dart';
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
+import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
+import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
 import 'package:anees_costing/Widget/send_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -133,7 +135,9 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
               CustomAutoComplete(
                 categories: categories,
-                onChange: () {},
+                onChange: (Category category) {
+                  getProductsByCatId(category.id, context);
+                },
               ),
               SizedBox(
                 height: height(context) * 1,
@@ -146,6 +150,9 @@ class _ProductScreenState extends State<ProductScreen> {
                       hinntText: 'Search Product',
                       validatior: () {},
                       inputController: _productController,
+                      submitted: (value) {
+                        getSearchedProduct(value, context);
+                      },
                     ),
                   ),
                   SizedBox(
@@ -313,14 +320,19 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ),
       floatingActionButton: currentUser!.role!.toLowerCase() == 'admin'
-          ? FloatingActionButton(
-              child: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(AddProduct.routeName, arguments: {
-                  "action": "add",
-                });
-              },
+          ? Container(
+              decoration: BoxDecoration(
+                  gradient: customGradient, shape: BoxShape.circle),
+              child: FloatingActionButton(
+                backgroundColor: Colors.transparent,
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(AddProduct.routeName, arguments: {
+                    "action": "add",
+                  });
+                },
+              ),
             )
           : null,
     );

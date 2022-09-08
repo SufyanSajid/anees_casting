@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import '../../../Functions/filterbar.dart';
 import '../../../Helpers/storage_methods.dart';
 import '../../../Widget/send_button.dart';
+import 'functions/getproductbycatid.dart';
+import 'functions/getsearchedproducts.dart';
 
 class ProductWebContent extends StatefulWidget {
   ProductWebContent({
@@ -123,19 +125,19 @@ class _ProductWebContentState extends State<ProductWebContent> {
             ));
   }
 
-  getSearchedProduct(String search) {
-    if (search.isEmpty) {
-      Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
-    } else {
-      Provider.of<Products>(context, listen: false)
-          .searchProduct(search, 'productName');
-    }
-  }
+  // getSearchedProduct(String search) {
+  //   if (search.isEmpty) {
+  //     Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
+  //   } else {
+  //     Provider.of<Products>(context, listen: false)
+  //         .searchProduct(search, 'productName');
+  //   }
+  // }
 
-  getProductsByCatId(String catId) async {
-    await Provider.of<Products>(context, listen: false)
-        .searchProduct(catId, 'catId');
-  }
+  // getProductsByCatId(String catId) async {
+  //   await Provider.of<Products>(context, listen: false)
+  //       .searchProduct(catId, 'catId');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +152,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
         //Filter bar
 
         buildFilterBar(
-          searchSubmitted: (val) => getSearchedProduct(val),
+          searchSubmitted: (val) => getSearchedProduct(val, context),
           context: context,
           searchConttroller: _designController,
           btnTap: () {
@@ -163,7 +165,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
             width: 250,
             child: CustomAutoComplete(
                 onChange: (Category val) {
-                  getProductsByCatId(val.id);
+                  getProductsByCatId(val.id, context);
                 },
                 categories: categories),
           ),

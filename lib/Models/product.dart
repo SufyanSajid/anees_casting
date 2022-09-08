@@ -224,4 +224,49 @@ class Products with ChangeNotifier {
     http.Response res = await FirestoreMethods()
         .createRecord(collection: "sentproductsrecord/", data: payLoad);
   }
+
+  Future<void> getCustomerProducts(String userId) async {
+    List<Product> tempProds = [];
+    http.Response prodRes = await FirestoreMethods()
+        .getRecords(collection: "users/$userId/products");
+
+    List<dynamic> docsData = json.decode(prodRes.body)["documents"];
+
+    for (var element in docsData) {
+      Map fields = element["fields"];
+      String catId = fields["catId"]["stringValue"];
+      String catTitle = fields["catTitle"]["stringValue"];
+      String imageUrl = fields["imageUrl"]["stringValue"];
+      String productName = fields["productName"]["stringValue"];
+      String productWidth = fields["productWidth"]["stringValue"];
+      String productUnit = fields["productUnit"]["stringValue"];
+      String productLength = fields["productLength"]["stringValue"];
+      String id = (element["name"] as String).split("products/").last;
+      String time = element["updateTime"];
+
+      tempProds.add(Product(
+          id: id,
+          name: productName,
+          length: productLength,
+          width: productWidth,
+          unit: productUnit,
+          categoryId: catId,
+          categoryTitle: catTitle,
+          image: imageUrl,
+          dateTime: time));
+    }
+
+    _products = tempProds;
+
+    notifyListeners();
+    // print(documents.toString());
+  }
+
+  void searchCustomerProducts(String search) {
+    print(123);
+    _products = _products
+        .where((element) => element.name.toLowerCase() == search.toLowerCase())
+        .toList();
+    notifyListeners();
+  }
 }
