@@ -4,6 +4,7 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
+import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/send_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -211,11 +212,18 @@ class _ProductScreenState extends State<ProductScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.network(
-                                  products[index].image,
-                                  fit: BoxFit.contain,
-                                  height: height(context) * 12,
-                                  width: width(context) * 100,
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                        ProductDetailScreen.routeName,
+                                        arguments: products[index]);
+                                  },
+                                  child: Image.network(
+                                    products[index].image,
+                                    fit: BoxFit.contain,
+                                    height: height(context) * 12,
+                                    width: width(context) * 100,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: height(context) * 0.5,

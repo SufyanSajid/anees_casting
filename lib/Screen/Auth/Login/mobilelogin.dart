@@ -45,8 +45,8 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                       width: width,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage(
-                              'https://cdn.vectorstock.com/i/1000x1000/24/40/blue-dna-medical-and-healthcare-background-vector-37962440.webp',
+                            image: AssetImage(
+                              'assets/images/poster.jpeg',
                             ),
                             fit: BoxFit.cover),
                       )),
@@ -54,19 +54,16 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                     height: height * 50,
                     width: width,
                     decoration:
-                        BoxDecoration(color: Colors.black.withOpacity(0.5)),
+                        BoxDecoration(color: Colors.black.withOpacity(0.8)),
                   ),
-                  Container(
-                    height: height * 60,
-                    width: width,
-                    child: Center(
-                      child: Text(
-                        'Anees Casting',
-                        style: GoogleFonts.titanOne(
-                            fontSize: 54, color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  Positioned(
+                      left: 100,
+                      top: 100,
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: height * 20,
+                        fit: BoxFit.contain,
+                      )),
                 ],
               ),
             ), //logo container

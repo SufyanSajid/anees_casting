@@ -31,16 +31,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   int index = 0;
   bool isLoading = false;
+  var currentUser;
 
-  void _nameChange() {}
+  void _nameChange() {
+    setState(() {
+      isLoading = true;
+    });
+    if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: Empty Feilds'),
+      ));
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Auth>(context, listen: false)
+          .changeUserName(
+              '${_firstNameController.text} ${_lastNameController.text}',
+              currentUser.id)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
+  }
 
   void _passwordChange() {
-    print('password');
+    if (_CurrentPassword.text.isEmpty ||
+        _newPasswordController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: Empty Feilds'),
+      ));
+    } else if (_newPasswordController.text.toLowerCase() !=
+        _confirmPasswordController.text.toLowerCase()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: Password didnot match'),
+      ));
+    } else {}
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
     super.initState();
   }
@@ -49,8 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
-    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-    print(currentUser!.name);
+
     _emailController.text = currentUser.email;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
     return Scaffold(
@@ -261,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               )
                             : SubmitButton(
-                                onTap: () {},
+                                onTap: _nameChange,
                                 height: height,
                                 width: width,
                                 title: 'Change Name'),
@@ -320,7 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: AdaptiveIndecator(color: primaryColor),
                               )
                             : SubmitButton(
-                                onTap: () {},
+                                onTap: _passwordChange,
                                 height: height,
                                 width: width,
                                 title: 'Change Password'),

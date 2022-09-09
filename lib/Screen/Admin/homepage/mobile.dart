@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Screen/Admin/category/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/product.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
@@ -22,9 +23,30 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   //bottomNavigationBar: CustomBottomBar(selectedIndex: 1, onTap: (){}),
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int selectIndex = 0;
+  bool isFirst = true;
+  bool isLoading = false;
+  Count? count;
+  @override
+  void didChangeDependencies() async {
+    if (isFirst) {
+      setState(() {
+        isLoading = true;
+      });
+      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
+      setState(() {
+        isLoading = false;
+      });
+      isFirst = false;
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    count = Provider.of<Counts>(context, listen: false).getCount;
+
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
     var homePage = SafeArea(
@@ -120,7 +142,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 DisplayBox(
                   height: height,
                   title: 'Products',
-                  value: '25',
+                  value: isLoading ? '...' : count!.productsCount.toString(),
                 ),
                 Container(
                   height: height * 5,
@@ -129,8 +151,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 ),
                 DisplayBox(
                   height: height,
-                  title: 'Sales',
-                  value: '562',
+                  title: 'Categories',
+                  value: isLoading ? '...' : count!.catsCount.toString(),
                 ),
                 Container(
                   height: height * 5,
@@ -140,7 +162,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 DisplayBox(
                   height: height,
                   title: 'Clients',
-                  value: '25',
+                  value: isLoading ? '...' : count!.usersCount.toString(),
                 ),
               ],
             ),

@@ -74,6 +74,20 @@ class Auth with ChangeNotifier {
     return docsData[0]["document"]["fields"]["isBlocked"]["booleanValue"];
   }
 
+  Future<void> changeUserName(String name, String userId) async {
+    var body = jsonEncode({
+      "fields": {
+        "name": {"stringValue": name},
+      }
+    });
+    var response = await FirestoreMethods().updateSingleField(
+        collection: 'users',
+        documentId: userId,
+        fieldName: 'name',
+        bodyData: body);
+    print(response.body);
+  }
+
   Future<void> _authentication(
       String email, String password, String urlSegment) async {
     // try {
