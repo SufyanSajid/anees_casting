@@ -336,43 +336,44 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  users![index].isBlocked
-                                      ? 'Blocked'
-                                      : 'Active',
-                                  style: TextStyle(
-                                      color: users![index].isBlocked
-                                          ? Colors.red
-                                          : Colors.green),
-                                ),
-                                SizedBox(
-                                  width: width * 3,
-                                ),
-                                Switch(
-                                  value: users![index].isBlocked,
-                                  activeColor: Colors.red,
-                                  inactiveTrackColor: Colors.green,
-                                  thumbColor:
-                                      MaterialStateProperty.all(Colors.white),
-                                  onChanged: (value) async {
-                                    print(value);
-                                    var provider =
-                                        Provider.of<Users>(ctx, listen: false);
+                            if (users![index].role != 'Admin')
+                              Row(
+                                children: [
+                                  Text(
+                                    users![index].isBlocked
+                                        ? 'Blocked'
+                                        : 'Active',
+                                    style: TextStyle(
+                                        color: users![index].isBlocked
+                                            ? Colors.red
+                                            : Colors.green),
+                                  ),
+                                  SizedBox(
+                                    width: width * 3,
+                                  ),
+                                  Switch(
+                                    value: users![index].isBlocked,
+                                    activeColor: Colors.red,
+                                    inactiveTrackColor: Colors.green,
+                                    thumbColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                    onChanged: (value) async {
+                                      print(value);
+                                      var provider = Provider.of<Users>(ctx,
+                                          listen: false);
 
-                                    await provider.blockUser(
-                                        user: users![index], block: value);
+                                      await provider.blockUser(
+                                          user: users![index], block: value);
 
-                                    setState(() {
-                                      users![index].isBlocked =
-                                          !users![index].isBlocked;
-                                    });
-                                    await provider.fetchAndUpdateUser();
-                                  },
-                                ),
-                              ],
-                            ),
+                                      setState(() {
+                                        users![index].isBlocked =
+                                            !users![index].isBlocked;
+                                      });
+                                      await provider.fetchAndUpdateUser();
+                                    },
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ),
