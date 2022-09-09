@@ -3,6 +3,8 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
+import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
+import 'package:anees_costing/Screen/Admin/users/customers.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
@@ -14,8 +16,6 @@ import 'Screen/Admin/Product/addproduct.dart';
 import 'Screen/Admin/homepage/admin_home.dart';
 import 'Screen/Admin/users/add_user.dart';
 import 'Screen/Admin/Product/product.dart';
-// import '../Screen/Auth/login.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,6 @@ import 'package:provider/provider.dart';
 import 'Screen/Admin/category/category.dart';
 import 'Screen/Admin/users/users.dart';
 import 'Screen/Auth/Login/login.dart';
-import 'Screen/Auth/Login/mobilelogin.dart';
 
 void main() async {
   debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
@@ -75,11 +74,13 @@ class MyApp extends StatelessWidget {
           AdminHomePage.routeName: (ctx) => const AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
           UserScreen.routeName: (ctx) => const UserScreen(),
+          CustomerScreen.routeName: (ctx) => CustomerScreen(),
           ProductScreen.routeName: (ctx) => ProductScreen(),
           AddProduct.routeName: (ctx) => const AddProduct(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           AddUser.routeName: (ctx) => const AddUser(),
           CustomerProductScreen.routeName: (ctx) => CustomerProductScreen(),
+          ActivityLogScreen.routeName: (ctx) => const ActivityLogScreen(),
         },
       ),
     );

@@ -59,17 +59,18 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
               fillIcon: Icons.analytics,
               isActive: widget.selectedIndex == 1,
             ),
-          NavbarItem(
-            onTap: () {
-              setState(() {
-                widget.onTap(2);
-                widget.selectedIndex = 2;
-              });
-            },
-            icon: Icons.description_outlined,
-            fillIcon: Icons.description,
-            isActive: widget.selectedIndex == 2,
-          ),
+          if (currentUser.role!.toLowerCase() == 'admin')
+            NavbarItem(
+              onTap: () {
+                setState(() {
+                  widget.onTap(2);
+                  widget.selectedIndex = 2;
+                });
+              },
+              icon: Icons.recycling_outlined,
+              fillIcon: Icons.recycling,
+              isActive: widget.selectedIndex == 2,
+            ),
           NavbarItem(
             onTap: () {
               setState(() {

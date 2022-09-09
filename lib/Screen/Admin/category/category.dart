@@ -8,7 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Functions/dailog.dart';
+import '../../../Helpers/firestore_methods.dart';
+import '../../../Models/counts.dart';
 import '../../../Widget/appbar.dart';
+import '../Product/content.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = '/categoryScreen';
@@ -41,6 +45,55 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  void deleteCat(Category cat) {
+    bool isParent = false;
+    List<Category> childCat =
+        Provider.of<Categories>(context, listen: false).childCategories;
+    for (var element in childCat) {
+      if (element.parentId == cat.id) {
+        isParent = true;
+        break;
+      }
+    }
+    if (isParent) {
+      showCustomDialog(
+          context: context,
+          title: "Parent Category",
+          btn1: null,
+          content: "Parent category can't be deleted.",
+          btn2: "Ok",
+          btn1Pressed: null,
+          btn2Pressed: () => Navigator.of(context).pop());
+    } else {
+      showCustomDialog(
+          context: context,
+          title: 'Delete',
+          btn1: 'No',
+          content: 'Do You want to "${cat.title}" Category?',
+          btn2: 'Yes',
+          btn1Pressed: () {
+            Navigator.of(context).pop();
+          },
+          btn2Pressed: () {
+            Navigator.of(context).pop();
+            setState(() {
+              isCatLoading = true;
+            });
+            FirestoreMethods()
+                .deleteRecord(collection: 'categories', prodId: cat.id)
+                .then((value) async {
+              Provider.of<Counts>(context, listen: false)
+                  .decreaseCount(category: 1);
+              await Provider.of<Categories>(context, listen: false)
+                  .fetchAndUpdateCat();
+              setState(() {
+                isCatLoading = false;
+              });
+            });
+          });
+    }
   }
 
   @override
@@ -156,7 +209,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 subtitle: 'All Your Categories',
                 svgIcon: 'assets/icons/category.svg',
                 leadingIcon: Icons.arrow_back,
-                leadingTap: () {},
+                leadingTap: () {
+                  Navigator.of(context).pop();
+                },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {},
               ),
@@ -164,27 +219,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 height: height(context) * 3,
               ),
               Expanded(
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 15.0,
-                    mainAxisSpacing: 25.0,
-                  ),
+                child: ListView.builder(
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       splashColor: primaryColor,
                       onTap: () {},
                       child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                           border: Border.all(
-                              color: primaryColor,
-                              style: BorderStyle.solid,
-                              width: 1),
+                              color: btnbgColor.withOpacity(0.6), width: 1),
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.grey,
@@ -193,19 +240,52 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             )
                           ],
                         ),
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              categories[index].title,
+                        child: ListTile(
+                            leading: Icon(
+                              Icons.bookmark,
+                              color: btnbgColor.withOpacity(1),
+                            ),
+                            title: Text(
+                              categories[index].title.toUpperCase(),
                               style: GoogleFonts.righteous(
                                 color: headingColor,
-                                fontSize: 20,
+                                fontSize: 16,
                               ),
-                            )
-                          ],
-                        )),
+                            ),
+                            subtitle: Text(
+                              categories[index].parentId.isEmpty
+                                  ? '(Parent)'
+                                  : '(${categories[index].parentTitle})',
+                              style:
+                                  TextStyle(color: contentColor, fontSize: 12),
+                            ),
+                            trailing: IconButton(
+                                onPressed: () {
+                                  deleteCat(categories[index]);
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ))
+                            //  PopupMenuButton(
+                            //   icon: Icon(
+                            //     Icons.more_vert,
+                            //     color: btnbgColor.withOpacity(1),
+                            //   ),
+                            //   itemBuilder: (BuildContext context) =>
+                            //       <PopupMenuEntry>[
+                            //     PopupMenuItem(
+                            //       child: PopupItem(
+                            //         icon: Icons.delete,
+                            //         text: 'Delete',
+                            //         onTap: () {
+                            //           deleteCat(categories[index]);
+                            //         },
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            ),
                       ),
                     );
                   },

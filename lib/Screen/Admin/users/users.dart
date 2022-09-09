@@ -1,7 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
-import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/sent_products.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
 import '/Models/user.dart';
@@ -165,6 +163,8 @@ class _ShowUsersState extends State<ShowUsers> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
+                    border: Border.all(
+                        color: btnbgColor.withOpacity(0.6), width: 1),
                     color: widget.users[index].isBlocked
                         ? Colors.grey[200]
                         : Colors.white,

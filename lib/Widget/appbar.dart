@@ -52,6 +52,7 @@ class Appbar extends StatelessWidget {
             ),
             SvgPicture.asset(
               svgIcon,
+              height: 44,
               color: btnbgColor.withOpacity(1),
             ),
             InkWell(

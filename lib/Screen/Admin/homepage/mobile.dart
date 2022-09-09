@@ -3,6 +3,8 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/category/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/product.dart';
+import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
+import 'package:anees_costing/Screen/Admin/users/customers.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -98,7 +100,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'Admin',
+                          currentUser!.role!,
                           style: GoogleFonts.righteous(
                             color: primaryColor,
                             fontSize: 20,
@@ -204,23 +206,27 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 QuickChecks(
                   width: width,
                   height: height,
-                  title: 'Sellers',
+                  title: 'Categories',
                   subtitle: 'Click to view',
-                  icon: Icons.person_pin_circle_outlined,
-                  onTap: () {},
+                  icon: Icons.document_scanner_sharp,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(CategoryScreen.routeName);
+                  },
                 ),
                 QuickChecks(
                   width: width,
                   height: height,
                   title: 'Customers',
                   subtitle: 'Click to view',
-                  icon: Icons.person_outline,
-                  onTap: () {},
+                  icon: Icons.person_pin_circle_outlined,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(CustomerScreen.routeName);
+                  },
                 ),
               ],
             ),
           ),
-          if (currentUser!.role!.toLowerCase() == 'admin')
+          if (currentUser.role!.toLowerCase() == 'admin')
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -261,6 +267,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
+                            border: Border.all(
+                                color: btnbgColor.withOpacity(0.6), width: 1),
                             color: users![index].isBlocked
                                 ? Colors.grey[200]
                                 : Colors.white,
@@ -374,7 +382,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     List<Widget> _tabs = [
       homePage,
       const UserScreen(),
-      CategoryScreen(),
+      ActivityLogScreen(),
       const ProfileScreen(),
     ];
     return Scaffold(
@@ -455,6 +463,7 @@ class QuickChecks extends StatelessWidget {
         margin: const EdgeInsets.only(left: 20, bottom: 10, top: 10),
         width: width * 40,
         decoration: BoxDecoration(
+          border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
           borderRadius: BorderRadius.circular(20),
           color: Colors.white.withOpacity(0.9),
           boxShadow: [
