@@ -7,6 +7,7 @@ import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
+import 'package:anees_costing/Widget/grad_button.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -143,6 +144,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
   Widget build(BuildContext context) {
     var width1 = MediaQuery.of(context).size.width;
     products = Provider.of<Products>(context).products;
+    String? token = Provider.of<Products>(context).pageToken;
     List<Category> categories = Provider.of<Categories>(context).categories;
     List<AUser> customers = Provider.of<Users>(context).customers;
     var currentUser = Provider.of<Auth>(context).currentUser;
@@ -341,150 +343,27 @@ class _ProductWebContentState extends State<ProductWebContent> {
                         ),
                       ),
                     );
-
-                    // Container(
-                    //     padding: const EdgeInsets.all(8),
-                    //     decoration: BoxDecoration(
-                    //         color: Colors.white,
-                    //         boxShadow: [
-                    //           BoxShadow(
-                    //             color: Colors.grey.withOpacity(
-                    //               0.4,
-                    //             ),
-                    //             offset: const Offset(0, 5),
-                    //             blurRadius: 20,
-                    //             spreadRadius: 1,
-                    //           ),
-                    //           BoxShadow(
-                    //             color: Colors.grey.withOpacity(
-                    //               0.5,
-                    //             ),
-                    //             offset: -Offset(5, 0),
-                    //             blurRadius: 5,
-                    //             spreadRadius: 1,
-                    //           ),
-                    //         ],
-                    //         borderRadius: customRadius),
-                    //     child: Column(
-                    //         mainAxisSize: MainAxisSize.min,
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           InkWell(
-                    //             onTap: () {
-                    //               showDialog(
-                    //                   context: context,
-                    //                   builder: (ctx) => AlertDialog(
-                    //                         content: Hero(
-                    //                           tag: products[index].id,
-                    //                           child: Image.network(
-                    //                             products[index].image,
-                    //                           ),
-                    //                         ),
-                    //                       ));
-                    //             },
-                    //             child: Container(
-                    //               decoration: const BoxDecoration(),
-                    //               child: ClipRRect(
-                    //                 borderRadius: customRadius,
-                    //                 child: Hero(
-                    //                   tag: products[index].id,
-                    //                   child: Image.network(
-                    //                     products[index].image,
-                    //                     fit: BoxFit.cover,
-                    //                     height: height(context) * 25,
-                    //                     width: double.infinity,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //           SizedBox(
-                    //             height: height(context) * 1,
-                    //           ),
-                    //           Row(
-                    //             mainAxisAlignment:
-                    //                 MainAxisAlignment.spaceBetween,
-                    //             children: [
-                    //               Column(
-                    //                 mainAxisSize: MainAxisSize.min,
-                    //                 crossAxisAlignment:
-                    //                     CrossAxisAlignment.start,
-                    //                 children: [
-                    //                   FittedBox(
-                    //                     child: Text(
-                    //                       products[index].name,
-                    //                       style: GoogleFonts.righteous(
-                    //                         color: primaryColor,
-                    //                         fontSize: 25,
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: height(context) * 0.5,
-                    //                   ),
-                    //                   FittedBox(
-                    //                     child: Row(
-                    //                       children: [
-                    //                         Text(
-                    //                           'Article No :',
-                    //                           style: TextStyle(
-                    //                               color: headingColor,
-                    //                               fontSize: 16),
-                    //                         ),
-                    //                         SizedBox(
-                    //                           width: width(context) * 0.5,
-                    //                         ),
-                    //                         Text(
-                    //                           products[index].name,
-                    //                         ),
-                    //                       ],
-                    //                     ),
-                    //                   )
-                    //                 ],
-                    //               ),
-                    //               PopupMenuButton(
-                    //                 icon: Icon(
-                    //                   Icons.more_vert,
-                    //                   color: headingColor,
-                    //                 ),
-                    //                 itemBuilder: (BuildContext context) =>
-                    //                     <PopupMenuEntry>[
-                    //                   PopupMenuItem(
-                    //                     child: PopupItem(
-                    //                       icon: Icons.edit_outlined,
-                    //                       text: 'Edit',
-                    //                       onTap: () {
-                    //                         Navigator.of(context).pop();
-                    //                         Provider.of<Products>(context,
-                    //                                 listen: false)
-                    //                             .setProduct(products[index]);
-
-                    //                         widget.scaffoldKey.currentState!
-                    //                             .openEndDrawer();
-                    //                       },
-                    //                     ),
-                    //                   ),
-                    //                   PopupMenuItem(
-                    //                     child: PopupItem(
-                    //                       icon: Icons.delete,
-                    //                       text: 'Delete',
-                    //                       onTap: () {
-                    //                         Navigator.of(context).pop();
-                    //                         _deleteProduct(
-                    //                             imgUrl: products[index].image,
-                    //                             prodId: products[index].id);
-                    //                       },
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ]));
                   },
                 ),
-        )
+        ),
+        if (token != null)
+          GradientButton(
+              onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await Provider.of<Products>(context, listen: false)
+                    .fetchAndUpdateProducts()
+                    .then((value) {
+                  setState(
+                    () {
+                      isLoading = false;
+                    },
+                  );
+                });
+              },
+              title: 'Load more')
+
         //main area end
       ],
     );

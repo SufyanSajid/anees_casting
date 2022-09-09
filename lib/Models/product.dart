@@ -31,6 +31,7 @@ class Product {
 class Products with ChangeNotifier {
   List<Product> _products = [];
   Product? drawerProduct;
+  String? pageToken;
 
   void setProduct(Product prod) {
     drawerProduct = prod;
@@ -66,10 +67,12 @@ class Products with ChangeNotifier {
 
   Future<void> fetchAndUpdateProducts() async {
     List<Product> tempProds = [];
-    http.Response prodRes =
-        await FirestoreMethods().getRecords(collection: "products");
+    http.Response prodRes = await FirestoreMethods()
+        .getRecords(collection: "products", pageToken: pageToken);
 
-    List<dynamic> docsData = json.decode(prodRes.body)["documents"];
+    var data = json.decode(prodRes.body);
+    List<dynamic> docsData = data["documents"];
+
 
     for (var element in docsData) {
       Map fields = element["fields"];
@@ -94,8 +97,17 @@ class Products with ChangeNotifier {
           image: imageUrl,
           dateTime: time));
     }
+    if (pageToken != null) {
+      _products.addAll(tempProds);
+    } else {
+      _products = tempProds;
+    }
 
-    _products = tempProds;
+    if (data['nextPageToken'] != null) {
+      pageToken = data['nextPageToken'];
+    }else{
+      pageToken = null;
+    }
 
     notifyListeners();
   }

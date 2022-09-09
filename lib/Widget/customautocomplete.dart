@@ -2,6 +2,7 @@ import 'package:anees_costing/Models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Models/product.dart';
 import '../contant.dart';
 
 class CustomAutoComplete extends StatefulWidget {
@@ -67,6 +68,12 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
             child: TextField(
               focusNode: fieldFocusNode,
               controller: controller,
+              onChanged: (value) async {
+                if (value.isEmpty) {
+                   Provider.of<Products>(context, listen: false)
+                      .fetchAndUpdateProducts();
+                }
+              },
               decoration: InputDecoration(
                   label: Text(
                     widget.firstSelction == null

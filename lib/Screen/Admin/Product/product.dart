@@ -116,6 +116,8 @@ class _ProductScreenState extends State<ProductScreen> {
         Provider.of<Categories>(context, listen: false).categories;
     var currentUser = Provider.of<Auth>(context).currentUser;
 
+    String? token = Provider.of<Products>(context).pageToken;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -231,7 +233,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 SizedBox(
                                   height: height(context) * 0.5,
                                 ),
-
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -295,31 +296,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                   ],
                                 ),
-                                // SizedBox(
-                                //   height: height(context) * 1,
-                                // ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   children: [
-                                //     FittedBox(
-                                //       child: Text(
-                                //         products[index].dateTime,
-                                //         style: GoogleFonts.righteous(
-                                //           color: headingColor,
-                                //           fontWeight: FontWeight.w500,
-                                //           fontSize: 16,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     Text(
-                                //       products[index].dateTime.runtimeType.toString(),
-                                //       style: TextStyle(
-                                //         color: contentColor,
-                                //         fontSize: 16,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               ],
                             ),
                           );
@@ -331,19 +307,50 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ),
       floatingActionButton: currentUser!.role!.toLowerCase() == 'admin'
-          ? Container(
-              decoration: BoxDecoration(
-                  gradient: customGradient, shape: BoxShape.circle),
-              child: FloatingActionButton(
-                backgroundColor: Colors.transparent,
-                child: const Icon(Icons.add),
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(AddProduct.routeName, arguments: {
-                    "action": "add",
-                  });
-                },
-              ),
+          ? Row(
+              mainAxisAlignment: token != null
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.start,
+              children: [
+                
+                Container(
+                  margin: const EdgeInsets.only(left: 30),
+                  decoration: BoxDecoration(
+                      gradient: customGradient, shape: BoxShape.circle),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.transparent,
+                    child: const Icon(Icons.add),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(AddProduct.routeName, arguments: {
+                        "action": "add",
+                      });
+                    },
+                  ),
+                ),
+                 if(token != null)
+                Container(
+                  
+                  decoration: BoxDecoration(
+                      gradient: customGradient, shape: BoxShape.circle),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.transparent,
+                    child:const Text("More"),
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      Provider.of<Products>(context,listen: false)
+                          .fetchAndUpdateProducts()
+                          .then((value) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                    },
+                  ),
+                ),
+              ],
             )
           : null,
     );

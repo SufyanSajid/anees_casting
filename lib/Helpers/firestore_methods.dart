@@ -16,13 +16,22 @@ class FirestoreMethods {
     return res;
   }
 
-  Future<http.Response> getRecords({required String collection}) async {
-    final URL = Uri.parse(baseUrl + collection
-        // +
-        // '?pageSize=&pageToken=AFTOeJw4lsJ0Zqy1YIqSMtWmRduefCa_e8noRIKBDOwZ03n1LJm2cFM1A_E7Z40j_El08Of9oDIvV7cu8n6jkxe6u4WbqjnVuroeFJ1p_u9YJ-iyC2eNFnTEwLPVIBFfrRlX'
-        );
+  Future<http.Response> getRecords(
+      {required String collection, String? pageToken}) async {
+    String ur = '';
+    if (collection == 'products') {
+      ur = "$baseUrl$collection?pageSize=2";
 
-    var res = await http.get(URL);
+      if (pageToken != null) {
+        ur += "&pageToken=$pageToken";
+      }
+    } else {
+      ur = baseUrl + collection;
+    }
+
+    final url = Uri.parse(ur);
+
+    var res = await http.get(url);
 
     return res;
   }
