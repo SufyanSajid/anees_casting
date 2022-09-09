@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/Widget/input_feild.dart';
 import 'package:anees_costing/Widget/submitbutton.dart';
 import 'package:anees_costing/contant.dart';
@@ -96,6 +97,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
     }
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
@@ -104,6 +107,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Provider.of<Categories>(context, listen: false).parentCategories;
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -213,7 +218,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Navigator.of(context).pop();
                 },
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 3,

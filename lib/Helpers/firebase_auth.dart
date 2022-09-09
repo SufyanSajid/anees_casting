@@ -33,6 +33,18 @@ class FirebaseAuth {
         phone: phone);
   }
 
+  Future<void> changePassword(String password, String userId) async {
+    final url = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=$APIkey');
+
+    var response = await http.post(url, body: {
+      'idToken': userId,
+      'password': password,
+      'returnSecureToken': 'false',
+    });
+    print(response.body);
+  }
+
   Future<http.Response> deletUser(authId) async {
     print("delete");
     var URL = Uri.parse(

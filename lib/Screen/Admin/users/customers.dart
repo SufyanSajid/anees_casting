@@ -1,5 +1,6 @@
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +20,14 @@ class CustomerScreen extends StatefulWidget {
 class _CustomerScreenState extends State<CustomerScreen> {
   List<AUser>? customers;
   bool isLoading = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     customers = Provider.of<Users>(context, listen: false).customers;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
@@ -39,7 +43,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   Navigator.of(context).pop();
                 },
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,

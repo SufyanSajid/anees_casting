@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _AdminSideCustomerProductScreenState
   bool isFirst = true;
   bool isLoading = false;
   AUser? customer;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void didChangeDependencies() async {
@@ -48,6 +50,8 @@ class _AdminSideCustomerProductScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -63,7 +67,9 @@ class _AdminSideCustomerProductScreenState
                   Navigator.of(context).pop();
                 },
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,

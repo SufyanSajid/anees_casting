@@ -1,3 +1,4 @@
+import 'package:anees_costing/Helpers/firebase_auth.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
@@ -22,7 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _emailController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _CurrentPassword = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _nameFormKey = GlobalKey<FormState>();
@@ -61,23 +61,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _passwordChange() {
-    if (_CurrentPassword.text.isEmpty ||
-        _newPasswordController.text.isEmpty ||
+    print(123);
+    if (_newPasswordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error: Empty Feilds'),
       ));
     } else if (_newPasswordController.text.toLowerCase() !=
         _confirmPasswordController.text.toLowerCase()) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error: Password didnot match'),
       ));
-    } else {}
+    } else {
+      setState(() {
+        isLoading = true;
+        FirebaseAuth()
+            .changePassword(_newPasswordController.text.trim(), currentUser.id)
+            .then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      });
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
     super.initState();
@@ -107,7 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     leadingTap: () {},
                     tarilingIcon: Icons.filter_list,
                     tarilingTap: () {
-                      print('shano');
                       _scaffoldKey.currentState!.openDrawer();
                     }),
               ),
@@ -135,16 +144,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //     right: 0,
-                  //     bottom: -10,
-                  //     child: IconButton(
-                  //         onPressed: () {},
-                  //         icon: Icon(
-                  //           Icons.add_a_photo_outlined,
-                  //           color: primaryColor,
-                  //           size: 30,
-                  //         )))
                 ],
               ),
               SizedBox(
@@ -192,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                               gradient: index == 0
                                   ? customGradient
-                                  : LinearGradient(colors: [
+                                  : const LinearGradient(colors: [
                                       Colors.transparent,
                                       Colors.transparent
                                     ]),
@@ -226,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                               gradient: index == 1
                                   ? customGradient
-                                  : LinearGradient(colors: [
+                                  : const LinearGradient(colors: [
                                       Colors.transparent,
                                       Colors.transparent
                                     ]),
@@ -313,17 +312,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     key: _passwordFormKey,
                     child: Column(
                       children: [
-                        InputFeild(
-                            hinntText: 'Current Password',
-                            validatior: (String value) {
-                              if (value.isEmpty) {
-                                return '';
-                              }
-                            },
-                            inputController: _CurrentPassword),
-                        SizedBox(
-                          height: height * 2,
-                        ),
                         InputFeild(
                             hinntText: 'New Password',
                             validatior: (String value) {

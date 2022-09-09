@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -10,11 +11,14 @@ class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-detail';
   ProductDetailScreen({Key? key}) : super(key: key);
   Product? product;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as Product;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
@@ -29,7 +33,9 @@ class ProductDetailScreen extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               tarilingIcon: Icons.filter_list,
-              tarilingTap: () {},
+              tarilingTap: () {
+                _scaffoldKey.currentState!.openDrawer();
+              },
             ),
             SizedBox(
               height: height(context) * 2,
