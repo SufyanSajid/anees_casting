@@ -179,7 +179,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
         Expanded(
           child: isLoading
               ? Center(
-                  child: CircularProgressIndicator(
+                  child: AdaptiveIndecator(
                     color: primaryColor,
                   ),
                 )

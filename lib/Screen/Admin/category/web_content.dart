@@ -11,6 +11,7 @@ import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/contant.dart';
 
 import '../../../Models/category.dart';
+import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/grad_button.dart';
 
 class CategoryWebContent extends StatefulWidget {
@@ -181,7 +182,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                 Expanded(
                   child: isLoading
                       ? Center(
-                          child: CircularProgressIndicator(color: primaryColor),
+                          child: AdaptiveIndecator(color: primaryColor),
                         )
                       : ListView.builder(
                           itemCount: categories.length,

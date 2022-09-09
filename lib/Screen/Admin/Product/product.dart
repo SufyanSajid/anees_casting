@@ -8,6 +8,7 @@ import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/send_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../Widget/adaptive_indecator.dart';
 import '/Helpers/storage_methods.dart';
 import 'addproduct.dart';
 
@@ -39,15 +40,17 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   void didChangeDependencies() {
     if (isFirst) {
-      isFirst = false;
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Products>(context).fetchAndUpdateProducts().then((value) {
+      if (Provider.of<Products>(context, listen: false).products.isEmpty) {
         setState(() {
-          isLoading = false;
+          isLoading = true;
         });
-      });
+        Provider.of<Products>(context).fetchAndUpdateProducts().then((value) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+      isFirst = false;
     }
     super.didChangeDependencies();
   }
@@ -177,7 +180,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: isLoading
                     ? Center(
-                        child: CircularProgressIndicator(
+                        child: AdaptiveIndecator(
                           color: primaryColor,
                         ),
                       )

@@ -3,6 +3,7 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../Widget/adaptive_indecator.dart';
 import '/Models/user.dart';
 import 'add_user.dart';
 import '/Widget/appbar.dart';
@@ -68,7 +69,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               isLoading
                   ? Center(
-                      child: CircularProgressIndicator(
+                      child: AdaptiveIndecator(
                         color: primaryColor,
                       ),
                     )
@@ -154,7 +155,7 @@ class _ShowUsersState extends State<ShowUsers> {
     return Expanded(
       child: isLoading
           ? Center(
-              child: CircularProgressIndicator(
+              child: AdaptiveIndecator(
                 color: primaryColor,
               ),
             )
@@ -262,65 +263,6 @@ class _ShowUsersState extends State<ShowUsers> {
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //       decoration: const BoxDecoration(
-                    //           color: Colors.white,
-                    //           shape: BoxShape.circle,
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //                 color: Colors.grey,
-                    //                 offset: Offset(0, 5),
-                    //                 blurRadius: 5),
-                    //           ]),
-                    //       padding: const EdgeInsets.all(8),
-                    //       child: IconButton(
-                    //         icon: const Icon(
-                    //           Icons.edit,
-                    //         ),
-                    //         color: contentColor,
-                    //         onPressed: () {
-                    //           Provider.of<Users>(context, listen: false)
-                    //               .setUser(widget.users[index]);
-
-                    //           widget.scaffoldKey!.currentState!.openEndDrawer();
-                    //         },
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: width(context) * 6,
-                    //     ),
-                    //     Container(
-                    //       decoration: const BoxDecoration(
-                    //           color: Colors.white,
-                    //           shape: BoxShape.circle,
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //                 color: Colors.grey,
-                    //                 offset: Offset(0, 5),
-                    //                 blurRadius: 5),
-                    //           ]),
-                    //       padding: const EdgeInsets.all(8),
-                    //       child: IconButton(
-                    //         icon: const Icon(
-                    //           Icons.delete,
-                    //           color: Colors.red,
-                    //         ),
-                    //         color: contentColor,
-                    //         onPressed: () {
-                    //           _blockUser(
-                    //               user: widget.users[index],
-                    //               ctx: context,
-                    //               block: widget.users[index].isBlocked
-                    //                   ? false
-                    //                   : true);
-                    //           setState(() {});
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

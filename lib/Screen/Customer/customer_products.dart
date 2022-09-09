@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/input_feild.dart';
 import '../../Widget/send_button.dart';
 import '../Admin/Product/addproduct.dart';
@@ -148,7 +149,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
             Expanded(
               child: isLoading
                   ? Center(
-                      child: CircularProgressIndicator(
+                      child: AdaptiveIndecator(
                         color: primaryColor,
                       ),
                     )

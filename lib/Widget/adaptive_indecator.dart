@@ -16,7 +16,7 @@ class AdaptiveIndecator extends StatelessWidget {
     return Center(
       child: SizedBox(
         height: height * 2,
-        width: height*2,
+        width: height * 2,
         child: CircularProgressIndicator(
           color: color,
         ),

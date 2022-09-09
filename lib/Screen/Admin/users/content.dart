@@ -5,6 +5,7 @@ import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/desk_autocomplete.dart';
 import '../../../Widget/grad_button.dart';
 
@@ -100,7 +101,7 @@ class _UserWebContentState extends State<UserWebContent> {
         ),
         isLoading
             ? Center(
-                child: CircularProgressIndicator(
+                child: AdaptiveIndecator(
                   color: primaryColor,
                 ),
               )

@@ -107,7 +107,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
           height: height(context) * 2,
         ),
         isCatLoading
-            ? CircularProgressIndicator(
+            ? AdaptiveIndecator(
                 color: primaryColor,
               )
             : SubmitButton(
