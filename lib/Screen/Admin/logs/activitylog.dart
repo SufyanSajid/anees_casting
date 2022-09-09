@@ -1,3 +1,4 @@
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,12 +9,14 @@ import '../../../Widget/appbar.dart';
 
 class ActivityLogScreen extends StatelessWidget {
   static const routeName = 'activity-log';
-  const ActivityLogScreen({super.key});
-
+  ActivityLogScreen({super.key});
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     var logs = Provider.of<Logs>(context, listen: false).logs;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
@@ -27,7 +30,9 @@ class ActivityLogScreen extends StatelessWidget {
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {},
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,
@@ -36,8 +41,9 @@ class ActivityLogScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: logs.length,
                   itemBuilder: (ctx, index) => Container(
-                    margin: EdgeInsets.only(bottom: 15),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    margin: const EdgeInsets.only(bottom: 15),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       border: Border.all(
                           color: btnbgColor.withOpacity(0.6), width: 1),

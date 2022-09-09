@@ -37,14 +37,16 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       setState(() {
         isLoading = true;
       });
+
       await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
+
       await Provider.of<Users>(context, listen: false).fetchAndUpdateUser();
       setState(() {
         isLoading = false;
       });
       isFirst = false;
     }
-    // TODO: implement didChangeDependencies
+
     super.didChangeDependencies();
   }
 

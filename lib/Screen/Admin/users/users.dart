@@ -1,5 +1,6 @@
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Models/sent_products.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
 import '/Models/user.dart';
@@ -22,11 +23,14 @@ class _UserScreenState extends State<UserScreen> {
   List<AUser> users = [];
   bool isLoading = false;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     users = Provider.of<Users>(context, listen: true).users;
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       floatingActionButton: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -60,7 +64,9 @@ class _UserScreenState extends State<UserScreen> {
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {},
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,

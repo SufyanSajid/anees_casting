@@ -5,6 +5,7 @@ import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/Widget/send_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -109,6 +110,8 @@ class _ProductScreenState extends State<ProductScreen> {
     super.dispose();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     List<Product> products = Provider.of<Products>(context).products;
@@ -119,6 +122,8 @@ class _ProductScreenState extends State<ProductScreen> {
     String? token = Provider.of<Products>(context).pageToken;
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
@@ -134,7 +139,9 @@ class _ProductScreenState extends State<ProductScreen> {
                   Navigator.of(context).pop();
                 },
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,

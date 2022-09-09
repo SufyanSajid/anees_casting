@@ -1,6 +1,7 @@
 import 'package:anees_costing/Helpers/firebase_auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:provider/provider.dart';
 import '/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -14,11 +15,14 @@ import 'package:flutter/material.dart';
 class AddUser extends StatelessWidget {
   static const routeName = '/adduser';
 
-  const AddUser({Key? key}) : super(key: key);
+  AddUser({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
@@ -34,7 +38,9 @@ class AddUser extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 tarilingIcon: Icons.filter_list,
-                tarilingTap: () {},
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
               SizedBox(
                 height: height(context) * 2,
