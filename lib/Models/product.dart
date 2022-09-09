@@ -225,7 +225,7 @@ class Products with ChangeNotifier {
         .createRecord(collection: "sentproductsrecord/", data: payLoad);
   }
 
-  Future<void> getCustomerProducts(String userId) async {
+  Future<List<Product>> getCustomerProducts(String userId) async {
     List<Product> tempProds = [];
     http.Response prodRes = await FirestoreMethods()
         .getRecords(collection: "users/$userId/products");
@@ -256,17 +256,16 @@ class Products with ChangeNotifier {
           dateTime: time));
     }
 
-    _products = tempProds;
+    return tempProds;
 
-    notifyListeners();
     // print(documents.toString());
   }
 
   void searchCustomerProducts(String search) {
-    print(123);
-    _products = _products
-        .where((element) => element.name.toLowerCase() == search.toLowerCase())
-        .toList();
-    notifyListeners();
+    // print(123);
+    // _products = _products
+    //     .where((element) => element.name.toLowerCase() == search.toLowerCase())
+    //     .toList();
+    // notifyListeners();
   }
 }

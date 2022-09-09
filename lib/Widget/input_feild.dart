@@ -8,6 +8,7 @@ class InputFeild extends StatefulWidget {
   Function validatior;
   void Function(String?)? saved;
   void Function(String)? submitted;
+  void Function(String)? onChanged;
   TextEditingController inputController;
   TextInputType? type;
   TextInputAction? textInputAction;
@@ -29,6 +30,7 @@ class InputFeild extends StatefulWidget {
       this.suffix,
       this.maxLines = 1,
       this.suffixPress,
+      this.onChanged,
       this.textInputAction,
       this.readOnly = false,
       this.secure = false});
@@ -58,6 +60,7 @@ class _InputFeildState extends State<InputFeild> {
       //   margin: EdgeInsets.only(top: height * 3),
       child: Center(
         child: TextFormField(
+          onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           onFieldSubmitted: widget.submitted,
           onSaved: widget.saved,

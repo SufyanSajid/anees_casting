@@ -2,6 +2,7 @@ import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
+import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
 import 'package:anees_costing/Screen/Admin/users/customers.dart';
@@ -75,6 +76,8 @@ class MyApp extends StatelessWidget {
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
           UserScreen.routeName: (ctx) => const UserScreen(),
           CustomerScreen.routeName: (ctx) => CustomerScreen(),
+          AdminSideCustomerProductScreen.routeName: (ctx) =>
+              AdminSideCustomerProductScreen(),
           ProductScreen.routeName: (ctx) => ProductScreen(),
           AddProduct.routeName: (ctx) => const AddProduct(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),

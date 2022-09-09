@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Screen/Auth/Login/mobilelogin.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
@@ -167,24 +168,10 @@ class _AppDrawerState extends State<AppDrawer> {
                           fontSize: 16,
                           color: Colors.white),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(AdminHomePage.routeName);
+                    },
                   ),
-                  // if(currentUser!.role.toLowerCase()=='admin')
-                  ListTile(
-                    leading: const Icon(
-                      Icons.manage_accounts,
-                      color: Colors.white,
-                    ),
-                    title: const Text(
-                      'Manage Members',
-                      style: TextStyle(
-                          fontFamily: 'Poppins-thin',
-                          fontSize: 16,
-                          color: Colors.white),
-                    ),
-                    onTap: () {},
-                  ),
-
                   if (Platform.isAndroid)
                     ListTile(
                       leading: const Icon(

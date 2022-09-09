@@ -10,10 +10,6 @@ import 'package:provider/provider.dart';
 
 import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/input_feild.dart';
-import '../../Widget/send_button.dart';
-import '../Admin/Product/addproduct.dart';
-import '../Admin/Product/content.dart';
-import '../Admin/Product/functions/getsearchedproducts.dart';
 
 class CustomerProductScreen extends StatefulWidget {
   static const routeName = '/customer-products';
@@ -36,7 +32,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
         isLoading = true;
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-      await Provider.of<Products>(context, listen: false)
+      products = await Provider.of<Products>(context)
           .getCustomerProducts(currentUser!.id);
       setState(() {
         isLoading = false;
@@ -52,7 +48,6 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    products = Provider.of<Products>(context).products;
     return Scaffold(
       key: _scaffoldKey,
       drawer: AppDrawer(),
@@ -135,10 +130,22 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                 submitted: (value) {
                   if (value.isEmpty) {
                     Provider.of<Products>(context, listen: false)
-                        .getCustomerProducts(currentUser!.id);
+                        .getCustomerProducts(currentUser!.id)
+                        .then((value) {
+                      setState(() {
+                        products = value;
+                      });
+                    });
                   } else {
-                    Provider.of<Products>(context, listen: false)
-                        .searchCustomerProducts(value);
+                    setState(
+                      () {
+                        products = products!
+                            .where((element) =>
+                                element.name.toLowerCase() ==
+                                value.toLowerCase())
+                            .toList();
+                      },
+                    );
                   }
                 },
               ),
@@ -209,93 +216,6 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                                       fontSize: 20,
                                     ),
                                   )
-
-                                  // Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text(
-                                  //       products![index].name,
-                                  //       style: GoogleFonts.righteous(
-                                  //         color: headingColor,
-                                  //         fontWeight: FontWeight.w500,
-                                  //         fontSize: 20,
-                                  //       ),
-                                  //     ),
-                                  //     Row(
-                                  //       mainAxisAlignment: MainAxisAlignment.end,
-                                  //       children: [
-                                  //         PopupMenuButton(
-                                  //           icon: Icon(
-                                  //             Icons.more_vert,
-                                  //             color:
-                                  //                 primaryColor.withOpacity(0.8),
-                                  //           ),
-                                  //           itemBuilder: (BuildContext context) =>
-                                  //               <PopupMenuEntry>[
-                                  //             PopupMenuItem(
-                                  //               child: PopupItem(
-                                  //                 icon: Icons.edit_outlined,
-                                  //                 text: 'Edit',
-                                  //                 onTap: () {
-                                  //                   // Navigator.of(context).pop();
-                                  //                   // Navigator.pushNamed(context,
-                                  //                   //     AddProduct.routeName,
-                                  //                   //     arguments: {
-                                  //                   //       "action": "edit",
-                                  //                   //       "product":
-                                  //                   //           products[index]
-                                  //                   //     });
-                                  //                 },
-                                  //               ),
-                                  //             ),
-                                  //             PopupMenuItem(
-                                  //               child: PopupItem(
-                                  //                 icon: Icons.delete,
-                                  //                 text: 'Delete',
-                                  //                 onTap: () {
-                                  //                   // Navigator.of(context).pop();
-                                  //                   // _deleteProduct(
-                                  //                   //     imgUrl: products[index]
-                                  //                   //         .image,
-                                  //                   //     prodId:
-                                  //                   //         products[index].id);
-                                  //                 },
-                                  //               ),
-                                  //             ),
-                                  //           ],
-                                  //         ),
-                                  //         SendProductButton(
-                                  //             prod: products![index])
-                                  //       ],
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // SizedBox(
-                                  //   height: height(context) * 1,
-                                  // ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     FittedBox(
-                                  //       child: Text(
-                                  //         products[index].dateTime,
-                                  //         style: GoogleFonts.righteous(
-                                  //           color: headingColor,
-                                  //           fontWeight: FontWeight.w500,
-                                  //           fontSize: 16,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     Text(
-                                  //       products[index].dateTime.runtimeType.toString(),
-                                  //       style: TextStyle(
-                                  //         color: contentColor,
-                                  //         fontSize: 16,
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
                                 ],
                               ),
                             ),
