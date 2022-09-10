@@ -32,6 +32,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int index = 0;
   bool isLoading = false;
   var currentUser;
+  @override
+  void initState() {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+
+    super.initState();
+  }
 
   void _nameChange() {
     setState(() {
@@ -75,22 +81,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       setState(() {
         isLoading = true;
-        FirebaseAuth()
-            .changePassword(_newPasswordController.text.trim(), currentUser.id)
-            .then((value) {
-          setState(() {
-            isLoading = false;
-          });
+      });
+      FirebaseAuth()
+          .changePassword(
+              password: _newPasswordController.text.trim(),
+              userId: currentUser.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+          _newPasswordController.clear();
+          _confirmPasswordController.clear();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Changed: Password Changed'),
+          ));
         });
+      }).catchError((error) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('$error:Login again to change pass'),
+        ));
       });
     }
-  }
-
-  @override
-  void initState() {
-    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-
-    super.initState();
   }
 
   @override

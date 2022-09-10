@@ -5,6 +5,7 @@ import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import '../../../Models/activitylogs.dart';
 import '../../../Models/auth.dart';
 import '../../../Widget/adaptiveDialog.dart';
 import '../../../Widget/adaptive_indecator.dart';
@@ -141,8 +142,15 @@ class _LoginFeildsState extends State<LoginFeilds> {
     await Provider.of<Auth>(context, listen: false)
         .login(_emailController.text.trim(), _passController.text.trim())
         .then((value) async {
+      var date = DateTime.now().toString().split(' ');
       CurrentUser currentUser =
           Provider.of<Auth>(context, listen: false).currentUser!;
+      Provider.of<Logs>(context, listen: false).addLog(Log(
+          id: DateTime.now().microsecond.toString(),
+          userid: currentUser.id,
+          userName: currentUser.name!,
+          content: '${currentUser.name} Loged in at ${date[0]}',
+          logType: 'Activity'));
       bool isBlocked = await Provider.of<Auth>(context, listen: false)
           .isBlocked(currentUser.id);
 

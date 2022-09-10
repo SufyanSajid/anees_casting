@@ -1,3 +1,5 @@
+import 'package:anees_costing/Models/activitylogs.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class _SendProductButtonState extends State<SendProductButton> {
 
   @override
   Widget build(BuildContext context) {
+    var currentUser = Provider.of<Auth>(context, listen: true).currentUser;
     List<AUser> customers = Provider.of<Users>(context).customers;
     return IconButton(
       onPressed: () {
@@ -183,6 +186,20 @@ class _SendProductButtonState extends State<SendProductButton> {
                                                       isSended = true;
                                                     },
                                                   );
+                                                  Provider.of<Logs>(context,
+                                                          listen: false)
+                                                      .addLog(Log(
+                                                          id: DateTime.now()
+                                                              .microsecond
+                                                              .toString(),
+                                                          userid:
+                                                              currentUser!.id,
+                                                          userName:
+                                                              currentUser.name!,
+                                                          content:
+                                                              '${currentUser.name} shared design ${productToSend.name} with ${customers[index].name}',
+                                                          logType: 'Share'));
+
                                                   // Navigator.of(ctx).pop();
                                                 },
                                                 icon: Icon(

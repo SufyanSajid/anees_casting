@@ -19,6 +19,7 @@ Widget buildFilterBar(
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
     decoration: BoxDecoration(
+      border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
       color: Colors.white,
       boxShadow: shadow,
       borderRadius: customRadius,

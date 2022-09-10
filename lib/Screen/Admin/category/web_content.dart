@@ -125,6 +125,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
           decoration: BoxDecoration(
+            border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
             color: Colors.white,
             boxShadow: shadow,
             borderRadius: customRadius,
@@ -299,6 +300,7 @@ class RowDetail extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
+            border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
             color: isHeading ? btnbgColor.withOpacity(0.5) : Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [

@@ -63,8 +63,9 @@ class _UserWebContentState extends State<UserWebContent> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 1.5, horizontal: 10),
           decoration: BoxDecoration(
+            border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
             color: Colors.white,
             boxShadow: shadow,
             borderRadius: customRadius,

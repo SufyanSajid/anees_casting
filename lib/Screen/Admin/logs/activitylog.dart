@@ -1,3 +1,4 @@
+import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,30 @@ import 'package:provider/provider.dart';
 import '../../../Models/activitylogs.dart';
 import '../../../Widget/appbar.dart';
 
-class ActivityLogScreen extends StatelessWidget {
+class ActivityLogScreen extends StatefulWidget {
   static const routeName = 'activity-log';
   ActivityLogScreen({super.key});
+
+  @override
+  State<ActivityLogScreen> createState() => _ActivityLogScreenState();
+}
+
+class _ActivityLogScreenState extends State<ActivityLogScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
+  @override
+  void didChangeDependencies() async {
+    setState(() {
+      isLoading = true;
+    });
+    // TODO: implement didChangeDependencies
+    await Provider.of<Logs>(context, listen: false).fetchAndSetLogs();
+    setState(() {
+      isLoading = false;
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     var logs = Provider.of<Logs>(context, listen: false).logs;
@@ -38,86 +59,80 @@ class ActivityLogScreen extends StatelessWidget {
                 height: height(context) * 2,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: logs.length,
-                  itemBuilder: (ctx, index) => Container(
-                    margin: const EdgeInsets.only(bottom: 15),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: btnbgColor.withOpacity(0.6), width: 1),
-                      color: Colors.white,
-                      boxShadow: shadow,
-                      borderRadius: customRadius,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: height(context) * 6,
-                              width: height(context) * 6,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: btnbgColor.withOpacity(0.6),
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
-                                  height: height(context) * 10,
-                                  width: height(context) * 10,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: width(context) * 2,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  logs[index].userName,
-                                  style: TextStyle(
-                                    color: headingColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                child: isLoading
+                    ? Center(
+                        child: AdaptiveIndecator(
+                          color: primaryColor,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: logs.length,
+                        itemBuilder: (ctx, index) => Container(
+                          margin: const EdgeInsets.only(bottom: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: btnbgColor.withOpacity(0.6), width: 1),
+                            color: Colors.white,
+                            boxShadow: shadow,
+                            borderRadius: customRadius,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.campaign_outlined,
+                                        color: btnbgColor.withOpacity(1),
+                                      )),
+                                  SizedBox(
+                                    width: width(context) * 2,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: height(context) * 0.5,
-                                ),
-                                Text(
-                                  logs[index].content,
-                                  style: TextStyle(
-                                      color: contentColor, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              logs[index].logType,
-                              style: GoogleFonts.righteous(
-                                color: primaryColor,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        logs[index].userName,
+                                        style: TextStyle(
+                                          color: headingColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height(context) * 0.5,
+                                      ),
+                                      Text(
+                                        logs[index].content,
+                                        style: TextStyle(
+                                            color: contentColor, fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    logs[index].logType,
+                                    style: GoogleFonts.righteous(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ],
           ),

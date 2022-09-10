@@ -48,6 +48,20 @@ class _WebAppbarState extends State<WebAppbar> {
                       showPopupMenu(context: context, popups: [
                         PopupMenuItem(
                           child: buildListTile(
+                              leadingIcon: Icons.badge_outlined,
+                              title: 'Name',
+                              subTitle: 'Change your name',
+                              onTap: () {}),
+                        ),
+                        PopupMenuItem(
+                          child: buildListTile(
+                              leadingIcon: Icons.lock_reset_outlined,
+                              title: 'Password',
+                              subTitle: 'Change your password',
+                              onTap: () {}),
+                        ),
+                        PopupMenuItem(
+                          child: buildListTile(
                               leadingIcon: Icons.logout_outlined,
                               title: 'Logout',
                               subTitle: 'Logout from Aness casting',

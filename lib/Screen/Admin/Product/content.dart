@@ -238,106 +238,114 @@ class _ProductWebContentState extends State<ProductWebContent> {
                           ),
                         );
                       },
-                      child: GridTile(
-                        footer: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          height: height(context) * 5,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            gradient: LinearGradient(
-                                colors: [Colors.white24, Colors.black38],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Text(
-                                  products[index].name,
-                                  style: GoogleFonts.righteous(
-                                    color: Colors.black54,
-                                    fontSize: 25,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  if (currentUser!.role!.toLowerCase() ==
-                                      'admin')
-                                    PopupMenuButton(
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: primaryColor.withOpacity(0.8),
-                                      ),
-                                      itemBuilder: (BuildContext context) =>
-                                          <PopupMenuEntry>[
-                                        PopupMenuItem(
-                                          child: PopupItem(
-                                            icon: Icons.edit_outlined,
-                                            text: 'Edit',
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                              Provider.of<Products>(context,
-                                                      listen: false)
-                                                  .setProduct(products[index]);
-
-                                              widget.scaffoldKey.currentState!
-                                                  .openEndDrawer();
-                                            },
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          child: PopupItem(
-                                            icon: Icons.delete,
-                                            text: 'Delete',
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                              _deleteProduct(
-                                                  imgUrl: products[index].image,
-                                                  prodId: products[index].id);
-                                            },
-                                          ),
-                                        ),
-                                      ],
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: btnbgColor.withOpacity(0.6), width: 1),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: GridTile(
+                          footer: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            height: height(context) * 5,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              gradient: LinearGradient(
+                                  colors: [Colors.white24, Colors.black38],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    products[index].name,
+                                    style: GoogleFonts.righteous(
+                                      color: Colors.black54,
+                                      fontSize: 25,
                                     ),
-                                  SendProductButton(prod: products[index])
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(
-                                    0.4,
+                                    textAlign: TextAlign.start,
                                   ),
-                                  offset: const Offset(0, 5),
-                                  blurRadius: 20,
-                                  spreadRadius: 1,
                                 ),
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(
-                                    0.5,
-                                  ),
-                                  offset: -Offset(5, 0),
-                                  blurRadius: 5,
-                                  spreadRadius: 1,
+                                Row(
+                                  children: [
+                                    if (currentUser!.role!.toLowerCase() ==
+                                        'admin')
+                                      PopupMenuButton(
+                                        icon: Icon(
+                                          Icons.more_vert,
+                                          color: primaryColor.withOpacity(0.8),
+                                        ),
+                                        itemBuilder: (BuildContext context) =>
+                                            <PopupMenuEntry>[
+                                          PopupMenuItem(
+                                            child: PopupItem(
+                                              icon: Icons.edit_outlined,
+                                              text: 'Edit',
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                                Provider.of<Products>(context,
+                                                        listen: false)
+                                                    .setProduct(
+                                                        products[index]);
+
+                                                widget.scaffoldKey.currentState!
+                                                    .openEndDrawer();
+                                              },
+                                            ),
+                                          ),
+                                          PopupMenuItem(
+                                            child: PopupItem(
+                                              icon: Icons.delete,
+                                              text: 'Delete',
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                                _deleteProduct(
+                                                    imgUrl:
+                                                        products[index].image,
+                                                    prodId: products[index].id);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    SendProductButton(prod: products[index])
+                                  ],
                                 ),
                               ],
-                              borderRadius: customRadius),
-                          child: Hero(
-                            tag: products[index].id,
-                            child: Image.network(
-                              key: ValueKey(products[index].id),
-                              products[index].image,
+                            ),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(
+                                      0.4,
+                                    ),
+                                    offset: const Offset(0, 5),
+                                    blurRadius: 20,
+                                    spreadRadius: 1,
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(
+                                      0.5,
+                                    ),
+                                    offset: -Offset(5, 0),
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                                borderRadius: customRadius),
+                            child: Hero(
+                              tag: products[index].id,
+                              child: Image.network(
+                                key: ValueKey(products[index].id),
+                                products[index].image,
+                              ),
                             ),
                           ),
                         ),
