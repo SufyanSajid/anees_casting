@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           NavbarItem(
             onTap: () {
               setState(() {
-                widget.onTap(0);
+                // widget.onTap(0);
+                Provider.of<Counts>(context, listen: false).setSelectedIndex(0);
                 widget.selectedIndex = 0;
               });
             },
@@ -51,7 +53,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
             NavbarItem(
               onTap: () {
                 setState(() {
-                  widget.onTap(1);
+                  // widget.onTap(1);
+                  Provider.of<Counts>(context, listen: false)
+                      .setSelectedIndex(1);
                   widget.selectedIndex = 1;
                 });
               },
@@ -63,7 +67,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
             NavbarItem(
               onTap: () {
                 setState(() {
-                  widget.onTap(2);
+                  // widget.onTap(2);
+                  Provider.of<Counts>(context, listen: false)
+                      .setSelectedIndex(2);
                   widget.selectedIndex = 2;
                 });
               },
@@ -74,7 +80,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           NavbarItem(
             onTap: () {
               setState(() {
-                widget.onTap(3);
+                // widget.onTap(3);
+                Provider.of<Counts>(context, listen: false).setSelectedIndex(3);
                 widget.selectedIndex = 3;
               });
             },

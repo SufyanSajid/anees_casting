@@ -324,6 +324,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   decoration: BoxDecoration(
                       gradient: customGradient, shape: BoxShape.circle),
                   child: FloatingActionButton(
+                    heroTag: DateTime.now().microsecond,
                     backgroundColor: Colors.transparent,
                     child: const Icon(Icons.add),
                     onPressed: () {

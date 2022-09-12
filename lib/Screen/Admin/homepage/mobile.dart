@@ -26,7 +26,7 @@ class MobileAdminHomePage extends StatefulWidget {
 class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   //bottomNavigationBar: CustomBottomBar(selectedIndex: 1, onTap: (){}),
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int selectIndex = 0;
+  int? selectIndex;
   bool isFirst = true;
   bool isLoading = false;
   Count? count;
@@ -52,6 +52,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    selectIndex = Provider.of<Counts>(context).selectedIndex;
     var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
@@ -393,13 +394,13 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
         drawer: const AppDrawer(),
         bottomNavigationBar: CustomBottomBar(
           onTap: (value) {
-            setState(() {
-              selectIndex = value;
-            });
+            // setState(() {
+            //   selectIndex = value;
+            // });
           },
-          selectedIndex: selectIndex,
+          selectedIndex: selectIndex!,
         ),
-        body: _tabs[selectIndex]);
+        body: _tabs[selectIndex!]);
   }
 }
 

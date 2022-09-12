@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../Models/counts.dart';
 import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/drawer.dart';
 import '../../Widget/input_feild.dart';
@@ -127,8 +128,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: 'Profile',
                       subtitle: 'Edit Your Profile',
                       svgIcon: 'assets/icons/profile.svg',
-                      leadingIcon: Icons.arrow_back,
-                      leadingTap: () {},
+                      leadingIcon: Icons.home,
+                      leadingTap: () {
+                        Provider.of<Counts>(context, listen: false)
+                            .setSelectedIndex(0);
+                      },
                       tarilingIcon: Icons.filter_list,
                       tarilingTap: () {
                         _scaffoldKey.currentState!.openDrawer();

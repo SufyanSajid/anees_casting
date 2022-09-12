@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/activitylogs.dart';
+import '../../../Models/counts.dart';
 import '../../../Widget/appbar.dart';
 
 class ActivityLogScreen extends StatefulWidget {
@@ -48,8 +49,11 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                 title: 'Log',
                 subtitle: 'Users Activities',
                 svgIcon: 'assets/icons/recycle.svg',
-                leadingIcon: Icons.arrow_back,
-                leadingTap: () {},
+                leadingIcon: Icons.home,
+                leadingTap: () {
+                  Provider.of<Counts>(context, listen: false)
+                      .setSelectedIndex(0);
+                },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {
                   _scaffoldKey.currentState!.openDrawer();

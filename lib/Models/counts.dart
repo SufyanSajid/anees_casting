@@ -19,8 +19,13 @@ class Count {
 
 class Counts with ChangeNotifier {
   Count? _counts;
+  int selectedIndex = 0;
 
   Count? get getCount => _counts;
+  void setSelectedIndex(int value) {
+    selectedIndex = value;
+    notifyListeners();
+  }
 
   Future<void> fetchtAndUpdateCount() async {
     http.Response res =

@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 
@@ -61,8 +62,11 @@ class _UserScreenState extends State<UserScreen> {
                 title: 'User',
                 subtitle: 'All users here',
                 svgIcon: 'assets/icons/users.svg',
-                leadingIcon: Icons.arrow_back,
-                leadingTap: () {},
+                leadingIcon: Icons.home,
+                leadingTap: () {
+                  Provider.of<Counts>(context, listen: false)
+                      .setSelectedIndex(0);
+                },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {
                   _scaffoldKey.currentState!.openDrawer();
