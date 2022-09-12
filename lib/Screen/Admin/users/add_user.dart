@@ -26,27 +26,29 @@ class AddUser extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Appbar(
-                title: 'User',
-                subtitle: 'Add New User',
-                svgIcon: 'assets/icons/users.svg',
-                leadingIcon: Icons.arrow_back,
-                leadingTap: () {
-                  Navigator.of(context).pop();
-                },
-                tarilingIcon: Icons.filter_list,
-                tarilingTap: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
-              ),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              const AddUserFeilds(),
-            ],
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Appbar(
+                  title: 'User',
+                  subtitle: 'Add New User',
+                  svgIcon: 'assets/icons/users.svg',
+                  leadingIcon: Icons.arrow_back,
+                  leadingTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  tarilingIcon: Icons.filter_list,
+                  tarilingTap: () {
+                    _scaffoldKey.currentState!.openDrawer();
+                  },
+                ),
+                SizedBox(
+                  height: height(context) * 2,
+                ),
+                const AddUserFeilds(),
+              ],
+            ),
           ),
         ),
       ),
@@ -117,7 +119,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     if (isFirst) {
       isFirst = false;
       drawerUser = Provider.of<Users>(context, listen: false).drawerUser;
@@ -139,38 +140,24 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: primaryColor.withOpacity(0.5),
-                    width: 2,
-                    style: BorderStyle.solid,
-                  )),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
-                  height: height(context) * 12,
-                  width: height(context) * 12,
-                  fit: BoxFit.cover,
-                ),
-              ),
+        Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: primaryColor.withOpacity(0.5),
+                width: 2,
+                style: BorderStyle.solid,
+              )),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset(
+              'assets/images/person22.jpeg',
+              height: height(context) * 12,
+              width: height(context) * 12,
+              fit: BoxFit.cover,
             ),
-            Positioned(
-                right: 0,
-                bottom: -10,
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.add_a_photo_outlined,
-                      color: primaryColor,
-                      size: 30,
-                    ))),
-          ],
+          ),
         ),
         SizedBox(
           height: height(context) * 5,

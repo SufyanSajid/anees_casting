@@ -193,7 +193,8 @@ class _LoginFeildsState extends State<LoginFeilds> {
           builder: (ctx) => AdaptiveDiaglog(
               ctx: ctx,
               title: '❌',
-              content: error.toString(),
+              // content: error.toString(),
+              content: 'Check your email or password',
               btnYes: 'Okay',
               yesPressed: () {
                 Navigator.of(context).pop();
@@ -250,20 +251,20 @@ class _LoginFeildsState extends State<LoginFeilds> {
         SizedBox(
           height: height(context) * 2,
         ),
-        Container(
-          alignment: Alignment.bottomRight,
-          width: double.infinity,
-          child: TextButton(
-            onPressed: () {
-              // Navigator.of(context)
-              //     .pushNamed(ForgetScreen.routeName);
-            },
-            child: Text(
-              'Forget Password!',
-              style: TextStyle(color: primaryColor, fontSize: 13),
-            ),
-          ),
-        ),
+        // Container(
+        //   alignment: Alignment.bottomRight,
+        //   width: double.infinity,
+        //   child: TextButton(
+        //     onPressed: () {
+        //       // Navigator.of(context)
+        //       //     .pushNamed(ForgetScreen.routeName);
+        //     },
+        //     child: Text(
+        //       'Forget Password!',
+        //       style: TextStyle(color: primaryColor, fontSize: 13),
+        //     ),
+        //   ),
+        // ),
         SizedBox(
           height: height(context) * 1,
         ),

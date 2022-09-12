@@ -168,7 +168,12 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 DisplayBox(
                   height: height,
                   title: 'Categories',
-                  value: isLoading ? '...' : count!.catsCount.toString(),
+                  value: isLoading
+                      ? '...'
+                      : Provider.of<Categories>(context)
+                          .categories
+                          .length
+                          .toString(),
                 ),
                 Container(
                   height: height * 5,
@@ -178,7 +183,12 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 DisplayBox(
                   height: height,
                   title: 'Clients',
-                  value: isLoading ? '...' : count!.usersCount.toString(),
+                  value: isLoading
+                      ? '...'
+                      : Provider.of<Users>(context, listen: true)
+                          .customers
+                          .length
+                          .toString(),
                 ),
               ],
             ),

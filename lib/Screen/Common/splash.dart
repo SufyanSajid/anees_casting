@@ -35,6 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
           Navigator.of(context)
               .pushReplacementNamed(CustomerProductScreen.routeName);
+        } else if (isLogin && currentUser!.role!.toLowerCase() == 'seller') {
+          Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
         } else if (isLogin && currentUser!.role!.toLowerCase() == 'admin') {
           Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
         } else {

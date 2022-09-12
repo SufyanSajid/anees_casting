@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
 
 import '../../../Widget/appbar.dart';
 import '../../../contant.dart';
@@ -17,6 +22,20 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as Product;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final imageUrl = Uri.parse(product!.image);
+          final response = await http.get(imageUrl);
+          final bytes = response.bodyBytes;
+
+          final temp = await getTemporaryDirectory();
+          final path = '${temp.path}/image.jpg';
+          File(path).writeAsBytesSync(bytes);
+          await Share.shareFiles([path]);
+        },
+        backgroundColor: primaryColor,
+        child: const Icon(Icons.share),
+      ),
       key: _scaffoldKey,
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,

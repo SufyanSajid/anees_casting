@@ -8,6 +8,7 @@ import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Screen/Admin/users/customers.dart';
 import '../Screen/Auth/Login/login.dart';
 import '../contant.dart';
 
@@ -175,21 +176,28 @@ class _AppDrawerState extends State<AppDrawer> {
                           .setSelectedIndex(0);
                     },
                   ),
-                  if (Platform.isAndroid)
+                  if (currentUser.role!.toLowerCase() == 'admin')
+                    const Divider(),
+                  if (currentUser.role!.toLowerCase() == 'admin')
                     ListTile(
                       leading: const Icon(
-                        Icons.share_outlined,
+                        Icons.home_outlined,
                         color: Colors.white,
                       ),
                       title: const Text(
-                        'Share App',
+                        'Customer',
                         style: TextStyle(
                             fontFamily: 'Poppins-thin',
                             fontSize: 16,
                             color: Colors.white),
                       ),
-                      onTap: () async {},
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .pushNamed(CustomerScreen.routeName);
+                      },
                     ),
+                  const Divider(),
                   ListTile(
                     leading: const Icon(
                       Icons.logout,
