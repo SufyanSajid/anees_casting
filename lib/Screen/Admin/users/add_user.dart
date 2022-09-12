@@ -27,28 +27,32 @@ class AddUser extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Appbar(
-                  title: 'User',
-                  subtitle: 'Add New User',
-                  svgIcon: 'assets/icons/users.svg',
-                  leadingIcon: Icons.arrow_back,
-                  leadingTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  tarilingIcon: Icons.filter_list,
-                  tarilingTap: () {
-                    _scaffoldKey.currentState!.openDrawer();
-                  },
+          child: Column(
+            children: [
+              Appbar(
+                title: 'User',
+                subtitle: 'Add New User',
+                svgIcon: 'assets/icons/users.svg',
+                leadingIcon: Icons.arrow_back,
+                leadingTap: () {
+                  Navigator.of(context).pop();
+                },
+                tarilingIcon: Icons.filter_list,
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: height(context) * 2,
+                    ),
+                    const AddUserFeilds(),
+                  ],
                 ),
-                SizedBox(
-                  height: height(context) * 2,
-                ),
-                const AddUserFeilds(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

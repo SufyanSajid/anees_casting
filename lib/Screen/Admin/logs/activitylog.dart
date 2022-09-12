@@ -42,7 +42,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Column(
             children: [
               Appbar(

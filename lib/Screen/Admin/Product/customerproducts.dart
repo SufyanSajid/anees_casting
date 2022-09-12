@@ -85,12 +85,12 @@ class _AdminSideCustomerProductScreenState
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Column(
             children: [
               Appbar(
                 title: 'Customer',
-                subtitle: 'Customer Name',
+                subtitle: customer!.name,
                 svgIcon: 'assets/icons/users.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {

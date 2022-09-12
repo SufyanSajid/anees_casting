@@ -119,14 +119,25 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     _scaffoldKey.currentState!.openDrawer();
                   },
-                  icon: Icon(
-                    Icons.filter_list,
-                    color: primaryColor,
-                    size: 30,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0, 5),
+                              blurRadius: 5),
+                        ]),
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.filter_list,
+                      color: btnbgColor.withOpacity(1),
+                    ),
                   ),
                 ),
               ],

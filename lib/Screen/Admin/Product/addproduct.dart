@@ -158,125 +158,133 @@ class _AddProductState extends State<AddProduct> {
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {},
               ),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              Stack(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    width: width(context) * 80,
-                    height: height(context) * 30,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: primaryColor.withOpacity(0.5),
-                          width: 2,
-                          style: BorderStyle.solid,
-                        )),
-                    child: args!['action'] == 'edit'
-                        ? Image.network(editImage!)
-                        : image != null
-                            ? Image.memory(
-                                image!,
-                                fit: BoxFit.contain,
-                              )
-                            : Container(),
-                  ),
-                  Positioned(
-                      right: 1,
-                      bottom: 1,
-                      child: IconButton(
-                          onPressed: () async {
-                            FilePickerResult? result1 =
-                                await FilePicker.platform.pickFiles(
-                                    withData: true, allowCompression: true);
+              Expanded(
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: height(context) * 2,
+                    ),
+                    Stack(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          width: width(context) * 80,
+                          height: height(context) * 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: primaryColor.withOpacity(0.5),
+                                width: 2,
+                                style: BorderStyle.solid,
+                              )),
+                          child: args!['action'] == 'edit'
+                              ? Image.network(editImage!)
+                              : image != null
+                                  ? Image.memory(
+                                      image!,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Container(),
+                        ),
+                        Positioned(
+                            right: 1,
+                            bottom: 1,
+                            child: IconButton(
+                                onPressed: () async {
+                                  FilePickerResult? result1 =
+                                      await FilePicker.platform.pickFiles(
+                                          withData: true,
+                                          allowCompression: true);
 
-                            setState(() {
-                              image = result1!.files.first.bytes;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.add_a_photo_outlined,
-                            color: primaryColor.withOpacity(0.5),
-                            size: 30,
-                          ))),
-                ],
-              ),
-              SizedBox(
-                height: height(context) * 5,
-              ),
-              CustomAutoComplete(
-                categories: categories,
-                onChange: (Category cat) {
-                  category = cat;
-                },
-              ),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              InputFeild(
-                  hinntText: 'Enter Article Number',
-                  validatior: () {},
-                  inputController: _prodNameController),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: InputFeild(
-                        hinntText: 'Length',
-                        validatior: () {},
-                        inputController: _prodLengthController),
-                  ),
-                  SizedBox(
-                    width: width(context) * 3,
-                  ),
-                  Expanded(
-                    child: InputFeild(
-                        hinntText: 'Width',
-                        validatior: () {},
-                        inputController: _prodWidthController),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              Row(
-                children: [
-                  Expanded(flex: 2, child: Container()),
-                  Expanded(
-                    flex: 4,
-                    child: CustomDropDown(
-                        items: const ['Cm', 'MM'],
-                        onChanged: (String value) {
-                          prodUnit = value;
-                        }),
-                  ),
-                  Expanded(flex: 2, child: Container()),
-                ],
-              ),
-              SizedBox(
-                height: height(context) * 5,
-              ),
-              isLoading
-                  ? AdaptiveIndecator(
-                      color: primaryColor,
-                    )
-                  : SubmitButton(
-                      height: height(context),
-                      width: width(context),
-                      onTap: () {
-                        args!["action"] == "add"
-                            ? _addProduct(image)
-                            : _editProduct(
-                                img: image,
-                                prodId: (args!["product"] as Product).id,
-                                imageUrl: (args!["product"] as Product).image);
+                                  setState(() {
+                                    image = result1!.files.first.bytes;
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  color: primaryColor.withOpacity(0.5),
+                                  size: 30,
+                                ))),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height(context) * 5,
+                    ),
+                    CustomAutoComplete(
+                      categories: categories,
+                      onChange: (Category cat) {
+                        category = cat;
                       },
-                      title: 'Add Design')
+                    ),
+                    SizedBox(
+                      height: height(context) * 2,
+                    ),
+                    InputFeild(
+                        hinntText: 'Enter Article Number',
+                        validatior: () {},
+                        inputController: _prodNameController),
+                    SizedBox(
+                      height: height(context) * 2,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InputFeild(
+                              hinntText: 'Length',
+                              validatior: () {},
+                              inputController: _prodLengthController),
+                        ),
+                        SizedBox(
+                          width: width(context) * 3,
+                        ),
+                        Expanded(
+                          child: InputFeild(
+                              hinntText: 'Width',
+                              validatior: () {},
+                              inputController: _prodWidthController),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height(context) * 2,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(flex: 2, child: Container()),
+                        Expanded(
+                          flex: 4,
+                          child: CustomDropDown(
+                              items: const ['Cm', 'MM'],
+                              onChanged: (String value) {
+                                prodUnit = value;
+                              }),
+                        ),
+                        Expanded(flex: 2, child: Container()),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height(context) * 5,
+                    ),
+                    isLoading
+                        ? AdaptiveIndecator(
+                            color: primaryColor,
+                          )
+                        : SubmitButton(
+                            height: height(context),
+                            width: width(context),
+                            onTap: () {
+                              args!["action"] == "add"
+                                  ? _addProduct(image)
+                                  : _editProduct(
+                                      img: image,
+                                      prodId: (args!["product"] as Product).id,
+                                      imageUrl:
+                                          (args!["product"] as Product).image);
+                            },
+                            title: 'Add Design')
+                  ],
+                ),
+              ),
             ],
           ),
         ),

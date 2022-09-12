@@ -112,8 +112,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Provider.of<Categories>(context, listen: true).categories;
     List<Category> parentCategories =
         Provider.of<Categories>(context, listen: false).parentCategories;
+    var media = MediaQuery.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       key: _scaffoldKey,
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,
@@ -131,78 +133,86 @@ class _CategoryScreenState extends State<CategoryScreen> {
           onPressed: () {
             print('shani');
             showModalBottomSheet(
+                isScrollControlled: true,
                 context: context,
-                builder: (ctx) => StatefulBuilder(
-                      key: _scaffoldKey,
-                      builder: (context, setState) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
-                        height: height(context) * 40,
-                        width: width(context) * 100,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Add New Category',
-                              style: GoogleFonts.righteous(
-                                color: primaryColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                builder: (ctx) => Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: StatefulBuilder(
+                        key: ValueKey(1),
+                        builder: (context, setState) => Container(
+                          // padding:
+                          //     EdgeInsets.only(bottom: media.viewInsets.bottom),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          height: height(context) * 40,
+                          width: width(context) * 100,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Add New Category',
+                                style: GoogleFonts.righteous(
+                                  color: primaryColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: height(context) * 4,
-                            ),
-                            CustomAutoComplete(
-                                categories: parentCategories,
-                                onChange: (Category cat) {
-                                  parentCat = cat;
-                                }),
-                            SizedBox(
-                              height: height(context) * 2,
-                            ),
-                            InputFeild(
-                              hinntText: 'Category Name',
-                              validatior: () {},
-                              inputController: _nameController,
-                            ),
-                            SizedBox(
-                              height: height(context) * 2,
-                            ),
-                            isCatLoading
-                                ? Center(
-                                    child:
-                                        AdaptiveIndecator(color: primaryColor),
-                                  )
-                                : SubmitButton(
-                                    height: height(context),
-                                    width: width(context),
-                                    onTap: () async {
-                                      setState(() {
-                                        isCatLoading = true;
-                                      });
-                                      var navi = Navigator.of(context);
-                                      var provider = Provider.of<Categories>(
-                                          context,
-                                          listen: false);
-                                      await provider.uploadCatagory(
-                                        title: _nameController.text.trim(),
-                                        parentId: parentCat == null
-                                            ? ""
-                                            : parentCat!.id,
-                                        parentTitle: parentCat == null
-                                            ? ""
-                                            : parentCat!.title,
-                                      );
-                                      await provider.fetchAndUpdateCat();
-                                      setState(() {
-                                        _nameController.clear();
-                                        isCatLoading = false;
-                                      });
+                              SizedBox(
+                                height: height(context) * 4,
+                              ),
+                              CustomAutoComplete(
+                                  categories: parentCategories,
+                                  onChange: (Category cat) {
+                                    parentCat = cat;
+                                  }),
+                              SizedBox(
+                                height: height(context) * 2,
+                              ),
+                              InputFeild(
+                                hinntText: 'Category Name',
+                                validatior: () {},
+                                inputController: _nameController,
+                              ),
+                              SizedBox(
+                                height: height(context) * 2,
+                              ),
+                              isCatLoading
+                                  ? Center(
+                                      child: AdaptiveIndecator(
+                                          color: primaryColor),
+                                    )
+                                  : SubmitButton(
+                                      height: height(context),
+                                      width: width(context),
+                                      onTap: () async {
+                                        setState(() {
+                                          isCatLoading = true;
+                                        });
+                                        var navi = Navigator.of(context);
+                                        var provider = Provider.of<Categories>(
+                                            context,
+                                            listen: false);
+                                        await provider.uploadCatagory(
+                                          title: _nameController.text.trim(),
+                                          parentId: parentCat == null
+                                              ? ""
+                                              : parentCat!.id,
+                                          parentTitle: parentCat == null
+                                              ? ""
+                                              : parentCat!.title,
+                                        );
+                                        await provider.fetchAndUpdateCat();
+                                        setState(() {
+                                          _nameController.clear();
+                                          isCatLoading = false;
+                                        });
 
-                                      navi.pop();
-                                    },
-                                    title: 'Add Category')
-                          ],
+                                        navi.pop();
+                                      },
+                                      title: 'Add Category')
+                            ],
+                          ),
                         ),
                       ),
                     ));
@@ -215,8 +225,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Appbar(
                 title: 'Category',
