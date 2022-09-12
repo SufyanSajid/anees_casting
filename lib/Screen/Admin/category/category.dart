@@ -28,16 +28,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Category? parentCat;
   bool isCatLoading = false;
+  bool isLoading = false;
   bool isFirst = true;
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
-      isFirst = false;
       if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
         await Provider.of<Categories>(context, listen: false)
             .fetchAndUpdateCat();
+        setState(() {
+          isLoading = false;
+        });
       }
+      isFirst = false;
     }
     super.didChangeDependencies();
   }
@@ -80,7 +87,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           btn2Pressed: () {
             Navigator.of(context).pop();
             setState(() {
-              isCatLoading = true;
+              isLoading = true;
             });
             FirestoreMethods()
                 .deleteRecord(collection: 'categories', prodId: cat.id)
@@ -90,7 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               await Provider.of<Categories>(context, listen: false)
                   .fetchAndUpdateCat();
               setState(() {
-                isCatLoading = false;
+                isLoading = false;
               });
             });
           });
@@ -122,9 +129,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: FloatingActionButton(
           backgroundColor: btnbgColor.withOpacity(0.4),
           onPressed: () {
-            showBottomSheet(
+            print('shani');
+            showModalBottomSheet(
                 context: context,
                 builder: (ctx) => StatefulBuilder(
+                      key: _scaffoldKey,
                       builder: (context, setState) => Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 15),
@@ -226,77 +235,82 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 height: height(context) * 3,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      splashColor: primaryColor,
-                      onTap: () {},
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              color: btnbgColor.withOpacity(0.6), width: 1),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0, 5),
-                              blurRadius: 5,
-                            )
-                          ],
-                        ),
-                        child: ListTile(
-                            leading: Icon(
-                              Icons.bookmark,
-                              color: btnbgColor.withOpacity(1),
-                            ),
-                            title: Text(
-                              categories[index].title.toUpperCase(),
-                              style: GoogleFonts.righteous(
-                                color: headingColor,
-                                fontSize: 16,
+                child: isLoading
+                    ? Center(
+                        child: AdaptiveIndecator(color: primaryColor),
+                      )
+                    : ListView.builder(
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            splashColor: primaryColor,
+                            onTap: () {},
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: btnbgColor.withOpacity(0.6),
+                                    width: 1),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0, 5),
+                                    blurRadius: 5,
+                                  )
+                                ],
                               ),
+                              child: ListTile(
+                                  leading: Icon(
+                                    Icons.bookmark,
+                                    color: btnbgColor.withOpacity(1),
+                                  ),
+                                  title: Text(
+                                    categories[index].title.toUpperCase(),
+                                    style: GoogleFonts.righteous(
+                                      color: headingColor,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    categories[index].parentId.isEmpty
+                                        ? '(Parent)'
+                                        : '(${categories[index].parentTitle})',
+                                    style: TextStyle(
+                                        color: contentColor, fontSize: 12),
+                                  ),
+                                  trailing: IconButton(
+                                      onPressed: () {
+                                        deleteCat(categories[index]);
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ))
+                                  //  PopupMenuButton(
+                                  //   icon: Icon(
+                                  //     Icons.more_vert,
+                                  //     color: btnbgColor.withOpacity(1),
+                                  //   ),
+                                  //   itemBuilder: (BuildContext context) =>
+                                  //       <PopupMenuEntry>[
+                                  //     PopupMenuItem(
+                                  //       child: PopupItem(
+                                  //         icon: Icons.delete,
+                                  //         text: 'Delete',
+                                  //         onTap: () {
+                                  //           deleteCat(categories[index]);
+                                  //         },
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  ),
                             ),
-                            subtitle: Text(
-                              categories[index].parentId.isEmpty
-                                  ? '(Parent)'
-                                  : '(${categories[index].parentTitle})',
-                              style:
-                                  TextStyle(color: contentColor, fontSize: 12),
-                            ),
-                            trailing: IconButton(
-                                onPressed: () {
-                                  deleteCat(categories[index]);
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ))
-                            //  PopupMenuButton(
-                            //   icon: Icon(
-                            //     Icons.more_vert,
-                            //     color: btnbgColor.withOpacity(1),
-                            //   ),
-                            //   itemBuilder: (BuildContext context) =>
-                            //       <PopupMenuEntry>[
-                            //     PopupMenuItem(
-                            //       child: PopupItem(
-                            //         icon: Icons.delete,
-                            //         text: 'Delete',
-                            //         onTap: () {
-                            //           deleteCat(categories[index]);
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               )
             ],
           ),

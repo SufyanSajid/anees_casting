@@ -319,7 +319,6 @@ class _ProductScreenState extends State<ProductScreen> {
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.start,
               children: [
-                
                 Container(
                   margin: const EdgeInsets.only(left: 30),
                   decoration: BoxDecoration(
@@ -335,28 +334,27 @@ class _ProductScreenState extends State<ProductScreen> {
                     },
                   ),
                 ),
-                 if(token != null)
-                Container(
-                  
-                  decoration: BoxDecoration(
-                      gradient: customGradient, shape: BoxShape.circle),
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.transparent,
-                    child:const Text("More"),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Provider.of<Products>(context,listen: false)
-                          .fetchAndUpdateProducts()
-                          .then((value) {
+                if (token != null)
+                  Container(
+                    decoration: BoxDecoration(
+                        gradient: customGradient, shape: BoxShape.circle),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.transparent,
+                      child: const Text("More"),
+                      onPressed: () async {
                         setState(() {
-                          isLoading = false;
+                          isLoading = true;
                         });
-                      });
-                    },
+                        Provider.of<Products>(context, listen: false)
+                            .fetchAndUpdateProducts()
+                            .then((value) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        });
+                      },
+                    ),
                   ),
-                ),
               ],
             )
           : null,

@@ -65,74 +65,81 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                           color: primaryColor,
                         ),
                       )
-                    : ListView.builder(
-                        itemCount: logs.length,
-                        itemBuilder: (ctx, index) => Container(
-                          margin: const EdgeInsets.only(bottom: 15),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: btnbgColor.withOpacity(0.6), width: 1),
-                            color: Colors.white,
-                            boxShadow: shadow,
-                            borderRadius: customRadius,
-                          ),
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.campaign_outlined,
-                                      color: btnbgColor.withOpacity(1),
-                                    )),
+                    : logs.isEmpty
+                        ? Center(
+                            child: Text('No Logs Yet'),
+                          )
+                        : ListView.builder(
+                            itemCount: logs.length,
+                            itemBuilder: (ctx, index) => Container(
+                              margin: const EdgeInsets.only(bottom: 15),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: btnbgColor.withOpacity(0.6),
+                                    width: 1),
+                                color: Colors.white,
+                                boxShadow: shadow,
+                                borderRadius: customRadius,
                               ),
-                              SizedBox(
-                                width: width(context) * 2,
-                              ),
-                              Expanded(
-                                flex: 8,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      logs[index].userName,
-                                      style: TextStyle(
-                                        color: headingColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.campaign_outlined,
+                                          color: btnbgColor.withOpacity(1),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: width(context) * 2,
+                                  ),
+                                  Expanded(
+                                    flex: 8,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          logs[index].userName,
+                                          style: TextStyle(
+                                            color: headingColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: height(context) * 0.5,
+                                        ),
+                                        Text(
+                                          logs[index].content,
+                                          style: TextStyle(
+                                              color: contentColor,
+                                              fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      logs[index].logType,
+                                      textAlign: TextAlign.right,
+                                      style: GoogleFonts.righteous(
+                                        color: primaryColor,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: height(context) * 0.5,
-                                    ),
-                                    Text(
-                                      logs[index].content,
-                                      style: TextStyle(
-                                          color: contentColor, fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  logs[index].logType,
-                                  textAlign: TextAlign.right,
-                                  style: GoogleFonts.righteous(
-                                    color: primaryColor,
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
               ),
             ],
           ),

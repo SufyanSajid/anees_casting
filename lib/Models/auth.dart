@@ -90,64 +90,64 @@ class Auth with ChangeNotifier {
 
   Future<void> _authentication(
       String email, String password, String urlSegment) async {
-    // try {
-    final url = Uri.parse(
-        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$APIkey');
-    final response = await http.post(
-      url,
-      body: json.encode(
-        {
-          'email': email,
-          'password': password,
-          'returnSecureToken': true,
-        },
-      ),
-    );
+    try {
+      final url = Uri.parse(
+          'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$APIkey');
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {
+            'email': email,
+            'password': password,
+            'returnSecureToken': true,
+          },
+        ),
+      );
 
-    final responseData = json.decode(response.body);
-    if (responseData['error'] != null) {
-      print('error in login model');
-      // throw HttpException(responseData['error']['message']);
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        print('error in login model');
+        // throw HttpException(responseData['error']['message']);
+      }
+      var userResponse = await FirestoreMethods().searchDocumnent(
+          collection: 'users',
+          field: 'authId',
+          fieldValue: responseData['localId']);
+      // print(userResponse.body);
+      var extractedUser = json.decode(userResponse.body) as List<dynamic>;
+      String? userRole;
+      String? userName;
+      print(extractedUser);
+      extractedUser.forEach((element) {
+        userRole = element['document']['fields']['role']['stringValue'];
+        userName = element['document']['fields']['name']['stringValue'];
+      });
+
+      currentUser = CurrentUser(
+          id: responseData['localId'],
+          token: responseData['idToken'],
+          name: userName,
+          role: userRole,
+          email: responseData['email'],
+          expiryDate: DateTime.now().add(
+            Duration(seconds: int.parse(responseData['expiresIn'])),
+          ));
+
+      autologout();
+      notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({
+        'token': currentUser!.token,
+        'role': currentUser!.role,
+        'name': currentUser!.name,
+        'userId': currentUser!.id,
+        'expiryDate': currentUser!.expiryDate.toIso8601String(),
+        'email': currentUser!.email,
+      });
+      prefs.setString('userData', userData);
+    } catch (error) {
+      throw error;
     }
-    var userResponse = await FirestoreMethods().searchDocumnent(
-        collection: 'users',
-        field: 'authId',
-        fieldValue: responseData['localId']);
-    // print(userResponse.body);
-    var extractedUser = json.decode(userResponse.body) as List<dynamic>;
-    String? userRole;
-    String? userName;
-    print(extractedUser);
-    extractedUser.forEach((element) {
-      userRole = element['document']['fields']['role']['stringValue'];
-      userName = element['document']['fields']['name']['stringValue'];
-    });
-
-    currentUser = CurrentUser(
-        id: responseData['localId'],
-        token: responseData['idToken'],
-        name: userName,
-        role: userRole,
-        email: responseData['email'],
-        expiryDate: DateTime.now().add(
-          Duration(seconds: int.parse(responseData['expiresIn'])),
-        ));
-
-    autologout();
-    notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    final userData = json.encode({
-      'token': currentUser!.token,
-      'role': currentUser!.role,
-      'name': currentUser!.name,
-      'userId': currentUser!.id,
-      'expiryDate': currentUser!.expiryDate.toIso8601String(),
-      'email': currentUser!.email,
-    });
-    prefs.setString('userData', userData);
-    // } catch (error) {
-    //   throw error;
-    // }
   }
 
   // Future<void> signUp(String email, String password) async {

@@ -44,9 +44,6 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Auth(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => Categories(),
-        ),
-        ChangeNotifierProvider(
           create: (ctx) => Users(),
         ),
         ChangeNotifierProvider(
@@ -54,6 +51,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Logs(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Categories(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => Counts(),

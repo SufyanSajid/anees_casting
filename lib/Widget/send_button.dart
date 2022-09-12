@@ -186,6 +186,7 @@ class _SendProductButtonState extends State<SendProductButton> {
                                                       isSended = true;
                                                     },
                                                   );
+
                                                   Provider.of<Logs>(context,
                                                           listen: false)
                                                       .addLog(Log(
