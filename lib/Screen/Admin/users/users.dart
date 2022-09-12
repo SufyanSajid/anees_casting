@@ -169,112 +169,138 @@ class _ShowUsersState extends State<ShowUsers> {
             )
           : ListView.builder(
               itemCount: widget.users.length,
-              itemBuilder: (ctx, index) => Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: btnbgColor.withOpacity(0.6), width: 1),
-                    color: widget.users[index].isBlocked
-                        ? Colors.grey[200]
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.6),
-                        offset: const Offset(0, 5),
-                        blurRadius: 10,
-                      ),
-                    ]),
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: height(context) * 6,
-                          width: height(context) * 6,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 5),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  style: BorderStyle.solid,
-                                  width: 2,
-                                  color: btnbgColor.withOpacity(1)),
-                              borderRadius: BorderRadius.circular(50)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(
-                              'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
-                              height: height(context) * 10,
-                              width: height(context) * 10,
-                              fit: BoxFit.cover,
-                            ),
+              itemBuilder: (ctx, index) => Stack(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: btnbgColor.withOpacity(0.6), width: 1),
+                        color: widget.users[index].isBlocked
+                            ? Colors.grey[200]
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.6),
+                            offset: const Offset(0, 5),
+                            blurRadius: 10,
                           ),
-                        ),
-                        SizedBox(
-                          width: width(context) * 4,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ]),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            Text(
-                              widget.users[index].name,
-                              style: TextStyle(
-                                color: headingColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                            Container(
+                              height: height(context) * 6,
+                              width: height(context) * 6,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      style: BorderStyle.solid,
+                                      width: 2,
+                                      color: btnbgColor.withOpacity(1)),
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  'assets/images/person22.jpeg',
+                                  height: height(context) * 10,
+                                  width: height(context) * 10,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             SizedBox(
-                              height: height(context) * 0.5,
+                              width: width(context) * 4,
                             ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.users[index].name,
+                                  style: TextStyle(
+                                    color: headingColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height(context) * 0.5,
+                                ),
+                                Text(
+                                  widget.users[index].phone,
+                                  style: TextStyle(
+                                      color: contentColor, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Text(
-                              widget.users[index].role,
-                              style:
-                                  TextStyle(color: contentColor, fontSize: 13),
+                              widget.users[index].isBlocked
+                                  ? 'Blocked'
+                                  : 'Active',
+                              style: TextStyle(
+                                  color: widget.users[index].isBlocked
+                                      ? Colors.red
+                                      : Colors.green),
+                            ),
+                            SizedBox(
+                              width: width(context) * 3,
+                            ),
+                            Switch(
+                              value: widget.users[index].isBlocked,
+                              activeColor: Colors.red,
+                              inactiveTrackColor: Colors.green,
+                              thumbColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              onChanged: (value) async {
+                                print(value);
+                                var provider =
+                                    Provider.of<Users>(ctx, listen: false);
+
+                                await provider.blockUser(
+                                    user: widget.users[index], block: value);
+
+                                setState(() {
+                                  widget.users[index].isBlocked =
+                                      !widget.users[index].isBlocked;
+                                });
+                                await provider.fetchAndUpdateUser();
+                              },
                             ),
                           ],
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          widget.users[index].isBlocked ? 'Blocked' : 'Active',
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      height: height(context) * 2,
+                      width: width(context) * 20,
+                      decoration: BoxDecoration(
+                          color: btnbgColor.withOpacity(1),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10))),
+                      child: Center(
+                        child: Text(
+                          widget.users[index].role,
                           style: TextStyle(
-                              color: widget.users[index].isBlocked
-                                  ? Colors.red
-                                  : Colors.green),
+                              fontWeight: FontWeight.bold, color: primaryColor),
                         ),
-                        SizedBox(
-                          width: width(context) * 3,
-                        ),
-                        Switch(
-                          value: widget.users[index].isBlocked,
-                          activeColor: Colors.red,
-                          inactiveTrackColor: Colors.green,
-                          thumbColor: MaterialStateProperty.all(Colors.white),
-                          onChanged: (value) async {
-                            print(value);
-                            var provider =
-                                Provider.of<Users>(ctx, listen: false);
-
-                            await provider.blockUser(
-                                user: widget.users[index], block: value);
-
-                            setState(() {
-                              widget.users[index].isBlocked =
-                                  !widget.users[index].isBlocked;
-                            });
-                            await provider.fetchAndUpdateUser();
-                          },
-                        ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
     );

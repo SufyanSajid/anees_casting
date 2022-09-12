@@ -154,8 +154,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                        child: Image.asset(
+                          'assets/images/person22.jpeg',
                           height: height * 13,
                           width: height * 13,
                           fit: BoxFit.cover,

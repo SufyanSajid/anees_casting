@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Screen/Auth/Login/mobilelogin.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
@@ -169,7 +170,9 @@ class _AppDrawerState extends State<AppDrawer> {
                           color: Colors.white),
                     ),
                     onTap: () {
-                      Navigator.of(context).pushNamed(AdminHomePage.routeName);
+                      Navigator.of(context).pop();
+                      Provider.of<Counts>(context, listen: false)
+                          .setSelectedIndex(0);
                     },
                   ),
                   if (Platform.isAndroid)

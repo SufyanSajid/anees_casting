@@ -81,8 +81,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                           borderRadius: BorderRadius.circular(50)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                        child: Image.asset(
+                          'assets/images/person22.jpeg',
                           height: height * 10,
                           width: height * 10,
                           fit: BoxFit.cover,
@@ -242,9 +242,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      setState(() {
-                        selectIndex = 1;
-                      });
+                      Provider.of<Counts>(context, listen: false)
+                          .setSelectedIndex(1);
                     },
                     child: Text(
                       'View All',
@@ -303,8 +302,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                       borderRadius: BorderRadius.circular(50)),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(
-                                      'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                                    child: Image.asset(
+                                      'assets/images/person22.jpeg',
                                       height: height * 10,
                                       width: height * 10,
                                       fit: BoxFit.cover,

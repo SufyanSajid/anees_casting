@@ -103,8 +103,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                               BorderRadius.circular(50)),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
-                                        child: Image.network(
-                                          'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                                        child: Image.asset(
+                                          'assets/images/person22.jpeg',
                                           height: height(context) * 10,
                                           width: height(context) * 10,
                                           fit: BoxFit.cover,
@@ -130,7 +130,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                           height: height(context) * 0.5,
                                         ),
                                         Text(
-                                          customers![index].role,
+                                          customers![index].phone,
                                           style: TextStyle(
                                               color: contentColor,
                                               fontSize: 13),
