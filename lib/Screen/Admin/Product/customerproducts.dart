@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/sent_products.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
 
@@ -49,14 +50,28 @@ class _AdminSideCustomerProductScreenState
     super.didChangeDependencies();
   }
 
-  void deleteCustomerProduct() {
+  void deleteCustomerProduct(Product prod, String cusId) {
     showCustomDialog(
         context: context,
         title: 'Delete',
         btn1: 'Yes',
         content: 'Product will be deleted from the list permamently',
         btn2: 'No',
-        btn1Pressed: () {},
+        btn1Pressed: () async {
+          Navigator.of(context).pop();
+          setState(() {
+            isLoading = true;
+          });
+          await Provider.of<SentProducts>(context, listen: false)
+              .deleteSentProduct(product: prod, userId: cusId);
+          Provider.of<Products>(context, listen: false)
+              .removeCustomer(cusId, prod.id);
+          products = await Provider.of<Products>(context, listen: false)
+              .getCustomerProducts(customer!.id);
+          setState(() {
+            isLoading = false;
+          });
+        },
         btn2Pressed: () {
           Navigator.of(context).pop();
         });
@@ -161,7 +176,10 @@ class _AdminSideCustomerProductScreenState
                                 top: 0,
                                 child: Material(
                                   child: IconButton(
-                                    onPressed: deleteCustomerProduct,
+                                    onPressed: () {
+                                      deleteCustomerProduct(
+                                          products![index], customer!.id);
+                                    },
                                     icon: const Icon(
                                       Icons.cancel,
                                       size: 30,

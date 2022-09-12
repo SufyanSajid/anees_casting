@@ -107,6 +107,25 @@ class FirestoreMethods {
     return res;
   }
 
+  Future<http.Response> getCustomerProducts(String cusId) async {
+    final URL = Uri.parse("${filterUrl}:runQuery");
+    var res = await http.post(URL,
+        body: json.encode({
+          'structuredQuery': {
+            'from': {'collectionId': 'products'},
+            'where': {
+              'fieldFilter': {
+                "field": {"fieldPath": 'customers'},
+                "op": 'ARRAY_CONTAINS',
+                "value": {'stringValue': cusId}
+              }
+            }
+          }
+        }));
+
+    return res;
+  }
+
   Future<http.Response> searchProduct(String title, String field) async {
     final URL = Uri.parse("${filterUrl}:runQuery");
     var res = await http.post(URL,

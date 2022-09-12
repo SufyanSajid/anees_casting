@@ -15,6 +15,7 @@ class SentProduct {
   String prodLength;
   String prodWidth;
   String prodUnit;
+  List<String>? customers;
   String prodImage;
   String prodCategoryTitle;
 
@@ -27,6 +28,7 @@ class SentProduct {
       required this.prodImage,
       required this.prodLength,
       required this.prodName,
+      this.customers,
       required this.prodUnit,
       required this.prodWidth});
 }
@@ -40,75 +42,86 @@ class SentProducts with ChangeNotifier {
 
   Future<void> addProduct(
       {required Product product, required String userId}) async {
-    var payLoad = {
-      "fields": {
-        "catId": {"stringValue": product.categoryId},
-        "prodId": {"stringValue": product.id},
-        "catTitle": {"stringValue": product.categoryTitle},
-        "imageUrl": {"stringValue": product.image},
-        "productName": {"stringValue": product.name},
-        "productWidth": {"stringValue": product.width},
-        "productUnit": {"stringValue": product.unit},
-        "productLength": {"stringValue": product.length},
+    List<String>? productCustomers = product.customers;
+
+    List<dynamic> customers = [];
+
+    if (productCustomers != null && productCustomers.isNotEmpty) {
+      if (!productCustomers.contains(userId)) {
+        customers.add({
+          'stringValue': userId,
+        });
       }
-    };
-    http.Response res = await FirestoreMethods()
-        .createRecord(collection: "users/$userId/products", data: payLoad);
-
-    print(res.body);
-  }
-
-  Future<List<SentProduct>> fetchSentProducts({required String userId}) async {
-    List<SentProduct> tempList = [];
-    http.Response res = await FirestoreMethods()
-        .getRecords(collection: "users/$userId/products");
-
-    if (jsonDecode(res.body)["documents"] == null) {
-      return [];
+      for (var customer in productCustomers) {
+        customers.add({'stringValue': customer});
+      }
+    } else {
+      customers.add({
+        'stringValue': userId,
+      });
     }
 
-    List<dynamic> docsData = json.decode(res.body)["documents"];
-    for (var element in docsData) {
-      Map fields = element["fields"];
-      String catId = fields["catId"]["stringValue"];
-      String prodId = fields["productId"]["stringValue"];
-      String catTitle = fields["catTitle"]["stringValue"];
-      String imageUrl = fields["imageUrl"]["stringValue"];
-      String productName = fields["productName"]["stringValue"];
-      String productWidth = fields["productWidth"]["stringValue"];
-      String productUnit = fields["productUnit"]["stringValue"];
-      String productLength = fields["productLength"]["stringValue"];
-      String id = (element["name"] as String).split("products/").last;
-      String time = element["updateTime"];
+    var payLoad = jsonEncode({
+      "fields": {
+        "customers": {
+          "arrayValue": {'values': customers}
+        },
+      }
+    });
 
-      tempList.add(SentProduct(
-          id: id,
-          prodCategoryId: catId,
-          userId: userId,
-          prodCategoryTitle: catTitle,
-          prodId: prodId,
-          prodImage: imageUrl,
-          prodLength: productLength,
-          prodName: productName,
-          prodUnit: productUnit,
-          prodWidth: productWidth));
-    }
-    print(tempList);
-    return tempList;
+    var response = await FirestoreMethods().updateSingleField(
+        collection: 'products',
+        documentId: product.id,
+        fieldName: 'customers',
+        bodyData: payLoad);
   }
 
-  // Future<void> fetchAndUpdateSentProducts() async {
-  //   List<SentProduct> tempSentProds = [];
-  //   http.Response prodRes =
-  //       await FirestoreMethods().getRecords(collection: "sentporducts");
+  Future<void> deleteSentProduct(
+      {required Product product, required String userId}) async {
+    List<String>? productCustomers = product.customers;
 
-  //   List<dynamic> docsData = json.decode(prodRes.body)["documents"];
+    List<dynamic> customers = [];
 
+    if (productCustomers != null && productCustomers.isNotEmpty) {
+      productCustomers.remove(userId);
+
+      for (var customer in productCustomers) {
+        customers.add({'stringValue': customer});
+      }
+    }
+    print(productCustomers);
+    print(customers);
+
+    var payLoad = jsonEncode({
+      "fields": {
+        "customers": {
+          "arrayValue": {'values': customers}
+        },
+      }
+    });
+
+    var response = await FirestoreMethods().updateSingleField(
+        collection: 'products',
+        documentId: product.id,
+        fieldName: 'customers',
+        bodyData: payLoad);
+  }
+
+  // Future<List<SentProduct>> fetchSentProducts({required String userId}) async {
+  //   List<SentProduct> tempList = [];
+  //   http.Response res = await FirestoreMethods()
+  //       .getRecords(collection: "users/$userId/products");
+
+  //   if (jsonDecode(res.body)["documents"] == null) {
+  //     return [];
+  //   }
+
+  //   List<dynamic> docsData = json.decode(res.body)["documents"];
   //   for (var element in docsData) {
+  //     List<String> customers = [];
   //     Map fields = element["fields"];
-  //     String userId = fields["userId"]["stringValue"];
-  //     String prodId = fields["productId"]["stringValue"];
   //     String catId = fields["catId"]["stringValue"];
+  //     String prodId = fields["productId"]["stringValue"];
   //     String catTitle = fields["catTitle"]["stringValue"];
   //     String imageUrl = fields["imageUrl"]["stringValue"];
   //     String productName = fields["productName"]["stringValue"];
@@ -117,94 +130,32 @@ class SentProducts with ChangeNotifier {
   //     String productLength = fields["productLength"]["stringValue"];
   //     String id = (element["name"] as String).split("products/").last;
   //     String time = element["updateTime"];
+  //     if (fields['customers'] != null) {
+  //       // print(fields['customers']);
+  //       if (fields['customers']['arrayValue']['values'] != null) {
+  //         var values = fields['customers']['arrayValue']['values'];
+  //         for (var customer in values) {
+  //           customers.add(customer['stringValue']);
+  //         }
+  //       }
+  //     }
 
-  //     tempSentProds.add(SentProduct(
+  //     tempList.add(SentProduct(
+  //         id: id,
+  //         prodCategoryId: catId,
   //         userId: userId,
-  //         productId: prodId,
-  //         id: id,
-  //         name: productName,
-  //         length: productLength,
-  //         width: productWidth,
-  //         unit: productUnit,
-  //         categoryId: catId,
-  //         categoryTitle: catTitle,
-  //         image: imageUrl,
-  //         dateTime: time));
+  //         prodCategoryTitle: catTitle,
+  //         prodId: prodId,
+  //         prodImage: imageUrl,
+  //         prodLength: productLength,
+  //         prodName: productName,
+  //         customers: customers,
+  //         prodUnit: productUnit,
+  //         prodWidth: productWidth));
   //   }
-
-  //   _sentProducts = tempSentProds;
-
-  //   notifyListeners();
+  //   print(tempList);
+  //   return tempList;
   // }
-
-  // Future<void> searchProduct(String title, String field) async {
-  //   List<Product> tempProds = [];
-  //   String prodRes = await FirestoreMethods().searchProduct(title, field);
-
-  //   List<dynamic> docsData = json.decode(prodRes);
-
-  //   for (var element in docsData) {
-  //     if (element['document'] == null) {
-  //       break;
-  //     }
-
-  //     Map fields = element['document']["fields"];
-  //     String catId = fields["catId"]["stringValue"];
-  //     String catTitle = fields["catTitle"]["stringValue"];
-  //     String imageUrl = fields["imageUrl"]["stringValue"];
-  //     String productName = fields["productName"]["stringValue"];
-  //     String productWidth = fields["productWidth"]["stringValue"];
-  //     String productUnit = fields["productUnit"]["stringValue"];
-  //     String productLength = fields["productLength"]["stringValue"];
-  //     String id =
-  //         (element['document']["name"] as String).split("products/").last;
-  //     String time = element['document']["updateTime"];
-
-  //     tempProds.add(Product(
-  //         id: id,
-  //         name: productName,
-  //         length: productLength,
-  //         width: productWidth,
-  //         unit: productUnit,
-  //         categoryId: catId,
-  //         categoryTitle: catTitle,
-  //         image: imageUrl,
-  //         dateTime: time));
-  //   }
-
-  //   _products = tempProds;
-
-  //   notifyListeners();
-  // }
-
-  // Future<void> updatProduct(
-  //     {required String imgUrl,
-  //     required String prodName,
-  //     required String prodWidth,
-  //     required String unit,
-  //     required String catId,
-  //     required String prodLen,
-  //     required String prodId,
-  //     required var file}) async {
-  //   // StorageMethods().updateImage(imgUrl: imgUrl, file: file);
-  //   var payLoad = {
-  //     "fields": {
-  //       "catId": {"stringValue": catId},
-  //       "imageUrl": {"stringValue": imgUrl},
-  //       "productName": {"stringValue": prodName},
-  //       "productWidth": {"stringValue": prodWidth},
-  //       "productUnit": {"stringValue": unit},
-  //       "productLength": {"stringValue": prodLen},
-  //     }
-  //   };
-  //   http.Response res = await FirestoreMethods()
-  //       .updateRecords(collection: "products", data: payLoad, prodId: prodId);
-  // }
-
-  Future<void> deleteSentProduct(String sentProductId) async {
-    http.Response res = await FirestoreMethods()
-        .deleteRecord(collection: "products", prodId: sentProductId);
-  }
 
   Future<void> updateProduct({required Product product}) async {
     var payLoad = {

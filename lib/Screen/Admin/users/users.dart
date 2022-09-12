@@ -153,10 +153,10 @@ class _ShowUsersState extends State<ShowUsers> {
         });
   }
 
-  getUserProduct(String userId) async {
-    await Provider.of<SentProducts>(context, listen: false)
-        .fetchSentProducts(userId: userId);
-  }
+  // getUserProduct(String userId) async {
+  //   await Provider.of<SentProducts>(context, listen: false)
+  //       .fetchSentProducts(userId: userId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -280,113 +280,3 @@ class _ShowUsersState extends State<ShowUsers> {
     );
   }
 }
-
-
-
-
-
-
-
-
-// Container(
-//               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-//               margin: const EdgeInsets.only(
-//                 bottom: 10,
-//               ),
-//               decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   boxShadow: [
-//                     const BoxShadow(
-//                       color: Color.fromRGBO(94, 89, 89, 0.11),
-//                       offset: Offset(0, 10),
-//                       blurRadius: 20,
-//                     ),
-//                     BoxShadow(
-//                       color: Color.fromRGBO(94, 89, 89, 0.11),
-//                       offset: -Offset(0, 10),
-//                       blurRadius: 20,
-//                     ),
-//                   ],
-//                   borderRadius: BorderRadius.circular(15)),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       Container(
-//                         height: height(context) * 6,
-//                         width: height(context) * 6,
-//                         padding: const EdgeInsets.symmetric(
-//                             vertical: 5, horizontal: 5),
-//                         decoration: BoxDecoration(
-//                             border: Border.all(
-//                                 style: BorderStyle.solid,
-//                                 width: 2,
-//                                 color: primaryColor),
-//                             borderRadius: BorderRadius.circular(50)),
-//                         child: ClipRRect(
-//                           borderRadius: BorderRadius.circular(50),
-//                           child: Image.network(
-//                             'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
-//                             height: height(context) * 10,
-//                             width: height(context) * 10,
-//                             fit: BoxFit.cover,
-//                           ),
-//                         ),
-//                       ),
-//                       SizedBox(
-//                         width: width(context) * 3,
-//                       ),
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             'Sufyan Sajid',
-//                             style: TextStyle(color: primaryColor, fontSize: 16),
-//                           ),
-//                           SizedBox(
-//                             height: height(context) * 0.3,
-//                           ),
-//                           Text(
-//                             'Booker',
-//                             style:
-//                                 TextStyle(color: secondaryColor, fontSize: 14),
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text(
-//                         'Active',
-//                         style: TextStyle(color: Colors.green),
-//                       ),
-//                       SizedBox(
-//                         width: width(context) * 3,
-//                       ),
-//                       Switch(
-//                         value: false,
-//                         activeColor: Colors.green,
-//                         inactiveTrackColor: Colors.red,
-//                         thumbColor: MaterialStateProperty.all(Colors.white),
-//                         onChanged: (value) async {
-//                           print(value);
-//                           int status;
-
-//                           if (value == true) {
-//                             status = 1;
-//                           } else {
-//                             status = 0;
-//                           }
-
-//                           // setState(() {
-//                           //   users[index].isActive = !users[index].isActive;
-//                           // });
-//                         },
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),

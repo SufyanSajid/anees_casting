@@ -37,7 +37,6 @@ class _SendProductButtonState extends State<SendProductButton> {
             barrierDismissible: false,
             context: context,
             builder: (context) {
-              Product productToSend = widget.prod;
               return AlertDialog(
                 title: Row(
                   children: [
@@ -69,6 +68,9 @@ class _SendProductButtonState extends State<SendProductButton> {
                   ],
                 ),
                 content: StatefulBuilder(builder: (context, setState) {
+                  Product productToSend = Provider.of<Products>(context)
+                      .getProdById(widget.prod.id);
+                  print(productToSend.customers);
                   return Container(
                     height: height(context) * 50,
                     width: width(context) * 50,
@@ -149,9 +151,10 @@ class _SendProductButtonState extends State<SendProductButton> {
                                               color: primaryColor,
                                             ),
                                           )
-                                        : isSended &&
-                                                customers[index].id ==
-                                                    receiverId
+                                        : productToSend.customers != null &&
+                                                productToSend.customers!
+                                                    .contains(
+                                                        customers[index].id)
                                             ? IconButton(
                                                 onPressed: () {},
                                                 icon: const Icon(
@@ -186,6 +189,14 @@ class _SendProductButtonState extends State<SendProductButton> {
                                                       isSended = true;
                                                     },
                                                   );
+                                                  Provider.of<Products>(context,
+                                                          listen: false)
+                                                      .addCustomer(
+                                                          customers[index]
+                                                              .id
+                                                              .toString(),
+                                                          productToSend.id
+                                                              .toString());
 
                                                   Provider.of<Logs>(context,
                                                           listen: false)
