@@ -1,5 +1,7 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/category/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/product.dart';
@@ -46,6 +48,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       });
       isFirst = false;
     }
+    Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
+    Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
 
     super.didChangeDependencies();
   }
@@ -76,8 +80,10 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 5),
                       decoration: BoxDecoration(
-                          border:
-                              Border.all(style: BorderStyle.solid, width: 2),
+                          border: Border.all(
+                              style: BorderStyle.solid,
+                              width: 2,
+                              color: btnbgColor.withOpacity(1)),
                           borderRadius: BorderRadius.circular(50)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),

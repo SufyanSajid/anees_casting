@@ -44,20 +44,20 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
     var logs = Provider.of<Logs>(context, listen: false).logs;
     return Column(
       children: [
-        buildFilterBar(
-          searchSubmitted: () {},
-          context: context,
-          searchConttroller: activityController,
-          btnTap: () {},
-          btnText: '',
-          dropDown: CustomDropDown(
-            onChanged: () {},
-            items: ['By Date', 'By A-Z'],
-          ),
-        ),
-        SizedBox(
-          height: height(context) * 3,
-        ),
+        // buildFilterBar(
+        //   searchSubmitted: () {},
+        //   context: context,
+        //   searchConttroller: activityController,
+        //   btnTap: () {},
+        //   btnText: '',
+        //   dropDown: CustomDropDown(
+        //     onChanged: () {},
+        //     items: ['By Date', 'By A-Z'],
+        //   ),
+        // ),
+        // SizedBox(
+        //   height: height(context) * 3,
+        // ),
         Expanded(
           child: isLoading
               ? Center(
@@ -66,7 +66,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
               : ListView.builder(
                   itemCount: logs.length,
                   itemBuilder: (ctx, index) => Container(
-                    margin: const EdgeInsets.only(bottom: 15),
+                    margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(

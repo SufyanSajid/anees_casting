@@ -20,7 +20,7 @@ class FirestoreMethods {
       {required String collection, String? pageToken}) async {
     String ur = '';
     if (collection == 'products') {
-      ur = "$baseUrl$collection?pageSize=2";
+      ur = "$baseUrl$collection?pageSize=50";
 
       if (pageToken != null) {
         ur += "&pageToken=$pageToken";

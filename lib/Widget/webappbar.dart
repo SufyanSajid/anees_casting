@@ -46,20 +46,20 @@ class _WebAppbarState extends State<WebAppbar> {
                   onTap: () {
                     setState(() {
                       showPopupMenu(context: context, popups: [
-                        PopupMenuItem(
-                          child: buildListTile(
-                              leadingIcon: Icons.badge_outlined,
-                              title: 'Name',
-                              subTitle: 'Change your name',
-                              onTap: () {}),
-                        ),
-                        PopupMenuItem(
-                          child: buildListTile(
-                              leadingIcon: Icons.lock_reset_outlined,
-                              title: 'Password',
-                              subTitle: 'Change your password',
-                              onTap: () {}),
-                        ),
+                        // PopupMenuItem(
+                        //   child: buildListTile(
+                        //       leadingIcon: Icons.badge_outlined,
+                        //       title: 'Name',
+                        //       subTitle: 'Change your name',
+                        //       onTap: () {}),
+                        // ),
+                        // PopupMenuItem(
+                        //   child: buildListTile(
+                        //       leadingIcon: Icons.lock_reset_outlined,
+                        //       title: 'Password',
+                        //       subTitle: 'Change your password',
+                        //       onTap: () {}),
+                        // ),
                         PopupMenuItem(
                           child: buildListTile(
                               leadingIcon: Icons.logout_outlined,
@@ -71,17 +71,17 @@ class _WebAppbarState extends State<WebAppbar> {
                                     title: 'Logout',
                                     content:
                                         'Click on the logout button to proceed',
-                                    btn1: 'Cancel',
+                                    btn1: 'Logout',
                                     btn1Pressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    btn2: 'Logout',
-                                    btn2Pressed: () {
                                       Provider.of<Auth>(context, listen: false)
                                           .logout();
                                       Navigator.of(context)
                                           .pushReplacementNamed(
                                               LoginScreen.routeName);
+                                    },
+                                    btn2: 'Cancel',
+                                    btn2Pressed: () {
+                                      Navigator.of(context).pop();
                                     });
                               }),
                         ),

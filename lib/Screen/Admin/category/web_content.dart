@@ -78,13 +78,10 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
       showCustomDialog(
           context: context,
           title: 'Delete',
-          btn1: 'No',
+          btn1: 'Yes',
           content: 'Do You want to "${cat.title}" Category?',
-          btn2: 'Yes',
+          btn2: 'No',
           btn1Pressed: () {
-            Navigator.of(context).pop();
-          },
-          btn2Pressed: () {
             Navigator.of(context).pop();
             setState(() {
               isLoading = true;
@@ -100,6 +97,9 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                 isLoading = false;
               });
             });
+          },
+          btn2Pressed: () {
+            Navigator.of(context).pop();
           });
     }
   }

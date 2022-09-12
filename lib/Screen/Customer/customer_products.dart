@@ -126,6 +126,27 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
               child: InputFeild(
                 hinntText: 'Search Product',
                 validatior: () {},
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    Provider.of<Products>(context, listen: false)
+                        .getCustomerProducts(currentUser!.id)
+                        .then((value) {
+                      setState(() {
+                        products = value;
+                      });
+                    });
+                  } else {
+                    setState(
+                      () {
+                        products = products!
+                            .where((element) =>
+                                element.name.toLowerCase() ==
+                                value.toLowerCase())
+                            .toList();
+                      },
+                    );
+                  }
+                },
                 inputController: _productController,
                 submitted: (value) {
                   if (value.isEmpty) {

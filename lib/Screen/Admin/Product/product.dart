@@ -158,7 +158,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Row(
                 children: [
                   Expanded(
-                    flex: 6,
+                    flex: 1,
                     child: InputFeild(
                       hinntText: 'Search Product',
                       validatior: () {},
@@ -168,19 +168,19 @@ class _ProductScreenState extends State<ProductScreen> {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: width(context) * 3,
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: CustomDropDown(
-                      items: const [
-                        'By Date',
-                        'By Article',
-                      ],
-                      onChanged: (value) {},
-                    ),
-                  )
+                  // SizedBox(
+                  //   width: width(context) * 3,
+                  // ),
+                  // Expanded(
+                  //   flex: 4,
+                  //   child: CustomDropDown(
+                  //     items: const [
+                  //       'By Date',
+                  //       'By Article',
+                  //     ],
+                  //     onChanged: (value) {},
+                  //   ),
+                  // )
                 ],
               ),
               SizedBox(

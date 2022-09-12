@@ -241,43 +241,45 @@ class _ShowUsersState extends State<ShowUsers> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              widget.users[index].isBlocked
-                                  ? 'Blocked'
-                                  : 'Active',
-                              style: TextStyle(
+                        if (widget.users[index].role != 'Admin')
+                          Row(
+                            children: [
+                              Text(
+                                widget.users[index].isBlocked
+                                    ? 'Blocked'
+                                    : 'Active',
+                                style: TextStyle(
                                   color: widget.users[index].isBlocked
                                       ? Colors.red
-                                      : Colors.green),
-                            ),
-                            SizedBox(
-                              width: width(context) * 3,
-                            ),
-                            Switch(
-                              value: widget.users[index].isBlocked,
-                              activeColor: Colors.red,
-                              inactiveTrackColor: Colors.green,
-                              thumbColor:
-                                  MaterialStateProperty.all(Colors.white),
-                              onChanged: (value) async {
-                                print(value);
-                                var provider =
-                                    Provider.of<Users>(ctx, listen: false);
+                                      : Colors.green,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width(context) * 3,
+                              ),
+                              Switch(
+                                value: widget.users[index].isBlocked,
+                                activeColor: Colors.red,
+                                inactiveTrackColor: Colors.green,
+                                thumbColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                onChanged: (value) async {
+                                  print(value);
+                                  var provider =
+                                      Provider.of<Users>(ctx, listen: false);
 
-                                await provider.blockUser(
-                                    user: widget.users[index], block: value);
+                                  await provider.blockUser(
+                                      user: widget.users[index], block: value);
 
-                                setState(() {
-                                  widget.users[index].isBlocked =
-                                      !widget.users[index].isBlocked;
-                                });
-                                await provider.fetchAndUpdateUser();
-                              },
-                            ),
-                          ],
-                        ),
+                                  setState(() {
+                                    widget.users[index].isBlocked =
+                                        !widget.users[index].isBlocked;
+                                  });
+                                  await provider.fetchAndUpdateUser();
+                                },
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
