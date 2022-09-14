@@ -7,6 +7,8 @@ import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/Widget/send_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
@@ -45,7 +47,9 @@ class _ProductScreenState extends State<ProductScreen> {
         setState(() {
           isLoading = true;
         });
-        Provider.of<Products>(context).fetchAndUpdateProducts().then((value) {
+        Provider.of<Products>(context, listen: false)
+            .fetchAndUpdateProducts()
+            .then((value) {
           setState(() {
             isLoading = false;
           });
@@ -194,6 +198,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                       )
                     : GridView.builder(
+                        cacheExtent: 9999,
                         // physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         gridDelegate:
@@ -205,6 +210,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         itemCount: products.length,
                         itemBuilder: (context, index) {
                           return Container(
+                            key: ValueKey(products[index].id),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 15),
                             decoration: BoxDecoration(
@@ -225,18 +231,22 @@ class _ProductScreenState extends State<ProductScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                        ProductDetailScreen.routeName,
-                                        arguments: products[index]);
-                                  },
-                                  child: Image.network(
-                                    products[index].image,
-                                    fit: BoxFit.contain,
-                                    height: height(context) * 12,
-                                    width: width(context) * 100,
-                                  ),
-                                ),
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                          ProductDetailScreen.routeName,
+                                          arguments: products[index]);
+                                    },
+                                    child: ExtendedImage.network(
+                                      products[index].image,
+                                      cache: true,
+                                    )
+                                    // Image.network(
+                                    //   products[index].image,
+                                    //   fit: BoxFit.contain,
+                                    //   height: height(context) * 12,
+                                    //   width: width(context) * 100,
+                                    // ),
+                                    ),
                                 SizedBox(
                                   height: height(context) * 0.5,
                                 ),

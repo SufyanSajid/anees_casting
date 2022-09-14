@@ -9,8 +9,11 @@ import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:anees_costing/Widget/grad_button.dart';
 import 'package:anees_costing/contant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/filterbar.dart';
@@ -55,11 +58,11 @@ class _ProductWebContentState extends State<ProductWebContent> {
       //FirestoreMethods().getProductsByCatId();
 
       isFirst = false;
-      if (Provider.of<Products>(context).products.isEmpty) {
+      if (Provider.of<Products>(context, listen: false).products.isEmpty) {
         setState(() {
           isLoading = true;
         });
-        await Provider.of<Products>(context)
+        await Provider.of<Products>(context, listen: false)
             .fetchAndUpdateProducts()
             .then((value) {
           setState(
@@ -142,7 +145,9 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
   @override
   Widget build(BuildContext context) {
-    var width1 = MediaQuery.of(context).size.width;
+    var mediaQuery = MediaQuery.of(context).size;
+    var height1 = mediaQuery.height / 100;
+    var width1 = mediaQuery.width / 100;
     products = Provider.of<Products>(context).products;
     String? token = Provider.of<Products>(context).pageToken;
     List<Category> categories = Provider.of<Categories>(context).categories;
@@ -186,6 +191,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   ),
                 )
               : GridView.builder(
+                  cacheExtent: 9999,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   shrinkWrap: true,
@@ -197,6 +203,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     return InkWell(
+                      key: ValueKey(products[index].id),
                       onTap: () {
                         showDialog(
                           context: context,
@@ -206,8 +213,9 @@ class _ProductWebContentState extends State<ProductWebContent> {
                               child: Stack(
                                 alignment: Alignment.topCenter,
                                 children: [
-                                  Image.network(
+                                  ExtendedImage.network(
                                     products[index].image,
+                                    cache: true,
                                   ),
                                   Align(
                                     alignment: Alignment.bottomRight,
@@ -341,12 +349,11 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                 ],
                                 borderRadius: customRadius),
                             child: Hero(
-                              tag: products[index].id,
-                              child: Image.network(
-                                key: ValueKey(products[index].id),
-                                products[index].image,
-                              ),
-                            ),
+                                tag: products[index].id,
+                                child: ExtendedImage.network(
+                                  products[index].image,
+                                  cache: true,
+                                )),
                           ),
                         ),
                       ),

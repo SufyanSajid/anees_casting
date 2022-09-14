@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/drawer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,6 +23,7 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as Product;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -64,7 +67,11 @@ class ProductDetailScreen extends StatelessWidget {
               child: InteractiveViewer(
                 clipBehavior: Clip.none,
                 child: AspectRatio(
-                    aspectRatio: 1, child: Image.network(product!.image)),
+                    aspectRatio: 1,
+                    child: ExtendedImage.network(
+                      product!.image,
+                      cache: true,
+                    )),
               ),
             ),
             SizedBox(

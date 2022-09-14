@@ -95,7 +95,9 @@ class Products with ChangeNotifier {
 
     var data = json.decode(prodRes.body);
     List<dynamic> docsData = data["documents"];
-
+    if (docsData.isEmpty && docsData == null) {
+      return;
+    }
     for (var element in docsData) {
       List<String> customers = [];
       Map fields = element["fields"];
@@ -156,6 +158,7 @@ class Products with ChangeNotifier {
 
   Future<void> searchProduct(String title, String field) async {
     List<Product> tempProds = [];
+    List<Product> customerProducts = [];
     http.Response prodRes =
         await FirestoreMethods().searchProduct(title, field);
 
