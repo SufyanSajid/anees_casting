@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
@@ -22,6 +23,7 @@ class _UserWebContentState extends State<UserWebContent> {
   List<AUser> searchedUsers = [];
   bool isFirst = true;
   bool isLoading = false;
+  CurrentUser? currentUser;
 
   refreshSearchedUsers(AUser user) {
     Provider.of<Users>(context, listen: false).getUsersByUser(user);
@@ -31,12 +33,13 @@ class _UserWebContentState extends State<UserWebContent> {
   @override
   void didChangeDependencies() async {
     if (isFirst) {
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       if (Provider.of<Users>(context, listen: false).users.isEmpty) {
         setState(() {
           isLoading = true;
         });
         await Provider.of<Users>(context, listen: false)
-            .fetchAndUpdateUser()
+            .fetchAndUpdateUser(userToken: currentUser!.token)
             .then((value) {
           setState(() {
             isLoading = false;

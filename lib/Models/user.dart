@@ -7,21 +7,18 @@ import 'package:http/http.dart' as http;
 
 class AUser {
   String id;
-  String authId;
   String name;
   String email;
   String role;
   String phone;
-  bool isBlocked;
 
-  AUser(
-      {required this.id,
-      required this.authId,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.role,
-      required this.isBlocked});
+  AUser({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.role,
+  });
 }
 
 class Users with ChangeNotifier {
@@ -99,44 +96,59 @@ class Users with ChangeNotifier {
     print(response.body);
   }
 
-  Future<void> fetchAndUpdateUser() async {
-    http.Response res =
-        await FirestoreMethods().getRecords(collection: "users");
-    List<dynamic> resData = jsonDecode(res.body)["documents"];
-
+  Future<void> fetchAndUpdateUser({required String userToken}) async {
     List<AUser> tempUsers = [];
     List<AUser> tempCustomers = [];
 
-    for (var element in resData) {
-      Map fields = element["fields"];
-      String authId = fields["authId"]["stringValue"];
-      String name = fields["name"]["stringValue"];
-      String email = fields["email"]["stringValue"];
-      String phone = fields["phone"]["stringValue"];
-      String role = fields["role"]["stringValue"];
-      bool isBlocked = fields["isBlocked"]["booleanValue"];
-      String id = (element["name"] as String).split("users/").last;
+    final url = Uri.parse('${baseUrl}users');
 
-      AUser user = AUser(
-          id: id,
-          authId: authId,
-          name: name,
-          email: email,
-          phone: phone,
-          role: role,
-          isBlocked: isBlocked);
+    var response =
+        await http.get(url, headers: {'Authorization': 'Bearer $userToken'});
 
-      tempUsers.add(user);
+    var extractedData = json.decode(response.body);
 
-      if (role == "Customer") {
-        tempCustomers.add(user);
-      }
+    if (extractedData['success'] == true) {
+      var data = extractedData['data'] as List<dynamic>;
+      data.forEach((user) {
+        String userRole;
+
+        if (user['role'] == '1') {
+          userRole = 'Admin';
+        } else if (user['role'] == '2') {
+          userRole = 'Seller';
+        } else {
+          userRole = 'Customer';
+        }
+        tempUsers.add(
+          AUser(
+            id: user['id'].toString(),
+            name: user['name'],
+            email: user['email'],
+            phone: user['phone'],
+            role: userRole,
+          ),
+        );
+      });
+      tempUsers.forEach((element) {
+        element.role.toLowerCase() == 'customer'
+            ? tempCustomers.add(element)
+            : null;
+      });
+      _customers = tempCustomers;
+      _users = tempUsers;
+      print(_users.length);
+      print(_customers.length);
+
+      notifyListeners();
+    } else {
+      var message = extractedData['message'];
+      throw message;
     }
 
-    _users = tempUsers;
-    _customers = tempCustomers;
+    // _users = tempUsers;
+    // _customers = tempCustomers;
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> blockUser({required AUser user, required bool block}) async {

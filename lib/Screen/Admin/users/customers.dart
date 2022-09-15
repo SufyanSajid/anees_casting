@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -20,10 +21,12 @@ class CustomerScreen extends StatefulWidget {
 class _CustomerScreenState extends State<CustomerScreen> {
   List<AUser>? customers;
   bool isLoading = false;
+  CurrentUser? currentUser;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     customers = Provider.of<Users>(context, listen: false).customers;
     return Scaffold(
       key: _scaffoldKey,
@@ -72,9 +75,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                 border: Border.all(
                                     color: btnbgColor.withOpacity(0.6),
                                     width: 1),
-                                color: customers![index].isBlocked
-                                    ? Colors.grey[200]
-                                    : Colors.white,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
@@ -136,44 +137,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                               fontSize: 13),
                                         ),
                                       ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      customers![index].isBlocked
-                                          ? 'Blocked'
-                                          : 'Active',
-                                      style: TextStyle(
-                                          color: customers![index].isBlocked
-                                              ? Colors.red
-                                              : Colors.green),
-                                    ),
-                                    SizedBox(
-                                      width: width(context) * 3,
-                                    ),
-                                    Switch(
-                                      value: customers![index].isBlocked,
-                                      activeColor: Colors.red,
-                                      inactiveTrackColor: Colors.green,
-                                      thumbColor: MaterialStateProperty.all(
-                                          Colors.white),
-                                      onChanged: (value) async {
-                                        print(value);
-                                        var provider = Provider.of<Users>(ctx,
-                                            listen: false);
-
-                                        await provider.blockUser(
-                                            user: customers![index],
-                                            block: value);
-
-                                        setState(() {
-                                          customers![index].isBlocked =
-                                              !customers![index].isBlocked;
-                                        });
-                                        await provider.fetchAndUpdateUser();
-                                      },
                                     ),
                                   ],
                                 ),

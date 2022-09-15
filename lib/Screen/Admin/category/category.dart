@@ -91,11 +91,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             setState(() {
               isLoading = true;
             });
-            FirestoreMethods()
-                .deleteRecord(collection: 'categories', prodId: cat.id)
+            Provider.of<Categories>(context, listen: false)
+                .deleteCategory(cat.id, currentUser!.token)
                 .then((value) async {
-              Provider.of<Counts>(context, listen: false)
-                  .decreaseCount(category: 1);
               await Provider.of<Categories>(context, listen: false)
                   .fetchAndUpdateCat(currentUser!.token);
               setState(() {

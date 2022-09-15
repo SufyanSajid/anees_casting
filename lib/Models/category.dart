@@ -83,27 +83,71 @@ class Categories with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndUpdateCat(String userToken) async {
-    print('yeh ha user token $userToken');
-    List<Category> tempCat = [];
-    List<Category> tempParentCat = [];
-    List<Category> tempChildCat = [];
+  Future<void> deleteCategory(String catId, String userToken) async {
+    final url = Uri.parse('${baseUrl}categories/$catId');
 
-    final url = Uri.parse('${baseUrl}categories');
+    var response =
+        await http.delete(url, headers: {'Authorization': 'Bearer $userToken'});
 
-    var response = await http.post(url, headers: {
-      'Authorization': 'Bearer $userToken',
-    }, body: {});
     print(response.body);
+  }
 
-    // for (var cat in tempCat) {
-    //   cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);
-    // }
+  Future<void> fetchAndUpdateCat(String userToken) async {
+    try {
+      print('yeh ha user token $userToken');
+      List<Category> tempCat = [];
+      List<Category> tempParentCat = [];
+      List<Category> tempChildCat = [];
 
-    _categories = tempCat;
-    _parentCategories = tempParentCat;
-    _childCategories = tempChildCat;
-    notifyListeners();
+      final url = Uri.parse('${baseUrl}categories');
+
+      var response = await http.get(url, headers: {
+        'Authorization': 'Bearer $userToken',
+      });
+
+      var extractedData = json.decode(response.body);
+
+      if (extractedData['success'] == true) {
+        var data = extractedData['data'] as List<dynamic>;
+
+        data.forEach((cat) {
+          String parentId;
+          String parentName;
+          if (cat['parent_id'] == null) {
+            parentId = '';
+          } else {
+            parentId = cat['parent_id'].toString();
+          }
+
+          if (cat['parent_name'] == null) {
+            parentName = '';
+          } else {
+            parentName = cat['parent_name'].toString();
+          }
+          tempCat.add(
+            Category(
+              id: cat['id'].toString(),
+              parentId: parentId,
+              title: cat['name'],
+              parentTitle: parentName,
+            ),
+          );
+        });
+        for (var cat in tempCat) {
+          cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);
+        }
+        _categories = tempCat;
+        _parentCategories = tempParentCat;
+        _childCategories = tempChildCat;
+
+        notifyListeners();
+      } else {
+        var message = extractedData['message'];
+        throw message;
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 
   // Add new items in categories list

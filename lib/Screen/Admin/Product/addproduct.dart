@@ -51,6 +51,7 @@ class _AddProductState extends State<AddProduct> {
   void didChangeDependencies() {
     if (isFirst) {
       isFirst = false;
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       if (args!['action'] == 'edit') {
         Product prod = args!['product'];
@@ -142,7 +143,6 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
-    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
 

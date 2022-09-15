@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/sent_products.dart';
@@ -115,18 +116,20 @@ class ShowUsers extends StatefulWidget {
 class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
+  CurrentUser? currentUser;
   // List<Product> customerProducts = [];
   // bool productLoading = false;
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       if (Provider.of<Users>(context, listen: false).users.isEmpty) {
         setState(() {
           isLoading = true;
         });
         await Provider.of<Users>(context, listen: false)
-            .fetchAndUpdateUser()
+            .fetchAndUpdateUser(userToken: currentUser!.token)
             .then((value) {
           setState(() {
             isLoading = false;
@@ -164,7 +167,7 @@ class _ShowUsersState extends State<ShowUsers> {
           var provider = Provider.of<Users>(ctx, listen: false);
           var navigator = Navigator.of(ctx);
           await provider.blockUser(user: user, block: block ? true : false);
-          await provider.fetchAndUpdateUser();
+          await provider.fetchAndUpdateUser(userToken: currentUser!.token);
 
           navigator.pop();
         });
@@ -194,9 +197,7 @@ class _ShowUsersState extends State<ShowUsers> {
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: btnbgColor.withOpacity(0.6), width: 1),
-                        color: widget.users[index].isBlocked
-                            ? Colors.grey[200]
-                            : Colors.white,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -317,40 +318,6 @@ class _ShowUsersState extends State<ShowUsers> {
                                     child: Text('View Products')),
                               SizedBox(
                                 width: width(context) * 1,
-                              ),
-                              Text(
-                                widget.users[index].isBlocked
-                                    ? 'Blocked'
-                                    : 'Active',
-                                style: TextStyle(
-                                  color: widget.users[index].isBlocked
-                                      ? Colors.red
-                                      : Colors.green,
-                                ),
-                              ),
-                              SizedBox(
-                                width: width(context) * 3,
-                              ),
-                              Switch(
-                                value: widget.users[index].isBlocked,
-                                activeColor: Colors.red,
-                                inactiveTrackColor: Colors.green,
-                                thumbColor:
-                                    MaterialStateProperty.all(Colors.white),
-                                onChanged: (value) async {
-                                  print(value);
-                                  var provider =
-                                      Provider.of<Users>(ctx, listen: false);
-
-                                  await provider.blockUser(
-                                      user: widget.users[index], block: value);
-
-                                  setState(() {
-                                    widget.users[index].isBlocked =
-                                        !widget.users[index].isBlocked;
-                                  });
-                                  await provider.fetchAndUpdateUser();
-                                },
                               ),
                             ],
                           ),

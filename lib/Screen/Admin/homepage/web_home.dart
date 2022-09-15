@@ -48,7 +48,8 @@ class _WebHomeState extends State<WebHome> {
             .fetchAndUpdateCat(currentUser!.token);
       }
       if (Provider.of<Users>(ctx, listen: false).users.isEmpty) {
-        await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
+        await Provider.of<Users>(ctx, listen: false)
+            .fetchAndUpdateUser(userToken: currentUser!.token);
       }
       Provider.of<Counts>(ctx, listen: false).fetchtAndUpdateCount();
     }
@@ -233,9 +234,7 @@ class _WebHomeState extends State<WebHome> {
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: btnbgColor.withOpacity(0.6), width: 1),
-                          color: users![index].isBlocked
-                              ? Colors.grey[200]
-                              : Colors.white,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -298,44 +297,6 @@ class _WebHomeState extends State<WebHome> {
                               ),
                             ],
                           ),
-                          if (users![index].role != 'Admin')
-                            Row(
-                              children: [
-                                Text(
-                                  users![index].isBlocked
-                                      ? 'Blocked'
-                                      : 'Active',
-                                  style: TextStyle(
-                                      color: users![index].isBlocked
-                                          ? Colors.red
-                                          : Colors.green),
-                                ),
-                                SizedBox(
-                                  width: width(context) * 3,
-                                ),
-                                Switch(
-                                  value: users![index].isBlocked,
-                                  activeColor: Colors.red,
-                                  inactiveTrackColor: Colors.green,
-                                  thumbColor:
-                                      MaterialStateProperty.all(Colors.white),
-                                  onChanged: (value) async {
-                                    print(value);
-                                    var provider =
-                                        Provider.of<Users>(ctx, listen: false);
-
-                                    await provider.blockUser(
-                                        user: users![index], block: value);
-
-                                    setState(() {
-                                      users![index].isBlocked =
-                                          !users![index].isBlocked;
-                                    });
-                                    await provider.fetchAndUpdateUser();
-                                  },
-                                ),
-                              ],
-                            ),
                         ],
                       ),
                     ),
