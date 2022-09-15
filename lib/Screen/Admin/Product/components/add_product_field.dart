@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/show_snackbar.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:file_picker/file_picker.dart';
@@ -39,6 +40,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   Category? category;
 
   Uint8List? image;
+  String? imageExtention;
 
   String? downloadImgUrl;
 
@@ -46,11 +48,13 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   Product? drawerProduct;
   String? prodImageUrl;
   String? selectedCatTitle;
+  CurrentUser? currentUser;
 
   @override
   void initState() {
     // Provider.of<Categories>(cont
     //ext, listen: false).fetchAndUpdateCat();
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     drawerProduct = Provider.of<Products>(context, listen: false).drawerProduct;
     if (drawerProduct != null) {
       category = Provider.of<Categories>(context, listen: false)
@@ -148,7 +152,10 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         image: downloadImgUrl!,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
-      await productProvider.addProduct(product: newProduct, context: context);
+      await productProvider.addProduct(
+          product: newProduct,
+          userToken: currentUser!.token,
+          imageExtension: imageExtention!);
       await productProvider.fetchAndUpdateProducts();
       countProvider.increaseCount(product: 1);
 

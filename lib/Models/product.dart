@@ -5,6 +5,8 @@ import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../contant.dart';
+
 class Product {
   String id;
   String name;
@@ -44,27 +46,24 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(
-      {required Product product, required BuildContext context}) async {
-    var payLoad = {
-      "fields": {
-        "catId": {"stringValue": product.categoryId},
-        "catTitle": {"stringValue": product.categoryTitle},
-        "imageUrl": {"stringValue": product.image},
-        "productName": {"stringValue": product.name},
-        "productWidth": {"stringValue": product.width},
-        "productUnit": {"stringValue": product.unit},
-        "productLength": {"stringValue": product.length},
-      }
-    };
+      {required Product product,
+      required userToken,
+      required String imageExtension}) async {
+    print(product.image);
+    print(imageExtension);
+    final url = Uri.parse('${baseUrl}products');
 
-    bool isProductExist =
-        await _isProductExist(title: product.name, field: "productName");
-
-    if (isProductExist) {
-      showSnackBar(context, "Product Already exist");
-    }
-    http.Response res = await FirestoreMethods()
-        .createRecord(collection: "products", data: payLoad);
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {
+      'name': product.name,
+      'image': product.image,
+      'length': product.length,
+      'width': product.width,
+      'unit': product.unit,
+      'ext': imageExtension,
+    });
+    print(response.body);
   }
 
   void addCustomer(String cusId, String prodId) {
@@ -198,20 +197,20 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> _isProductExist(
-      {required String title, required String field}) async {
-    http.Response prodRes =
-        await FirestoreMethods().searchProduct(title, field);
+  // Future<bool> _isProductExist(
+  //     {required String title, required String field}) async {
+  //   http.Response prodRes =
+  //       await FirestoreMethods().searchProduct(title, field);
 
-    List<dynamic> docsData = json.decode(prodRes.body);
+  //   List<dynamic> docsData = json.decode(prodRes.body);
 
-    for (var element in docsData) {
-      if (element['document'] == null) {
-        return false;
-      }
-    }
-    return true;
-  }
+  //   for (var element in docsData) {
+  //     if (element['document'] == null) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
   Future<void> deleteProduct(String prodId) async {
     http.Response res = await FirestoreMethods()

@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/show_snackbar.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +38,14 @@ class _AddProductState extends State<AddProduct> {
   String prodUnit = "CM";
   Category? category;
   Uint8List? image;
+  String? imageExtention;
   File? image123;
   String? editImage;
+  String? base64Image;
   String? downloadImgUrl;
   bool isLoading = false;
   Map<String, dynamic>? args;
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() {
@@ -59,14 +64,14 @@ class _AddProductState extends State<AddProduct> {
     super.didChangeDependencies();
   }
 
-  _addProduct(var img) async {
+  void _addProduct(var img) async {
+    print(img);
     if (productNotEmpty()) {
       setState(() {
         isLoading = true;
       });
       var provider = Provider.of<Products>(context, listen: false);
-      downloadImgUrl =
-          await StorageMethods().uploadImage(file: img, collection: "products");
+
       Product newProduct = Product(
         id: "",
         name: _prodNameController.text.trim(),
@@ -75,10 +80,13 @@ class _AddProductState extends State<AddProduct> {
         unit: prodUnit,
         categoryId: category!.id,
         categoryTitle: category!.title,
-        image: downloadImgUrl!,
+        image: img,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
-      await provider.addProduct(product: newProduct, context: context);
+      await provider.addProduct(
+          product: newProduct,
+          userToken: currentUser!.token,
+          imageExtension: imageExtention!);
 
       clearControllersAndImage();
 
@@ -132,6 +140,7 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
 
@@ -191,11 +200,21 @@ class _AddProductState extends State<AddProduct> {
                                       await FilePicker.platform.pickFiles(
                                           withData: true,
                                           allowCompression: true);
+                                  print(1234);
 
                                   setState(() {
                                     image = result1!.files.first.bytes;
+
                                     print(image);
                                   });
+                                  var selectedImage = result1!.files.first;
+                                  base64Image = base64Encode(
+                                      File(selectedImage.path!)
+                                          .readAsBytesSync());
+                                  imageExtention =
+                                      result1.files.first.extension;
+
+                                  print(imageExtention);
                                 },
                                 icon: Icon(
                                   Icons.add_a_photo_outlined,
@@ -271,7 +290,7 @@ class _AddProductState extends State<AddProduct> {
                             width: width(context),
                             onTap: () {
                               args!["action"] == "add"
-                                  ? _addProduct(image)
+                                  ? _addProduct(base64Image)
                                   : _editProduct(
                                       img: image,
                                       prodId: (args!["product"] as Product).id,
