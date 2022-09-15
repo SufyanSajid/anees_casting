@@ -59,7 +59,8 @@ class _AddProductState extends State<AddProduct> {
         _prodWidthController.text = prod.width;
         editImage = prod.image;
       }
-      Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
+      Provider.of<Categories>(context, listen: false)
+          .fetchAndUpdateCat(currentUser!.token);
     }
     super.didChangeDependencies();
   }
@@ -84,9 +85,10 @@ class _AddProductState extends State<AddProduct> {
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
       await provider.addProduct(
-          product: newProduct,
-          userToken: currentUser!.token,
-          imageExtension: imageExtention!);
+        product: newProduct,
+        userToken: currentUser!.token,
+        imageExtension: imageExtention!,
+      );
 
       clearControllersAndImage();
 

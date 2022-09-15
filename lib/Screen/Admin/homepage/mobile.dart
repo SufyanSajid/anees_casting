@@ -33,6 +33,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   bool isLoading = false;
   Count? count;
   List<AUser>? users;
+  CurrentUser? currentUser;
   @override
   void didChangeDependencies() async {
     if (isFirst) {
@@ -46,10 +47,11 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       setState(() {
         isLoading = false;
       });
+      Provider.of<Categories>(context, listen: false)
+          .fetchAndUpdateCat(currentUser!.token);
+      Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
       isFirst = false;
     }
-    Provider.of<Categories>(context, listen: false).fetchAndUpdateCat();
-    Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
 
     super.didChangeDependencies();
   }
@@ -57,7 +59,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
   @override
   Widget build(BuildContext context) {
     selectIndex = Provider.of<Counts>(context).selectedIndex;
-    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
 
@@ -256,7 +258,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
               ],
             ),
           ),
-          if (currentUser.role!.toLowerCase() == 'admin')
+          if (currentUser!.role!.toLowerCase() == 'admin')
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -284,7 +286,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
           SizedBox(
             height: height * 1,
           ),
-          if (currentUser.role!.toLowerCase() == 'admin')
+          if (currentUser!.role!.toLowerCase() == 'admin')
             Expanded(
               child: isLoading
                   ? Center(

@@ -75,7 +75,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
         parentId: parentId ?? "",
       );
 
-      await catProvider.fetchAndUpdateCat();
+      await catProvider.fetchAndUpdateCat(currentUser!.token);
       countProvider.increaseCount(category: 1);
       setState(() {
         _nameController.clear();

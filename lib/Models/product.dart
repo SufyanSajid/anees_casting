@@ -45,25 +45,38 @@ class Products with ChangeNotifier {
     return [..._products];
   }
 
-  Future<void> addProduct(
-      {required Product product,
-      required userToken,
-      required String imageExtension}) async {
-    print(product.image);
-    print(imageExtension);
-    final url = Uri.parse('${baseUrl}products');
+  Future<void> addProduct({
+    required Product product,
+    required userToken,
+    required String imageExtension,
+  }) async {
+    try {
+      print(product.image);
+      print('$imageExtension ${product.categoryId}');
+      final url = Uri.parse('${baseUrl}products');
 
-    var response = await http.post(url, headers: {
-      'Authorization': 'Bearer $userToken',
-    }, body: {
-      'name': product.name,
-      'image': product.image,
-      'length': product.length,
-      'width': product.width,
-      'unit': product.unit,
-      'ext': imageExtension,
-    });
-    print(response.body);
+      var response = await http.post(url, headers: {
+        'Authorization': 'Bearer $userToken',
+      }, body: {
+        'name': product.name,
+        'image': product.image,
+        'length': product.length,
+        'width': product.width,
+        'unit': product.unit,
+        'ext': imageExtension,
+        'category_id': product.categoryId,
+      });
+      var extractedData = json.decode(response.body);
+      if (extractedData['success'] == true) {
+        print(extractedData['message']);
+      } else {
+        var message = extractedData['message'];
+        throw message;
+      }
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 
   void addCustomer(String cusId, String prodId) {

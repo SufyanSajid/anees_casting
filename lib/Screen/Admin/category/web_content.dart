@@ -32,6 +32,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   final categoryController = TextEditingController();
   List<Category> categories = [];
   List<Category> searchedCat = [];
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() async {
@@ -42,7 +43,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
           isLoading = true;
         });
         await Provider.of<Categories>(context, listen: false)
-            .fetchAndUpdateCat()
+            .fetchAndUpdateCat(currentUser!.token)
             .then(
           (value) {
             setState(() {
@@ -92,7 +93,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
               Provider.of<Counts>(context, listen: false)
                   .decreaseCount(category: 1);
               await Provider.of<Categories>(context, listen: false)
-                  .fetchAndUpdateCat();
+                  .fetchAndUpdateCat(currentUser!.token);
               setState(() {
                 isLoading = false;
               });
@@ -112,7 +113,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   @override
   Widget build(BuildContext context) {
     categories = Provider.of<Categories>(context, listen: false).categories;
-    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     searchedCat =
         Provider.of<Categories>(context, listen: false).searchedCategories;
     if (searchedCat.isNotEmpty) {
@@ -196,7 +197,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                               ),
                               third: InkWell(
                                 onTap: () {
-                                  if (currentUser.role!.toLowerCase() !=
+                                  if (currentUser!.role!.toLowerCase() !=
                                       'admin') {
                                     showDialog(
                                         context: context,

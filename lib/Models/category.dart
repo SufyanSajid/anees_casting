@@ -83,30 +83,22 @@ class Categories with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndUpdateCat() async {
+  Future<void> fetchAndUpdateCat(String userToken) async {
+    print('yeh ha user token $userToken');
     List<Category> tempCat = [];
     List<Category> tempParentCat = [];
     List<Category> tempChildCat = [];
 
-    FirestoreMethods methods = FirestoreMethods();
-    http.Response catRes = await methods.getRecords(collection: "categories");
+    final url = Uri.parse('${baseUrl}categories');
 
-    List<dynamic> docsData = json.decode(catRes.body)["documents"];
-    for (var element in docsData) {
-      Map fields = element["fields"];
-      String parentId = fields["parentId"]["stringValue"];
-      String title = fields["title"]["stringValue"];
-      String parentTitle = fields["parentTitle"]["stringValue"];
-      String id = (element["name"] as String).split("categories/").last;
-      tempCat.add(
-        Category(
-            id: id, parentId: parentId, title: title, parentTitle: parentTitle),
-      );
-    }
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {});
+    print(response.body);
 
-    for (var cat in tempCat) {
-      cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);
-    }
+    // for (var cat in tempCat) {
+    //   cat.parentId.isEmpty ? tempParentCat.add(cat) : tempChildCat.add(cat);
+    // }
 
     _categories = tempCat;
     _parentCategories = tempParentCat;

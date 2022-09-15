@@ -31,6 +31,7 @@ class _WebHomeState extends State<WebHome> {
   Count? counts;
   int usersCount = 0;
   int categoriesCount = 0;
+  CurrentUser? currentUser;
   List<AUser>? users;
 
   @override
@@ -43,7 +44,8 @@ class _WebHomeState extends State<WebHome> {
       BuildContext ctx = context;
 
       if (Provider.of<Categories>(ctx, listen: false).categories.isEmpty) {
-        await Provider.of<Categories>(ctx, listen: false).fetchAndUpdateCat();
+        await Provider.of<Categories>(ctx, listen: false)
+            .fetchAndUpdateCat(currentUser!.token);
       }
       if (Provider.of<Users>(ctx, listen: false).users.isEmpty) {
         await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
@@ -64,7 +66,7 @@ class _WebHomeState extends State<WebHome> {
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;
     users = Provider.of<Users>(context, listen: false).users;
-    var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
     Widget homeContent = Column(
       children: [
@@ -217,7 +219,7 @@ class _WebHomeState extends State<WebHome> {
         SizedBox(
           height: height(context) * 2,
         ),
-        if (currentUser.role!.toLowerCase() == 'admin')
+        if (currentUser!.role!.toLowerCase() == 'admin')
           Expanded(
             child: isLoading
                 ? Center(

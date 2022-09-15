@@ -41,7 +41,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           isLoading = true;
         });
         await Provider.of<Categories>(context, listen: false)
-            .fetchAndUpdateCat();
+            .fetchAndUpdateCat(currentUser!.token);
         setState(() {
           isLoading = false;
         });
@@ -97,7 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               Provider.of<Counts>(context, listen: false)
                   .decreaseCount(category: 1);
               await Provider.of<Categories>(context, listen: false)
-                  .fetchAndUpdateCat();
+                  .fetchAndUpdateCat(currentUser!.token);
               setState(() {
                 isLoading = false;
               });
@@ -214,7 +214,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 Navigator.of(context).pop();
                                               });
                                         });
-                                        await provider.fetchAndUpdateCat();
+                                        await provider.fetchAndUpdateCat(
+                                            currentUser!.token);
                                         setState(() {
                                           _nameController.clear();
                                           isCatLoading = false;
