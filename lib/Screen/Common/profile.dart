@@ -52,18 +52,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         content: Text('Error: Empty Feilds'),
       ));
     } else {
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Auth>(context, listen: false)
-          .changeUserName(
-              '${_firstNameController.text} ${_lastNameController.text}',
-              currentUser.id)
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      });
+      // setState(() {
+      //   isLoading = true;
+      // });
+      // Provider.of<Auth>(context, listen: false)
+      //     .changeUserName(
+      //         '${_firstNameController.text} ${_lastNameController.text}',
+      //         currentUser.id)
+      //     .then((value) {
+      //   setState(() {
+      //     isLoading = false;
+      //   });
+      // });
     }
   }
 

@@ -141,64 +141,37 @@ class _LoginFeildsState extends State<LoginFeilds> {
       isLoading = true;
     });
     await Provider.of<Auth>(context, listen: false)
-        .login(_emailController.text.trim(), _passController.text.trim())
-        .then((value) async {
-      final DateTime now = DateTime.now();
-      final DateFormat dayFormatter = DateFormat('yyyy-MM-dd');
-      final DateFormat timeFormatter = DateFormat('h:mm a');
-      final String day = dayFormatter.format(now);
-      final String time = timeFormatter.format(now);
+        .LoginWithEmailAndPassword(
+            _emailController.text.trim(), _passController.text.trim())
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+      print('logged in');
+    }).then((value) async {
+      // final DateTime now = DateTime.now();
+      // final DateFormat dayFormatter = DateFormat('yyyy-MM-dd');
+      // final DateFormat timeFormatter = DateFormat('h:mm a');
+      // final String day = dayFormatter.format(now);
+      // final String time = timeFormatter.format(now);
 
       CurrentUser currentUser =
           Provider.of<Auth>(context, listen: false).currentUser!;
-      Provider.of<Logs>(context, listen: false).addLog(Log(
-          id: DateTime.now().microsecond.toString(),
-          userid: currentUser.id,
-          userName: currentUser.name!,
-          content: '${currentUser.name} Loged in at ${time} on ${day}',
-          logType: 'Activity'));
-      bool isBlocked = await Provider.of<Auth>(context, listen: false)
-          .isBlocked(currentUser.id);
+      // Provider.of<Logs>(context, listen: false).addLog(Log(
+      //     id: DateTime.now().microsecond.toString(),
+      //     userid: currentUser.id,
+      //     userName: currentUser.name!,
+      //     content: '${currentUser.name} Loged in at ${time} on ${day}',
+      //     logType: 'Activity'));
+      // bool isBlocked = await Provider.of<Auth>(context, listen: false)
+      //     .isBlocked(currentUser.id);
 
-      if (isBlocked) {
-        showDialog(
-            context: context,
-            builder: (ctx) => AdaptiveDiaglog(
-                ctx: ctx,
-                title: 'Blocked',
-                content:
-                    'You are blocked. Please contact Anees Casting for further details.',
-                btnYes: 'Okay',
-                yesPressed: () async {
-                  setState(() {
-                    isLoading = false;
-                  });
-                  Provider.of<Auth>(context, listen: false).logout();
-                  Navigator.of(context).pop();
-                }));
-        return;
-      }
-      if (currentUser.role!.toLowerCase() == 'customer') {
+      if (currentUser.role!.toLowerCase() == '0') {
         Navigator.of(context)
             .pushReplacementNamed(CustomerProductScreen.routeName);
       } else {
         Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
       }
-    }).catchError((error) {
-      setState(() {
-        isLoading = false;
-      });
-      showDialog(
-          context: context,
-          builder: (ctx) => AdaptiveDiaglog(
-              ctx: ctx,
-              title: '❌',
-              // content: error.toString(),
-              content: 'Check your email or password',
-              btnYes: 'Okay',
-              yesPressed: () {
-                Navigator.of(context).pop();
-              }));
     });
   }
 

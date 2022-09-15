@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../Helpers/firestore_methods.dart';
+import '../contant.dart';
 
 class Category {
   String id;
@@ -49,16 +50,37 @@ class Categories with ChangeNotifier {
   Future<void> uploadCatagory(
       {required String parentId,
       required String title,
-      required String parentTitle}) async {
-    var payLoad = {
-      "fields": {
-        "title": {"stringValue": title},
-        "parentId": {"stringValue": parentId},
-        "parentTitle": {"stringValue": parentTitle},
+      required userToken}) async {
+    try {
+      final url = Uri.parse('${baseUrl}categories');
+      http.Response response;
+
+      if (parentId.isEmpty) {
+        response = await http.post(url, headers: {
+          'Authorization': 'Bearer ${userToken}'
+        }, body: {
+          'name': title,
+        });
+      } else {
+        response = await http.post(url, headers: {
+          'Authorization': 'Bearer ${userToken}'
+        }, body: {
+          'name': title,
+          'parent_id': parentId,
+        });
       }
-    };
-    await FirestoreMethods()
-        .createRecord(collection: "categories", data: payLoad);
+      var extractedData = json.decode(response.body);
+      if (extractedData['success'] == true) {
+        print('uploaded');
+      } else {
+        var message = extractedData['message'];
+        throw message;
+      }
+
+      print(response.body);
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<void> fetchAndUpdateCat() async {

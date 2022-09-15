@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 String APIkey = 'AIzaSyBYhlmeIwLt0sdLzbvdUxU5JWFB-pgoa_Y';
 
+String baseUrl = 'https://anees-casting.rapidev.tech/api/';
+
 LinearGradient gradientBase(List<Color> colorList) {
   return LinearGradient(
     begin: Alignment.topCenter,

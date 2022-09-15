@@ -1,15 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:anees_costing/Functions/dailog.dart';
-import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/category.dart';
@@ -198,6 +194,7 @@ class _AddProductState extends State<AddProduct> {
 
                                   setState(() {
                                     image = result1!.files.first.bytes;
+                                    print(image);
                                   });
                                 },
                                 icon: Icon(

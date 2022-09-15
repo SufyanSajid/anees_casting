@@ -73,11 +73,11 @@ class _WebAppbarState extends State<WebAppbar> {
                                         'Click on the logout button to proceed',
                                     btn1: 'Logout',
                                     btn1Pressed: () {
-                                      Provider.of<Auth>(context, listen: false)
-                                          .logout();
-                                      Navigator.of(context)
-                                          .pushReplacementNamed(
-                                              LoginScreen.routeName);
+                                      // Provider.of<Auth>(context, listen: false)
+                                      //     .logout();
+                                      // Navigator.of(context)
+                                      //     .pushReplacementNamed(
+                                      //         LoginScreen.routeName);
                                     },
                                     btn2: 'Cancel',
                                     btn2Pressed: () {

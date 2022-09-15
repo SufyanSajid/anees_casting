@@ -52,9 +52,9 @@ Future<void> showCustomDialog({
   required String title,
   required String? btn1,
   required String content,
-  required String? btn2,
+  String? btn2,
   required Function()? btn1Pressed,
-  required Function()? btn2Pressed,
+  Function()? btn2Pressed,
   Function()? logoutap,
 }) async {
   String desc = 'Remember my info?';

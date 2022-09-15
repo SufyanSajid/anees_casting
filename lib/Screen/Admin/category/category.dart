@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
@@ -30,6 +31,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   bool isCatLoading = false;
   bool isLoading = false;
   bool isFirst = true;
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() async {
@@ -108,6 +110,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
     List<Category> parentCategories =
@@ -193,15 +196,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         var provider = Provider.of<Categories>(
                                             context,
                                             listen: false);
-                                        await provider.uploadCatagory(
+                                        await provider
+                                            .uploadCatagory(
                                           title: _nameController.text.trim(),
+                                          userToken: currentUser!.token,
                                           parentId: parentCat == null
                                               ? ""
                                               : parentCat!.id,
-                                          parentTitle: parentCat == null
-                                              ? ""
-                                              : parentCat!.title,
-                                        );
+                                        )
+                                            .catchError((error) {
+                                          showCustomDialog(
+                                              context: context,
+                                              title: 'Error',
+                                              btn1: 'Okay',
+                                              content: error.toString(),
+                                              btn1Pressed: () {
+                                                Navigator.of(context).pop();
+                                              });
+                                        });
                                         await provider.fetchAndUpdateCat();
                                         setState(() {
                                           _nameController.clear();

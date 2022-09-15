@@ -1,4 +1,6 @@
+import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/firebase_auth.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -74,42 +76,53 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  CurrentUser? currentUser;
 
   String role = "Customer";
   bool isLoading = false;
   bool isPassSecure = true;
 
-  _sigUpUser() async {
+  void _sigUpUser() async {
     setState(() {
       isLoading = true;
     });
-    BuildContext ctx = context;
-    await FirebaseAuth().createNewUser(
-        name: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        role: role,
-        image:
-            "https://images.unsplash.com/photo-1659976057522-817791f9bf3f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60",
-        phone: _phoneController.text.trim(),
-        password: _passwordController.text.trim());
+    Provider.of<Users>(context, listen: false)
+        .createUser(
+            name: _nameController.text.trim(),
+            email: _emailController.text.trim(),
+            phone: _phoneController.text.trim(),
+            password: _passwordController.text.trim())
+        .then((value) async {
+      await Provider.of<Users>(context, listen: false).updateUserRole(
+          userId: currentUser!.id,
+          userRole: currentUser!.role.toString(),
+          userToken: currentUser!.token);
+      setState(() {
+        isLoading = false;
+      });
+      _nameController.clear();
+      _emailController.clear();
+      _phoneController.clear();
+      _passwordController.clear();
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
 
-    _clearControllersAndRole();
-
-    showSnackBar(ctx, "User is added");
-    Provider.of<Counts>(context, listen: false).increaseCount(user: 1);
-    await Provider.of<Users>(ctx, listen: false).fetchAndUpdateUser();
-    setState(() {
-      isLoading = false;
+      showCustomDialog(
+        context: context,
+        title: 'Error',
+        btn1: 'Okay',
+        content: error.toString(),
+        btn1Pressed: () {
+          _nameController.clear();
+          _emailController.clear();
+          _phoneController.clear();
+          _passwordController.clear();
+          Navigator.of(context).pop();
+        },
+      );
     });
-    Navigator.of(ctx).pop();
-  }
-
-  _clearControllersAndRole() {
-    _nameController.clear();
-    _emailController.clear();
-    _phoneController.clear();
-    _passwordController.clear();
-    role = "Customer";
   }
 
   @override
@@ -125,6 +138,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   void didChangeDependencies() {
     if (isFirst) {
       isFirst = false;
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       drawerUser = Provider.of<Users>(context, listen: false).drawerUser;
       if (drawerUser != null) {
         _nameController.text = drawerUser!.name;

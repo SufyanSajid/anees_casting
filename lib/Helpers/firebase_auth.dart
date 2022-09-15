@@ -7,31 +7,31 @@ class FirebaseAuth {
   final signUpUrl =
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$APIkey';
 
-  Future<void> createNewUser({
-    required String name,
-    required String email,
-    required String role,
-    required String image,
-    required String phone,
-    required String password,
-  }) async {
-    final url = Uri.parse(signUpUrl);
-    var body = jsonEncode({
-      'email': email,
-      'password': password,
-      'returnSecureToken': true,
-    });
-    final response = await http.post(url, body: body);
-    var extractedData = json.decode(response.body);
-    print(extractedData["localId"]);
-    await Users().createUser(
-        authId: extractedData["localId"],
-        name: name,
-        email: email,
-        role: role,
-        image: image,
-        phone: phone);
-  }
+  // Future<void> createNewUser({
+  //   required String name,
+  //   required String email,
+  //   required String role,
+  //   required String image,
+  //   required String phone,
+  //   required String password,
+  // }) async {
+  //   final url = Uri.parse(signUpUrl);
+  //   var body = jsonEncode({
+  //     'email': email,
+  //     'password': password,
+  //     'returnSecureToken': true,
+  //   });
+  //   final response = await http.post(url, body: body);
+  //   var extractedData = json.decode(response.body);
+  //   print(extractedData["localId"]);
+  //   await Users().createUser(
+  //       authId: extractedData["localId"],
+  //       name: name,
+  //       email: email,
+  //       role: role,
+  //       image: image,
+  //       phone: phone);
+  // }
 
   Future<void> changePassword(
       {required String password, required String userId}) async {

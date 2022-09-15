@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -28,10 +29,12 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
   bool isCatLoading = false;
   bool isFirst = true;
   Category? category;
+  CurrentUser? currentUser;
 
   @override
   void initState() {
     category = Provider.of<Categories>(context, listen: false).drawerCategory;
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     if (category != null) {
       _nameController.text = category!.title.toString();
     } else {
@@ -67,9 +70,10 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
       });
 
       await catProvider.uploadCatagory(
-          title: _nameController.text.trim(),
-          parentId: parentId ?? "",
-          parentTitle: parentTitle ?? "");
+        title: _nameController.text.trim(),
+        userToken: currentUser!.token,
+        parentId: parentId ?? "",
+      );
 
       await catProvider.fetchAndUpdateCat();
       countProvider.increaseCount(category: 1);

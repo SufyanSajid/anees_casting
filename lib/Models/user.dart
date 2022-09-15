@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../contant.dart';
 import '/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -47,28 +48,55 @@ class Users with ChangeNotifier {
   }
 
   Future<void> createUser({
-    required String authId,
     required String name,
     required String email,
-    required String role,
-    required String image,
     required String phone,
+    required String password,
   }) async {
-    var payLoad = {
-      "fields": {
-        "authId": {"stringValue": authId},
-        "phone": {"stringValue": phone},
-        "name": {"stringValue": name},
-        "email": {"stringValue": email},
-        "role": {"stringValue": role},
-        "image": {"stringValue": image},
-        "isBlocked": {"booleanValue": false},
-      }
-    };
+    try {
+      final url = Uri.parse('${baseUrl}register');
 
-    http.Response res = await FirestoreMethods()
-        .updateRecords(collection: 'users', data: payLoad, prodId: authId);
-    // .createRecord(collection: "users/$authId", data: payLoad);
+      var response = await http.post(url, body: {
+        'name': name,
+        'email': email,
+        'password': password,
+        'c_password': password,
+        'phone': name,
+      });
+
+      var extractedData = json.decode(response.body);
+      if (extractedData['success'] == true) {
+        print(extractedData['message']);
+      } else {
+        var message = extractedData['message'];
+        throw message;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateUserRole(
+      {required String userId,
+      required String userToken,
+      required String userRole}) async {
+    final url = Uri.parse('${baseUrl}update_role');
+    String roleId;
+    if (userRole.toLowerCase() == 'admin') {
+      roleId = '1';
+    } else if (userRole.toLowerCase() == 'seller') {
+      roleId = '2';
+    } else {
+      roleId = '0';
+    }
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer ${userToken}'
+    }, body: {
+      'user_id': userId,
+      'role': roleId,
+    });
+    print(response.body);
   }
 
   Future<void> fetchAndUpdateUser() async {

@@ -31,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           //  Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
           print('error in autologin');
         });
+        print(isLogin);
         currentUser = Provider.of<Auth>(context, listen: false).currentUser;
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
           Navigator.of(context)
