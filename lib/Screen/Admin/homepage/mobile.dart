@@ -295,74 +295,109 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                     )
                   : ListView.builder(
                       itemCount: 4,
-                      itemBuilder: (ctx, index) => Container(
+                      itemBuilder: (ctx, index) => Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: btnbgColor.withOpacity(0.6), width: 1),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.6),
-                                offset: const Offset(0, 5),
-                                blurRadius: 10,
-                              ),
-                            ]),
-                        margin: const EdgeInsets.only(
-                            bottom: 20, left: 20, right: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            horizontal: 20, vertical: 5),
+                        child: Stack(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: height * 6,
-                                  width: height * 6,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 5),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          style: BorderStyle.solid,
-                                          width: 2,
-                                          color: btnbgColor.withOpacity(1)),
-                                      borderRadius: BorderRadius.circular(50)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.asset(
-                                      'assets/images/person22.jpeg',
-                                      height: height * 10,
-                                      width: height * 10,
-                                      fit: BoxFit.cover,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: btnbgColor.withOpacity(0.6),
+                                      width: 1),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.6),
+                                      offset: const Offset(0, 5),
+                                      blurRadius: 10,
                                     ),
+                                  ]),
+                              // margin: const EdgeInsets.only(
+                              //     bottom: 20, left: 20, right: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: height * 6,
+                                        width: height * 6,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 5),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                style: BorderStyle.solid,
+                                                width: 2,
+                                                color:
+                                                    btnbgColor.withOpacity(1)),
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.asset(
+                                            'assets/images/person22.jpeg',
+                                            height: height * 10,
+                                            width: height * 10,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width * 4,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            users![index].name,
+                                            style: TextStyle(
+                                              color: headingColor,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: height * 0.5,
+                                          ),
+                                          Text(
+                                            users![index].role,
+                                            style: TextStyle(
+                                                color: contentColor,
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                height: height * 2,
+                                width: width * 20,
+                                decoration: BoxDecoration(
+                                    color: btnbgColor.withOpacity(1),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10))),
+                                child: Center(
+                                  child: Text(
+                                    users![index].role,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: width * 4,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      users![index].name,
-                                      style: TextStyle(
-                                        color: headingColor,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.5,
-                                    ),
-                                    Text(
-                                      users![index].role,
-                                      style: TextStyle(
-                                          color: contentColor, fontSize: 13),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ],
                         ),

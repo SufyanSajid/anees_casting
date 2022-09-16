@@ -44,7 +44,7 @@ class Users with ChangeNotifier {
     return [..._customers];
   }
 
-  Future<void> createUser({
+  Future<String> createUser({
     required String name,
     required String email,
     required String phone,
@@ -64,8 +64,10 @@ class Users with ChangeNotifier {
       var extractedData = json.decode(response.body);
       if (extractedData['success'] == true) {
         print(extractedData['message']);
+        return extractedData['data']['user_id'].toString();
       } else {
         var message = extractedData['message'];
+
         throw message;
       }
     } catch (error) {
@@ -78,6 +80,7 @@ class Users with ChangeNotifier {
       required String userToken,
       required String userRole}) async {
     final url = Uri.parse('${baseUrl}update_role');
+    print(userRole);
     String roleId;
     if (userRole.toLowerCase() == 'admin') {
       roleId = '1';
@@ -92,6 +95,18 @@ class Users with ChangeNotifier {
     }, body: {
       'user_id': userId,
       'role': roleId,
+    });
+    print(response.body);
+  }
+
+  Future<void> deleteUser(
+      {required String userId, required String userToken}) async {
+    final url = Uri.parse('${baseUrl}delete_user');
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken'
+    }, body: {
+      'user_id': userId,
     });
     print(response.body);
   }

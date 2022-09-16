@@ -93,10 +93,13 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
             phone: _phoneController.text.trim(),
             password: _passwordController.text.trim())
         .then((value) async {
+      print('yeh h userId $value');
       await Provider.of<Users>(context, listen: false).updateUserRole(
-          userId: currentUser!.id,
-          userRole: currentUser!.role.toString(),
+          userId: value.toString(),
+          userRole: role,
           userToken: currentUser!.token);
+      await Provider.of<Users>(context, listen: false)
+          .fetchAndUpdateUser(userToken: currentUser!.token);
       setState(() {
         isLoading = false;
       });

@@ -173,6 +173,33 @@ class _ShowUsersState extends State<ShowUsers> {
         });
   }
 
+  void _deleteUser(String userId) {
+    showCustomDialog(
+        context: context,
+        title: 'Delete User',
+        btn1: 'Yes',
+        content: 'Do you want to delete user ?',
+        btn1Pressed: () {
+          Navigator.of(context).pop();
+          setState(() {
+            isLoading = true;
+          });
+          Provider.of<Users>(context, listen: false)
+              .deleteUser(userId: userId, userToken: currentUser!.token)
+              .then((value) async {
+            await Provider.of<Users>(context, listen: false)
+                .fetchAndUpdateUser(userToken: currentUser!.token);
+            setState(() {
+              isLoading = false;
+            });
+          });
+        },
+        btn2: 'No',
+        btn2Pressed: () {
+          Navigator.of(context).pop();
+        });
+  }
+
   // getUserProduct(String userId) async {
   //   await Provider.of<SentProducts>(context, listen: false)
   //       .fetchSentProducts(userId: userId);
@@ -251,7 +278,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                   height: height(context) * 0.5,
                                 ),
                                 Text(
-                                  widget.users[index].phone,
+                                  widget.users[index].email,
                                   style: TextStyle(
                                       color: contentColor, fontSize: 13),
                                 ),
@@ -320,6 +347,16 @@ class _ShowUsersState extends State<ShowUsers> {
                                 width: width(context) * 1,
                               ),
                             ],
+                          ),
+                        if (widget.users[index].role.toLowerCase() != 'admin')
+                          IconButton(
+                            onPressed: () {
+                              _deleteUser(widget.users[index].id);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
                           ),
                       ],
                     ),
