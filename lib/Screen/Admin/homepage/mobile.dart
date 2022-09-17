@@ -50,7 +50,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       });
       Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
-      Provider.of<Products>(context, listen: false).fetchAndUpdateProducts();
+      Provider.of<Products>(context, listen: false)
+          .fetchAndUpdateProducts(currentUser!.token);
       isFirst = false;
     }
 

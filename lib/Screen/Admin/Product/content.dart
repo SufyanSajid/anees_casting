@@ -45,6 +45,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
   bool isSending = false;
   bool isSended = false;
   String? receiverId;
+  CurrentUser? currentUser;
 
   @override
   void dispose() {
@@ -56,14 +57,14 @@ class _ProductWebContentState extends State<ProductWebContent> {
   void didChangeDependencies() async {
     if (isFirst) {
       //FirestoreMethods().getProductsByCatId();
-
+      currentUser = Provider.of<Auth>(context).currentUser;
       isFirst = false;
       if (Provider.of<Products>(context, listen: false).products.isEmpty) {
         setState(() {
           isLoading = true;
         });
         await Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts()
+            .fetchAndUpdateProducts(currentUser!.token)
             .then((value) {
           setState(
             () {
@@ -111,7 +112,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
                     await productProvider.deleteProduct(prodId);
                     countProvider.decreaseCount(product: 1);
-                    await productProvider.fetchAndUpdateProducts();
+                    await productProvider
+                        .fetchAndUpdateProducts(currentUser!.token);
 
                     setState(() {
                       isLoading = false;
@@ -152,7 +154,6 @@ class _ProductWebContentState extends State<ProductWebContent> {
     String? token = Provider.of<Products>(context).pageToken;
     List<Category> categories = Provider.of<Categories>(context).categories;
     List<AUser> customers = Provider.of<Users>(context).customers;
-    var currentUser = Provider.of<Auth>(context).currentUser;
 
     return Column(
       children: [
@@ -224,8 +225,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                         TableRow(children: [
                                           Text(
                                               "Title: ${products[index].name}"),
-                                          Text(
-                                              "Cat:  ${products[index].categoryTitle}"),
+                                          // Text(
+                                          //     "Cat:  ${products[index].categoryTitle}"),
                                           Text(
                                               "Unit:   ${products[index].unit}")
                                         ]),
@@ -368,7 +369,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   isLoading = true;
                 });
                 await Provider.of<Products>(context, listen: false)
-                    .fetchAndUpdateProducts()
+                    .fetchAndUpdateProducts(currentUser!.token)
                     .then((value) {
                   setState(
                     () {

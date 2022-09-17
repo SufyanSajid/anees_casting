@@ -408,8 +408,8 @@ class _CustomerProductsState extends State<CustomerProducts> {
       setState(() {
         productLoading = true;
       });
-      customerProducts = await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(widget.userId);
+      // customerProducts = await Provider.of<Products>(context, listen: false)
+      //     .getCustomerProducts(widget.userId);
       setState(() {
         productLoading = false;
       });
@@ -527,22 +527,22 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                     setState(() {
                                       productLoading = true;
                                     });
-                                    await Provider.of<SentProducts>(context,
-                                            listen: false)
-                                        .deleteSentProduct(
-                                            product: customerProducts[index],
-                                            userId: widget.userId);
+                                    // await Provider.of<SentProducts>(context,
+                                    //         listen: false)
+                                    //     .deleteSentProduct(
+                                    //         product: customerProducts[index],
+                                    //         userId: widget.userId);
 
-                                    Provider.of<Products>(
-                                            widget.scaffoldKey.currentContext!,
-                                            listen: false)
-                                        .removeCustomer(widget.userId,
-                                            customerProducts[index].id);
-                                    customerProducts = await Provider.of<
-                                                Products>(
-                                            widget.scaffoldKey.currentContext!,
-                                            listen: false)
-                                        .getCustomerProducts(widget.userId);
+                                    // Provider.of<Products>(
+                                    //         widget.scaffoldKey.currentContext!,
+                                    //         listen: false)
+                                    //     .removeCustomer(widget.userId,
+                                    //         customerProducts[index].id);
+                                    // customerProducts = await Provider.of<
+                                    //             Products>(
+                                    //         widget.scaffoldKey.currentContext!,
+                                    //         listen: false)
+                                    //     .getCustomerProducts(widget.userId);
 
                                     setState(() {
                                       productLoading = false;

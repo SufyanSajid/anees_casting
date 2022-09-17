@@ -32,8 +32,8 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
         isLoading = true;
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-      products = await Provider.of<Products>(context)
-          .getCustomerProducts(currentUser!.id);
+      // products = await Provider.of<Products>(context)
+      //     .getCustomerProducts(currentUser!.id);
       setState(() {
         isLoading = false;
       });
@@ -129,13 +129,13 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                 validatior: () {},
                 onChanged: (value) {
                   if (value.isEmpty) {
-                    Provider.of<Products>(context, listen: false)
-                        .getCustomerProducts(currentUser!.id)
-                        .then((value) {
-                      setState(() {
-                        products = value;
-                      });
-                    });
+                    // Provider.of<Products>(context, listen: false)
+                    //     .getCustomerProducts(currentUser!.id)
+                    //     .then((value) {
+                    //   setState(() {
+                    //     products = value;
+                    //   });
+                    // });
                   } else {
                     setState(
                       () {
@@ -151,13 +151,13 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                 inputController: _productController,
                 submitted: (value) {
                   if (value.isEmpty) {
-                    Provider.of<Products>(context, listen: false)
-                        .getCustomerProducts(currentUser!.id)
-                        .then((value) {
-                      setState(() {
-                        products = value;
-                      });
-                    });
+                    // Provider.of<Products>(context, listen: false)
+                    //     .getCustomerProducts(currentUser!.id)
+                    //     .then((value) {
+                    //   setState(() {
+                    //     products = value;
+                    //   });
+                    // });
                   } else {
                     setState(
                       () {

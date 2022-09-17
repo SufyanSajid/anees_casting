@@ -70,7 +70,7 @@ class _SendProductButtonState extends State<SendProductButton> {
                 content: StatefulBuilder(builder: (context, setState) {
                   Product productToSend = Provider.of<Products>(context)
                       .getProdById(widget.prod.id);
-                  print(productToSend.customers);
+
                   return Container(
                     height: height(context) * 50,
                     width: width(context) * 50,
@@ -142,82 +142,82 @@ class _SendProductButtonState extends State<SendProductButton> {
                                         ),
                                       ],
                                     ),
-                                    trailing: isSending &&
-                                            customers[index].id == receiverId
-                                        ? Container(
-                                            width: 50,
-                                            alignment: Alignment.centerRight,
-                                            child: AdaptiveIndecator(
-                                              color: primaryColor,
-                                            ),
-                                          )
-                                        : productToSend.customers != null &&
-                                                productToSend.customers!
-                                                    .contains(
-                                                        customers[index].id)
-                                            ? IconButton(
-                                                onPressed: () {},
-                                                icon: const Icon(
-                                                  Icons.check_circle_outline,
-                                                  color: Colors.green,
-                                                ))
-                                            : IconButton(
-                                                onPressed: () async {
-                                                  // print(customers[index].id);
-                                                  receiverId =
-                                                      customers[index].id;
-                                                  setState(
-                                                    () {
-                                                      isSending = true;
-                                                    },
-                                                  );
-                                                  // Future.delayed(Duration(seconds: 1)).then((value) {
+                                    // trailing: isSending &&
+                                    //         customers[index].id == receiverId
+                                    //     ? Container(
+                                    //         width: 50,
+                                    //         alignment: Alignment.centerRight,
+                                    //         child: AdaptiveIndecator(
+                                    //           color: primaryColor,
+                                    //         ),
+                                    //       )
+                                    //     : productToSend.customers != null &&
+                                    //             productToSend.customers!
+                                    //                 .contains(
+                                    //                     customers[index].id)
+                                    //         ? IconButton(
+                                    //             onPressed: () {},
+                                    //             icon: const Icon(
+                                    //               Icons.check_circle_outline,
+                                    //               color: Colors.green,
+                                    //             ))
+                                    //         : IconButton(
+                                    //             onPressed: () async {
+                                    //               // print(customers[index].id);
+                                    //               receiverId =
+                                    //                   customers[index].id;
+                                    //               setState(
+                                    //                 () {
+                                    //                   isSending = true;
+                                    //                 },
+                                    //               );
+                                    //               // Future.delayed(Duration(seconds: 1)).then((value) {
 
-                                                  // });
-                                                  await Provider.of<
-                                                              SentProducts>(ctx,
-                                                          listen: false)
-                                                      .addProduct(
-                                                          product:
-                                                              productToSend,
-                                                          userId:
-                                                              customers[index]
-                                                                  .id);
-                                                  setState(
-                                                    () {
-                                                      isSending = false;
-                                                      isSended = true;
-                                                    },
-                                                  );
-                                                  Provider.of<Products>(context,
-                                                          listen: false)
-                                                      .addCustomer(
-                                                          customers[index]
-                                                              .id
-                                                              .toString(),
-                                                          productToSend.id
-                                                              .toString());
+                                    //               // });
+                                    //               await Provider.of<
+                                    //                           SentProducts>(ctx,
+                                    //                       listen: false)
+                                    //                   .addProduct(
+                                    //                       product:
+                                    //                           productToSend,
+                                    //                       userId:
+                                    //                           customers[index]
+                                    //                               .id);
+                                    //               setState(
+                                    //                 () {
+                                    //                   isSending = false;
+                                    //                   isSended = true;
+                                    //                 },
+                                    //               );
+                                    //               // Provider.of<Products>(context,
+                                    //               //         listen: false)
+                                    //               //     .addCustomer(
+                                    //               //         customers[index]
+                                    //               //             .id
+                                    //               //             .toString(),
+                                    //               //         productToSend.id
+                                    //               //             .toString());
 
-                                                  Provider.of<Logs>(context,
-                                                          listen: false)
-                                                      .addLog(Log(
-                                                          id: DateTime.now()
-                                                              .microsecond
-                                                              .toString(),
-                                                          userid:
-                                                              currentUser!.id,
-                                                          userName:
-                                                              currentUser.name!,
-                                                          content:
-                                                              '${currentUser.name} shared design ${productToSend.name} with ${customers[index].name}',
-                                                          logType: 'Share'));
+                                    //               Provider.of<Logs>(context,
+                                    //                       listen: false)
+                                    //                   .addLog(Log(
+                                    //                       id: DateTime.now()
+                                    //                           .microsecond
+                                    //                           .toString(),
+                                    //                       userid:
+                                    //                           currentUser!.id,
+                                    //                       userName:
+                                    //                           currentUser.name!,
+                                    //                       content:
+                                    //                           '${currentUser.name} shared design ${productToSend.name} with ${customers[index].name}',
+                                    //                       logType: 'Share'));
 
-                                                  // Navigator.of(ctx).pop();
-                                                },
-                                                icon: Icon(
-                                                  Icons.send_outlined,
-                                                  color: primaryColor,
-                                                )),
+                                    //               // Navigator.of(ctx).pop();
+                                    //             },
+                                    //             icon: Icon(
+                                    //               Icons.send_outlined,
+                                    //               color: primaryColor,
+                                    //             )),
                                   ),
                                 );
                               }),

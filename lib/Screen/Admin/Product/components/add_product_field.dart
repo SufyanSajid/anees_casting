@@ -52,20 +52,18 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
 
   @override
   void initState() {
-    // Provider.of<Categories>(cont
-    //ext, listen: false).fetchAndUpdateCat();
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     drawerProduct = Provider.of<Products>(context, listen: false).drawerProduct;
     if (drawerProduct != null) {
-      category = Provider.of<Categories>(context, listen: false)
-          .getCategoryById(drawerProduct!.categoryId);
+      // category = Provider.of<Categories>(context, listen: false)
+      //     .getCategoryById(drawerProduct!.categoryId);
 
       _prodNameController.text = drawerProduct!.name;
       _prodLengthController.text = drawerProduct!.length;
       _prodWidthController.text = drawerProduct!.width;
       prodUnit = drawerProduct!.unit;
       prodImageUrl = drawerProduct!.image;
-      selectedCatTitle = drawerProduct!.categoryTitle;
+      // selectedCatTitle = drawerProduct!.categoryTitle;
     } else {
       _prodNameController.text = '';
       _prodLengthController.text = '';
@@ -156,7 +154,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
           product: newProduct,
           userToken: currentUser!.token,
           imageExtension: imageExtention!);
-      await productProvider.fetchAndUpdateProducts();
+      await productProvider.fetchAndUpdateProducts(currentUser!.token);
       countProvider.increaseCount(product: 1);
 
       clearControllersAndImage();
@@ -203,7 +201,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       }
 
       await provider.updateProduct(product: newProduct);
-      await provider.fetchAndUpdateProducts();
+      await provider.fetchAndUpdateProducts(currentUser!.token);
 
       clearControllersAndImage();
       setState(() {

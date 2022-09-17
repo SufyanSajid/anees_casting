@@ -39,16 +39,18 @@ class _ProductScreenState extends State<ProductScreen> {
   final _productController = TextEditingController();
   bool isFirst = true;
   bool isLoading = false;
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() {
     if (isFirst) {
+      currentUser = Provider.of<Auth>(context).currentUser;
       if (Provider.of<Products>(context, listen: false).products.isEmpty) {
         setState(() {
           isLoading = true;
         });
         Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts()
+            .fetchAndUpdateProducts(currentUser!.token)
             .then((value) {
           setState(() {
             isLoading = false;
@@ -90,7 +92,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     await StorageMethods().deleteImage(imgUrl: imgUrl);
 
                     await provider.deleteProduct(prodId);
-                    await provider.fetchAndUpdateProducts();
+                    await provider.fetchAndUpdateProducts(currentUser!.token);
 
                     setState(() {
                       isLoading = false;
@@ -121,7 +123,6 @@ class _ProductScreenState extends State<ProductScreen> {
     List<Product> products = Provider.of<Products>(context).products;
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
-    var currentUser = Provider.of<Auth>(context).currentUser;
 
     String? token = Provider.of<Products>(context).pageToken;
 
@@ -357,7 +358,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           isLoading = true;
                         });
                         Provider.of<Products>(context, listen: false)
-                            .fetchAndUpdateProducts()
+                            .fetchAndUpdateProducts(currentUser!.token)
                             .then((value) {
                           setState(() {
                             isLoading = false;

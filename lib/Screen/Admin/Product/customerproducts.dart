@@ -39,8 +39,8 @@ class _AdminSideCustomerProductScreenState
 
       customer = ModalRoute.of(context)!.settings.arguments as AUser;
 
-      products = await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(customer!.id);
+      // products = await Provider.of<Products>(context, listen: false)
+      //     .getCustomerProducts(customer!.id);
       setState(() {
         isLoading = false;
       });
@@ -62,12 +62,12 @@ class _AdminSideCustomerProductScreenState
           setState(() {
             isLoading = true;
           });
-          await Provider.of<SentProducts>(context, listen: false)
-              .deleteSentProduct(product: prod, userId: cusId);
-          Provider.of<Products>(context, listen: false)
-              .removeCustomer(cusId, prod.id);
-          products = await Provider.of<Products>(context, listen: false)
-              .getCustomerProducts(customer!.id);
+          // await Provider.of<SentProducts>(context, listen: false)
+          //     .deleteSentProduct(product: prod, userId: cusId);
+          // Provider.of<Products>(context, listen: false)
+          //     .removeCustomer(cusId, prod.id);
+          // products = await Provider.of<Products>(context, listen: false)
+          //     .getCustomerProducts(customer!.id);
           setState(() {
             isLoading = false;
           });

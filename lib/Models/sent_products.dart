@@ -40,72 +40,72 @@ class SentProducts with ChangeNotifier {
   //   return [..._sentProducts];
   // }
 
-  Future<void> addProduct(
-      {required Product product, required String userId}) async {
-    List<String>? productCustomers = product.customers;
+  // Future<void> addProduct(
+  //     {required Product product, required String userId}) async {
+  //   List<String>? productCustomers = product.customers;
 
-    List<dynamic> customers = [];
+  //   List<dynamic> customers = [];
 
-    if (productCustomers != null && productCustomers.isNotEmpty) {
-      if (!productCustomers.contains(userId)) {
-        customers.add({
-          'stringValue': userId,
-        });
-      }
-      for (var customer in productCustomers) {
-        customers.add({'stringValue': customer});
-      }
-    } else {
-      customers.add({
-        'stringValue': userId,
-      });
-    }
+  //   if (productCustomers != null && productCustomers.isNotEmpty) {
+  //     if (!productCustomers.contains(userId)) {
+  //       customers.add({
+  //         'stringValue': userId,
+  //       });
+  //     }
+  //     for (var customer in productCustomers) {
+  //       customers.add({'stringValue': customer});
+  //     }
+  //   } else {
+  //     customers.add({
+  //       'stringValue': userId,
+  //     });
+  //   }
 
-    var payLoad = jsonEncode({
-      "fields": {
-        "customers": {
-          "arrayValue": {'values': customers}
-        },
-      }
-    });
+  //   var payLoad = jsonEncode({
+  //     "fields": {
+  //       "customers": {
+  //         "arrayValue": {'values': customers}
+  //       },
+  //     }
+  //   });
 
-    var response = await FirestoreMethods().updateSingleField(
-        collection: 'products',
-        documentId: product.id,
-        fieldName: 'customers',
-        bodyData: payLoad);
-  }
+  //   var response = await FirestoreMethods().updateSingleField(
+  //       collection: 'products',
+  //       documentId: product.id,
+  //       fieldName: 'customers',
+  //       bodyData: payLoad);
+  // }
 
-  Future<void> deleteSentProduct(
-      {required Product product, required String userId}) async {
-    List<String>? productCustomers = product.customers;
+  // Future<void> deleteSentProduct(
+  //     {required Product product, required String userId}) async {
+  //   List<String>? productCustomers = product.customers;
 
-    List<dynamic> customers = [];
+  //   List<dynamic> customers = [];
 
-    if (productCustomers != null && productCustomers.isNotEmpty) {
-      productCustomers.remove(userId);
+  //   if (productCustomers != null && productCustomers.isNotEmpty) {
+  //     productCustomers.remove(userId);
 
-      for (var customer in productCustomers) {
-        customers.add({'stringValue': customer});
-      }
-    }
-    print(productCustomers);
-    print(customers);
+  //     for (var customer in productCustomers) {
+  //       customers.add({'stringValue': customer});
+  //     }
+  //   }
+  //   print(productCustomers);
+  //   print(customers);
 
-    var payLoad = jsonEncode({
-      "fields": {
-        "customers": {
-          "arrayValue": {'values': customers}
-        },
-      }
-    });
+  //   var payLoad = jsonEncode({
+  //     "fields": {
+  //       "customers": {
+  //         "arrayValue": {'values': customers}
+  //       },
+  //     }
+  //   });
 
-    var response = await FirestoreMethods().updateSingleField(
-        collection: 'products',
-        documentId: product.id,
-        fieldName: 'customers',
-        bodyData: payLoad);
-  }
+  //   var response = await FirestoreMethods().updateSingleField(
+  //       collection: 'products',
+  //       documentId: product.id,
+  //       fieldName: 'customers',
+  //       bodyData: payLoad);
+  // }
 
   // Future<List<SentProduct>> fetchSentProducts({required String userId}) async {
   //   List<SentProduct> tempList = [];
@@ -160,8 +160,6 @@ class SentProducts with ChangeNotifier {
   Future<void> updateProduct({required Product product}) async {
     var payLoad = {
       "fields": {
-        "catId": {"stringValue": product.categoryId},
-        "catTitle": {"stringValue": product.categoryTitle},
         "imageUrl": {"stringValue": product.image},
         "productName": {"stringValue": product.name},
         "productWidth": {"stringValue": product.width},

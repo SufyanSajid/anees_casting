@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +24,15 @@ class CustomAutoComplete extends StatefulWidget {
 
 class _CustomAutoCompleteState extends State<CustomAutoComplete> {
   bool isFirst = true;
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() async {
-    if (isFirst) {}
-    isFirst = false;
+    if (isFirst) {
+      isFirst = false;
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    }
+
     if (Provider.of<Categories>(context).categories.isEmpty) {}
     super.didChangeDependencies();
   }
@@ -70,8 +75,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               controller: controller,
               onChanged: (value) async {
                 if (value.isEmpty) {
-                   Provider.of<Products>(context, listen: false)
-                      .fetchAndUpdateProducts();
+                  Provider.of<Products>(context, listen: false)
+                      .fetchAndUpdateProducts(currentUser!.token);
                 }
               },
               decoration: InputDecoration(

@@ -17,7 +17,6 @@ class Product {
   String image;
   String dateTime;
   String categoryTitle;
-  List<String>? customers;
 
   Product(
       {required this.id,
@@ -28,7 +27,6 @@ class Product {
       required this.categoryId,
       required this.categoryTitle,
       required this.image,
-      this.customers,
       required this.dateTime});
 }
 
@@ -51,8 +49,6 @@ class Products with ChangeNotifier {
     required String imageExtension,
   }) async {
     try {
-      print(product.image);
-      print('$imageExtension ${product.categoryId}');
       final url = Uri.parse('${baseUrl}products');
 
       var response = await http.post(url, headers: {
@@ -79,86 +75,57 @@ class Products with ChangeNotifier {
     }
   }
 
-  void addCustomer(String cusId, String prodId) {
-    var prod = _products.firstWhere((element) => element.id == prodId);
-    prod.customers!.add(cusId);
-
-    notifyListeners();
-  }
-
-  void removeCustomer(String cusId, String prodId) {
-    List<Product> prods =
-        _products.where((element) => element.id == prodId).toList();
-    if (prods.isNotEmpty) {
-      var prod = _products.firstWhere((element) => element.id == prodId);
-      prod.customers!.remove(cusId);
-    }
-    notifyListeners();
-  }
-
   Product getProdById(String id) {
     return _products.firstWhere((element) => element.id == id);
   }
 
-  Future<void> fetchAndUpdateProducts() async {
+  Future<void> fetchAndUpdateProducts(String userToken) async {
     List<Product> tempProds = [];
-    http.Response prodRes = await FirestoreMethods()
-        .getRecords(collection: "products", pageToken: pageToken);
+    final url = Uri.parse('${baseUrl}products');
 
-    var data = json.decode(prodRes.body);
-    List<dynamic> docsData = data["documents"];
-    if (docsData.isEmpty && docsData == null) {
-      return;
-    }
-    for (var element in docsData) {
-      List<String> customers = [];
-      Map fields = element["fields"];
-      String catId = fields["catId"]["stringValue"];
-      String catTitle = fields["catTitle"]["stringValue"];
-      String imageUrl = fields["imageUrl"]["stringValue"];
-      String productName = fields["productName"]["stringValue"];
-      String productWidth = fields["productWidth"]["stringValue"];
-      String productUnit = fields["productUnit"]["stringValue"];
-      String productLength = fields["productLength"]["stringValue"];
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    });
+    print(response.body);
+    var extractedData = json.decode(response.body);
 
-      String id = (element["name"] as String).split("products/").last;
-      String time = element["updateTime"];
-
-      if (fields['customers'] != null) {
-        // print(fields['customers']);
-        if (fields['customers']['arrayValue']['values'] != null) {
-          var values = fields['customers']['arrayValue']['values'];
-          for (var customer in values) {
-            customers.add(customer['stringValue']);
-          }
-        }
-      }
-
-      tempProds.add(Product(
-          id: id,
-          name: productName,
-          length: productLength,
-          width: productWidth,
-          unit: productUnit,
-          categoryId: catId,
-          categoryTitle: catTitle,
-          customers: customers,
-          image: imageUrl,
-          dateTime: time));
-    }
-    if (pageToken != null) {
-      _products.addAll(tempProds);
-    } else {
+    if (extractedData['success'] == true) {
+      var data = extractedData['data'] as List<dynamic>;
+      data.forEach((prod) {
+        tempProds.add(
+          Product(
+            id: prod['id'].toString(),
+            name: prod['name'],
+            length: prod['length'],
+            width: prod['width'],
+            unit: prod['unit'],
+            categoryId: prod['category_id'].toString(),
+            categoryTitle: prod['category_name'],
+            image: prod['imageUrl'],
+            dateTime: prod['created_at'],
+          ),
+        );
+      });
       _products = tempProds;
-    }
-
-    if (data['nextPageToken'] != null) {
-      pageToken = data['nextPageToken'];
+      notifyListeners();
     } else {
-      pageToken = null;
+      var message = extractedData['message'];
+      throw message;
     }
 
-    notifyListeners();
+    //  tempProds.add(
+    //     Product(
+    //         id: id,
+    //         name: productName,
+    //         length: productLength,
+    //         width: productWidth,
+    //         unit: productUnit,
+    //         categoryId: catId,
+    //         categoryTitle: catTitle,
+    //         customers: customers,
+    //         image: imageUrl,
+    //         dateTime: time),
+    //   );
   }
 
   Future<void> getPaginationProducts() async {
@@ -263,55 +230,54 @@ class Products with ChangeNotifier {
         .createRecord(collection: "sentproductsrecord/", data: payLoad);
   }
 
-  Future<List<Product>> getCustomerProducts(String userId) async {
-    List<Product> tempProds = [];
-    http.Response prodRes =
-        await FirestoreMethods().getCustomerProducts(userId);
+  // Future<List<Product>> getCustomerProducts(String userId) async {
+  //   List<Product> tempProds = [];
+  //   http.Response prodRes =
+  //       await FirestoreMethods().getCustomerProducts(userId);
 
-    List<dynamic> docsData = json.decode(prodRes.body);
-    print(docsData);
+  //   List<dynamic> docsData = json.decode(prodRes.body);
+  //   print(docsData);
 
-    for (var element in docsData) {
-      if (element['document'] == null) {
-        continue;
-      }
-      List<String> customers = [];
-      var document = element['document'];
-      Map fields = document["fields"];
-      String catId = fields["catId"]["stringValue"];
-      String catTitle = fields["catTitle"]["stringValue"];
-      String imageUrl = fields["imageUrl"]["stringValue"];
-      String productName = fields["productName"]["stringValue"];
-      String productWidth = fields["productWidth"]["stringValue"];
-      String productUnit = fields["productUnit"]["stringValue"];
-      String productLength = fields["productLength"]["stringValue"];
-      String id = (document["name"] as String).split("products/").last;
-      String time = document["updateTime"];
-      if (fields['customers'] != null) {
-        // print(fields['customers']);
-        if (fields['customers']['arrayValue']['values'] != null) {
-          var values = fields['customers']['arrayValue']['values'];
-          for (var customer in values) {
-            customers.add(customer['stringValue']);
-          }
-        }
-      }
+  //   for (var element in docsData) {
+  //     if (element['document'] == null) {
+  //       continue;
+  //     }
+  //     List<String> customers = [];
+  //     var document = element['document'];
+  //     Map fields = document["fields"];
+  //     String catId = fields["catId"]["stringValue"];
+  //     String catTitle = fields["catTitle"]["stringValue"];
+  //     String imageUrl = fields["imageUrl"]["stringValue"];
+  //     String productName = fields["productName"]["stringValue"];
+  //     String productWidth = fields["productWidth"]["stringValue"];
+  //     String productUnit = fields["productUnit"]["stringValue"];
+  //     String productLength = fields["productLength"]["stringValue"];
+  //     String id = (document["name"] as String).split("products/").last;
+  //     String time = document["updateTime"];
+  //     if (fields['customers'] != null) {
+  //       // print(fields['customers']);
+  //       if (fields['customers']['arrayValue']['values'] != null) {
+  //         var values = fields['customers']['arrayValue']['values'];
+  //         for (var customer in values) {
+  //           customers.add(customer['stringValue']);
+  //         }
+  //       }
+  //     }
 
-      tempProds.add(Product(
-          id: id,
-          name: productName,
-          length: productLength,
-          width: productWidth,
-          unit: productUnit,
-          categoryId: catId,
-          customers: customers,
-          categoryTitle: catTitle,
-          image: imageUrl,
-          dateTime: time));
-    }
+  //     tempProds.add(Product(
+  //         id: id,
+  //         name: productName,
+  //         length: productLength,
+  //         width: productWidth,
+  //         unit: productUnit,
+  //         categoryId: catId,
+  //         categoryTitle: catTitle,
+  //         image: imageUrl,
+  //         dateTime: time));
+  //   }
 
-    return tempProds;
+  //   return tempProds;
 
-    // print(documents.toString());
-  }
+  //   // print(documents.toString());
+  // }
 }
