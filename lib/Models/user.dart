@@ -108,7 +108,6 @@ class Users with ChangeNotifier {
     }, body: {
       'user_id': userId,
     });
-    print(response.body);
   }
 
   Future<void> fetchAndUpdateUser({required String userToken}) async {

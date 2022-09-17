@@ -89,10 +89,8 @@ class _ProductScreenState extends State<ProductScreen> {
                     });
                     var provider =
                         Provider.of<Products>(context, listen: false);
-                    await StorageMethods().deleteImage(imgUrl: imgUrl);
 
-                    await provider.deleteProduct(prodId);
-                    await provider.fetchAndUpdateProducts(currentUser!.token);
+                    await provider.deleteProduct(prodId, currentUser!.token);
 
                     setState(() {
                       isLoading = false;

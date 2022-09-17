@@ -110,7 +110,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
                     await StorageMethods().deleteImage(imgUrl: imgUrl);
 
-                    await productProvider.deleteProduct(prodId);
+                    await productProvider.deleteProduct(
+                        prodId, currentUser!.token);
                     countProvider.decreaseCount(product: 1);
                     await productProvider
                         .fetchAndUpdateProducts(currentUser!.token);

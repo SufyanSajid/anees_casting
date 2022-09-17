@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../contant.dart';
 
 class Product {
@@ -16,18 +14,21 @@ class Product {
   String unit;
   String image;
   String dateTime;
+  List<String>? customers;
   String categoryTitle;
 
-  Product(
-      {required this.id,
-      required this.name,
-      required this.length,
-      required this.width,
-      required this.unit,
-      required this.categoryId,
-      required this.categoryTitle,
-      required this.image,
-      required this.dateTime});
+  Product({
+    required this.id,
+    required this.name,
+    required this.length,
+    required this.width,
+    required this.unit,
+    required this.categoryId,
+    required this.categoryTitle,
+    required this.image,
+    this.customers,
+    required this.dateTime,
+  });
 }
 
 class Products with ChangeNotifier {
@@ -65,6 +66,20 @@ class Products with ChangeNotifier {
       var extractedData = json.decode(response.body);
       if (extractedData['success'] == true) {
         print(extractedData['message']);
+        var data = extractedData['data'];
+        Product prod = Product(
+            id: data['id'].toString(),
+            name: data['name'],
+            length: data['length'],
+            width: data['width'],
+            unit: data['unit'],
+            categoryId: data['category_id'].toString(),
+            categoryTitle: data['category_name'],
+            image: data['imageUrl'],
+            dateTime: data['created_at']);
+
+        _products.add(prod);
+        notifyListeners();
       } else {
         var message = extractedData['message'];
         throw message;
@@ -73,6 +88,23 @@ class Products with ChangeNotifier {
       print(error);
       throw error;
     }
+  }
+
+  void addCustomer(String cusId, String prodId) {
+    var prod = _products.firstWhere((element) => element.id == prodId);
+    prod.customers!.add(cusId);
+
+    notifyListeners();
+  }
+
+  void removeCustomer(String cusId, String prodId) {
+    List<Product> prods =
+        _products.where((element) => element.id == prodId).toList();
+    if (prods.isNotEmpty) {
+      var prod = _products.firstWhere((element) => element.id == prodId);
+      prod.customers!.remove(cusId);
+    }
+    notifyListeners();
   }
 
   Product getProdById(String id) {
@@ -86,12 +118,16 @@ class Products with ChangeNotifier {
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
     });
-    print(response.body);
     var extractedData = json.decode(response.body);
 
     if (extractedData['success'] == true) {
       var data = extractedData['data'] as List<dynamic>;
       data.forEach((prod) {
+        List<String> tempCustomers = [];
+        var customers = prod['customers'] as List<dynamic>;
+        customers.forEach((cust) {
+          tempCustomers.add(cust.toString());
+        });
         tempProds.add(
           Product(
             id: prod['id'].toString(),
@@ -99,6 +135,7 @@ class Products with ChangeNotifier {
             length: prod['length'],
             width: prod['width'],
             unit: prod['unit'],
+            customers: tempCustomers,
             categoryId: prod['category_id'].toString(),
             categoryTitle: prod['category_name'],
             image: prod['imageUrl'],
@@ -112,27 +149,11 @@ class Products with ChangeNotifier {
       var message = extractedData['message'];
       throw message;
     }
-
-    //  tempProds.add(
-    //     Product(
-    //         id: id,
-    //         name: productName,
-    //         length: productLength,
-    //         width: productWidth,
-    //         unit: productUnit,
-    //         categoryId: catId,
-    //         categoryTitle: catTitle,
-    //         customers: customers,
-    //         image: imageUrl,
-    //         dateTime: time),
-    //   );
   }
 
   Future<void> getPaginationProducts() async {
     http.Response res =
         await FirestoreMethods().getChunkRecords(collection: "products");
-    print(jsonDecode(res.body)["nextPageToken"]);
-    print(res.body);
   }
 
   Future<void> searchProduct(String title, String field) async {
@@ -192,92 +213,100 @@ class Products with ChangeNotifier {
   //   return true;
   // }
 
-  Future<void> deleteProduct(String prodId) async {
-    http.Response res = await FirestoreMethods()
-        .deleteRecord(collection: "products", prodId: prodId);
-  }
-
-  Future<void> updateProduct({required Product product}) async {
-    var payLoad = {
-      "fields": {
-        "catId": {"stringValue": product.categoryId},
-        "catTitle": {"stringValue": product.categoryTitle},
-        "imageUrl": {"stringValue": product.image},
-        "productName": {"stringValue": product.name},
-        "productWidth": {"stringValue": product.width},
-        "productUnit": {"stringValue": product.unit},
-        "productLength": {"stringValue": product.length},
+  Future<void> deleteProduct(String prodId, String userToken) async {
+    try {
+      final url = Uri.parse('${baseUrl}products/$prodId');
+      print(url);
+      var response = await http.delete(url, headers: {
+        'Authorization': 'Bearer $userToken',
+      });
+      var extractedResponse = json.decode(response.body);
+      if (extractedResponse['success'] == true) {
+        print(extractedResponse['message']);
+        _products.removeWhere((element) => element.id == prodId);
+        notifyListeners();
+      } else {
+        var message = extractedResponse['message'];
+        throw message;
       }
-    };
-    http.Response res = await FirestoreMethods().updateRecords(
-        collection: "products", data: payLoad, prodId: product.id);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  Future<void> sendProductToUser(
-      {required Product product, required String userId}) async {
-    var payLoad = {
-      "fields": {
-        "catId": {"stringValue": product.categoryId},
-        "catTitle": {"stringValue": product.categoryTitle},
-        "imageUrl": {"stringValue": product.image},
-        "productName": {"stringValue": product.name},
-        "productWidth": {"stringValue": product.width},
-        "productUnit": {"stringValue": product.unit},
-        "productLength": {"stringValue": product.length},
-      }
-    };
-    http.Response res = await FirestoreMethods()
-        .createRecord(collection: "sentproductsrecord/", data: payLoad);
+  Future<void> updateProduct({required Product product}) async {}
+
+  Future<void> sendProductToUser({
+    required Product product,
+    required String userId,
+    required String userToken,
+  }) async {
+    final url = Uri.parse('${baseUrl}assign_customer');
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {
+      'user_id': userId,
+      'product_id': product.id,
+    });
   }
 
-  // Future<List<Product>> getCustomerProducts(String userId) async {
-  //   List<Product> tempProds = [];
-  //   http.Response prodRes =
-  //       await FirestoreMethods().getCustomerProducts(userId);
+  Future<List<Product>> getCustomerProducts(
+      String userId, String userToken) async {
+    List<Product> tempProds = [];
+    final url = Uri.parse('${baseUrl}customer_products?user_id=$userId');
 
-  //   List<dynamic> docsData = json.decode(prodRes.body);
-  //   print(docsData);
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    });
+    var extractedResponse = json.decode(response.body);
+    if (extractedResponse['success'] == true) {
+      var data = extractedResponse['data'] as List<dynamic>;
+      data.forEach((prod) {
+        List<String> tempCustomers = [];
+        var customers = prod['customers'] as List<dynamic>;
+        customers.forEach((cust) {
+          tempCustomers.add(cust.toString());
+        });
+        tempProds.add(
+          Product(
+            id: prod['id'].toString(),
+            name: prod['name'],
+            length: prod['length'],
+            width: prod['width'],
+            unit: prod['unit'],
+            customers: tempCustomers,
+            categoryId: prod['category_id'].toString(),
+            categoryTitle: prod['category_name'],
+            image: prod['imageUrl'],
+            dateTime: prod['created_at'],
+          ),
+        );
+      });
+      return tempProds;
+    } else {
+      var message = extractedResponse['message'];
+      throw message;
+    }
 
-  //   for (var element in docsData) {
-  //     if (element['document'] == null) {
-  //       continue;
-  //     }
-  //     List<String> customers = [];
-  //     var document = element['document'];
-  //     Map fields = document["fields"];
-  //     String catId = fields["catId"]["stringValue"];
-  //     String catTitle = fields["catTitle"]["stringValue"];
-  //     String imageUrl = fields["imageUrl"]["stringValue"];
-  //     String productName = fields["productName"]["stringValue"];
-  //     String productWidth = fields["productWidth"]["stringValue"];
-  //     String productUnit = fields["productUnit"]["stringValue"];
-  //     String productLength = fields["productLength"]["stringValue"];
-  //     String id = (document["name"] as String).split("products/").last;
-  //     String time = document["updateTime"];
-  //     if (fields['customers'] != null) {
-  //       // print(fields['customers']);
-  //       if (fields['customers']['arrayValue']['values'] != null) {
-  //         var values = fields['customers']['arrayValue']['values'];
-  //         for (var customer in values) {
-  //           customers.add(customer['stringValue']);
-  //         }
-  //       }
-  //     }
+    // print(documents.toString());
+  }
 
-  //     tempProds.add(Product(
-  //         id: id,
-  //         name: productName,
-  //         length: productLength,
-  //         width: productWidth,
-  //         unit: productUnit,
-  //         categoryId: catId,
-  //         categoryTitle: catTitle,
-  //         image: imageUrl,
-  //         dateTime: time));
-  //   }
+  Future<void> deleteCustomerProduct({
+    required String userId,
+    required String prodId,
+    required String userToken,
+  }) async {
+    print(prodId);
+    print(userId);
+    final url = Uri.parse('${baseUrl}delete_customer_product');
 
-  //   return tempProds;
-
-  //   // print(documents.toString());
-  // }
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {
+      'user_id': userId,
+      'product_id': prodId,
+    });
+    print(response.body);
+  }
 }

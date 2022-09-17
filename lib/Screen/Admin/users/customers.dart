@@ -68,6 +68,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             itemCount: customers!.length,
                             itemBuilder: (ctx, index) => InkWell(
                               onTap: () {
+                                print(customers![index].id);
                                 Navigator.of(context).pushNamed(
                                     AdminSideCustomerProductScreen.routeName,
                                     arguments: customers![index]);

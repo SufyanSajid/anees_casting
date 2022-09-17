@@ -43,6 +43,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
       await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
 
+      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
       await Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);
       setState(() {

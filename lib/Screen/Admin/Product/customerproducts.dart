@@ -1,4 +1,5 @@
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
@@ -28,19 +29,21 @@ class _AdminSideCustomerProductScreenState
   bool isFirst = true;
   bool isLoading = false;
   AUser? customer;
+  CurrentUser? currentUser;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
+      currentUser = Provider.of<Auth>(context).currentUser;
       setState(() {
         isLoading = true;
       });
 
       customer = ModalRoute.of(context)!.settings.arguments as AUser;
 
-      // products = await Provider.of<Products>(context, listen: false)
-      //     .getCustomerProducts(customer!.id);
+      products = await Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(customer!.id, currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -62,12 +65,15 @@ class _AdminSideCustomerProductScreenState
           setState(() {
             isLoading = true;
           });
-          // await Provider.of<SentProducts>(context, listen: false)
-          //     .deleteSentProduct(product: prod, userId: cusId);
-          // Provider.of<Products>(context, listen: false)
-          //     .removeCustomer(cusId, prod.id);
-          // products = await Provider.of<Products>(context, listen: false)
-          //     .getCustomerProducts(customer!.id);
+          await Provider.of<Products>(context, listen: false)
+              .deleteCustomerProduct(
+                  prodId: prod.id,
+                  userId: cusId,
+                  userToken: currentUser!.token);
+          Provider.of<Products>(context, listen: false)
+              .removeCustomer(cusId, prod.id);
+          products = await Provider.of<Products>(context, listen: false)
+              .getCustomerProducts(customer!.id, currentUser!.token);
           setState(() {
             isLoading = false;
           });
