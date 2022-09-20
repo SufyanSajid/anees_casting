@@ -7,6 +7,7 @@ import 'package:anees_costing/Widget/input_feild.dart';
 import 'package:anees_costing/Widget/submitbutton.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +33,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
   bool isLoading = false;
   bool isFirst = true;
   CurrentUser? currentUser;
+
+  Icon? _icon;
+
+  _pickIcon() async {
+    IconData? icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackModes: [IconPack.cupertino]);
+
+    _icon = Icon(icon);
+    setState(() {});
+
+    debugPrint('Picked Icon:  $icon');
+  }
 
   @override
   void didChangeDependencies() async {
@@ -170,10 +183,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               SizedBox(
                                 height: height(context) * 2,
                               ),
-                              InputFeild(
-                                hinntText: 'Category Name',
-                                validatior: () {},
-                                inputController: _nameController,
+                              Row(
+                                children: [
+                                  InputFeild(
+                                    hinntText: 'Category Name',
+                                    validatior: () {},
+                                    inputController: _nameController,
+                                  ),
+                                  Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        ElevatedButton(
+                                          onPressed: _pickIcon,
+                                          child: const Text('Open IconPicker'),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          child: _icon ?? Container(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
                                 height: height(context) * 2,
