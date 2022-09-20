@@ -25,12 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() async {
     if (isFirst) {
       await Future.delayed(Duration(seconds: 2)).then((value) async {
-        bool isLogin = await Provider.of<Auth>(context, listen: false)
-            .tryAutoLogin()
-            .catchError((error) {
-          //  Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-          print('error in autologin');
-        });
+        bool isLogin =
+            await Provider.of<Auth>(context, listen: false).tryAutoLogin();
         print(isLogin);
         currentUser = Provider.of<Auth>(context, listen: false).currentUser;
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {

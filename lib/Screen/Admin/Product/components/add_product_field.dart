@@ -200,7 +200,10 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         newProduct.image = newImageUrl;
       }
 
-      await provider.updateProduct(product: newProduct);
+      await provider.updateProduct(
+          product: newProduct,
+          userToken: currentUser!.token,
+          imageExtension: imageExtention!);
       await provider.fetchAndUpdateProducts(currentUser!.token);
 
       clearControllersAndImage();

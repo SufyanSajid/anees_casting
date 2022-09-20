@@ -234,7 +234,26 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> updateProduct({required Product product}) async {}
+  Future<void> updateProduct(
+      {required Product product,
+      required String userToken,
+      required String imageExtension}) async {
+    final url = Uri.parse('${baseUrl}edit_product');
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {
+      'name': product.name,
+      'image': product.image,
+      'length': product.length,
+      'width': product.width,
+      'unit': product.unit,
+      'ext': imageExtension,
+      'category_id': product.categoryId,
+    });
+
+    print(response.body);
+  }
 
   Future<void> sendProductToUser({
     required Product product,

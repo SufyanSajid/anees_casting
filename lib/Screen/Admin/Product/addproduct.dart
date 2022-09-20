@@ -111,19 +111,27 @@ class _AddProductState extends State<AddProduct> {
     });
 
     if (productNotEmpty()) {
-      Product newProduct = prodObj();
+      Product newProduct = Product(
+        id: "",
+        name: _prodNameController.text.trim(),
+        length: _prodLengthController.text.trim(),
+        width: _prodWidthController.text.trim(),
+        unit: prodUnit,
+        categoryId: category!.id,
+        categoryTitle: category!.title,
+        image: img,
+        dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
+      );
 
       newProduct.id = prodId;
       newProduct.image = imageUrl;
 
       var provider = Provider.of<Products>(context, listen: false);
 
-      await StorageMethods().updateImage(
-        imageURl: newProduct.image.split("?").first,
-        file: img,
-      );
-
-      await provider.updateProduct(product: newProduct);
+      await provider.updateProduct(
+          product: newProduct,
+          userToken: currentUser!.token,
+          imageExtension: imageExtention!);
 
       clearControllersAndImage();
     }
@@ -294,7 +302,7 @@ class _AddProductState extends State<AddProduct> {
                               args!["action"] == "add"
                                   ? _addProduct(base64Image)
                                   : _editProduct(
-                                      img: image,
+                                      img: base64Image,
                                       prodId: (args!["product"] as Product).id,
                                       imageUrl:
                                           (args!["product"] as Product).image);
