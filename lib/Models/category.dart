@@ -47,6 +47,14 @@ class Categories with ChangeNotifier {
     return [..._searchedCategories];
   }
 
+  Category? getParent(String id) {
+    return _categories.firstWhere((element) => element.id == id);
+  }
+
+  List<Category> getChildCategories(String catId) {
+    return _categories.where((cat) => catId == cat.parentId).toList();
+  }
+
   Future<void> uploadCatagory(
       {required String parentId,
       required String title,
@@ -139,6 +147,8 @@ class Categories with ChangeNotifier {
         _categories = tempCat;
         _parentCategories = tempParentCat;
         _childCategories = tempChildCat;
+
+        print(_categories.length);
 
         notifyListeners();
       } else {

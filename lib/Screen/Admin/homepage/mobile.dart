@@ -3,6 +3,7 @@ import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Screen/Admin/category/category.dart';
 import 'package:anees_costing/Screen/Admin/Product/product.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
@@ -65,6 +66,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
+    var products = Provider.of<Products>(context, listen: false).products;
+    var categories = Provider.of<Categories>(context, listen: false).categories;
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
@@ -174,7 +177,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                 DisplayBox(
                   height: height,
                   title: 'Products',
-                  value: isLoading ? '...' : count!.productsCount.toString(),
+                  value: isLoading ? '...' : products.length.toString(),
                 ),
                 Container(
                   height: height * 5,
@@ -244,6 +247,17 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   title: 'Categories',
                   subtitle: 'Click to view',
                   icon: Icons.document_scanner_sharp,
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(CategoryListScreen.routeName);
+                  },
+                ),
+                QuickChecks(
+                  width: width,
+                  height: height,
+                  title: 'Categories List',
+                  subtitle: 'Click to view',
+                  icon: Icons.list,
                   onTap: () {
                     Navigator.of(context).pushNamed(CategoryScreen.routeName);
                   },

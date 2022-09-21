@@ -2,6 +2,9 @@ import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
+import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
+import 'package:anees_costing/Screen/Admin/Design/child_cat.dart';
+import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
@@ -84,6 +87,9 @@ class MyApp extends StatelessWidget {
           AddUser.routeName: (ctx) => AddUser(),
           CustomerProductScreen.routeName: (ctx) => CustomerProductScreen(),
           ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
+          CategoryListScreen.routeName: (ctx) => CategoryListScreen(),
+          CategoryChildListScreen.routeName: (ctx) => CategoryChildListScreen(),
+          CatProductScreen.routeName: (ctx) => CatProductScreen(),
         },
       ),
     );

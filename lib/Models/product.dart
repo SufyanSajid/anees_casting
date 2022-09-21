@@ -33,6 +33,7 @@ class Product {
 
 class Products with ChangeNotifier {
   List<Product> _products = [];
+  List<Product> _catProducts = [];
   Product? drawerProduct;
   String? pageToken;
 
@@ -42,6 +43,10 @@ class Products with ChangeNotifier {
 
   List<Product> get products {
     return [..._products];
+  }
+
+  List<Product> get catProducts {
+    return [..._catProducts];
   }
 
   Future<void> addProduct({
@@ -148,6 +153,44 @@ class Products with ChangeNotifier {
     } else {
       var message = extractedData['message'];
       throw message;
+    }
+  }
+
+  Future<void> getCatProducts(
+      {required String userToken, required String catId}) async {
+    List<Product> tempProds = [];
+    final url = Uri.parse('${baseUrl}products?cat_id=$catId');
+    print(url);
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    });
+    var extractedData = json.decode(response.body);
+
+    if (extractedData['success'] == true) {
+      var data = extractedData['data'] as List<dynamic>;
+      data.forEach((prod) {
+        List<String> tempCustomers = [];
+        var customers = prod['customers'] as List<dynamic>;
+        customers.forEach((cust) {
+          tempCustomers.add(cust.toString());
+        });
+        tempProds.add(
+          Product(
+            id: prod['id'].toString(),
+            name: prod['name'],
+            length: prod['length'],
+            width: prod['width'],
+            unit: prod['unit'],
+            customers: tempCustomers,
+            categoryId: prod['category_id'].toString(),
+            categoryTitle: prod['category_name'],
+            image: prod['imageUrl'],
+            dateTime: prod['created_at'],
+          ),
+        );
+        _catProducts = tempProds;
+        notifyListeners();
+      });
     }
   }
 

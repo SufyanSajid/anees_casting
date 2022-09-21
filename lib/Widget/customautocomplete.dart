@@ -131,7 +131,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
             //     ),
             //   ),
             child: Container(
-              width: 250,
+              width: width(context) * 60,
               decoration: BoxDecoration(
                   borderRadius: customRadius, color: primaryColor),
               child: ListView.builder(

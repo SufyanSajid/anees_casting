@@ -12,10 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/dailog.dart';
-import '../../../Helpers/firestore_methods.dart';
-import '../../../Models/counts.dart';
 import '../../../Widget/appbar.dart';
-import '../Product/content.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = '/categoryScreen';
@@ -176,41 +173,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 height: height(context) * 4,
                               ),
                               CustomAutoComplete(
-                                  categories: parentCategories,
+                                  categories: categories,
                                   onChange: (Category cat) {
                                     parentCat = cat;
                                   }),
                               SizedBox(
                                 height: height(context) * 2,
                               ),
-                              Row(
-                                children: [
-                                  InputFeild(
-                                    hinntText: 'Category Name',
-                                    validatior: () {},
-                                    inputController: _nameController,
-                                  ),
-                                  Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        ElevatedButton(
-                                          onPressed: _pickIcon,
-                                          child: const Text('Open IconPicker'),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        AnimatedSwitcher(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          child: _icon ?? Container(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              InputFeild(
+                                hinntText: 'Category Name',
+                                validatior: () {},
+                                inputController: _nameController,
                               ),
                               SizedBox(
                                 height: height(context) * 2,
@@ -346,26 +319,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.red,
-                                      ))
-                                  //  PopupMenuButton(
-                                  //   icon: Icon(
-                                  //     Icons.more_vert,
-                                  //     color: btnbgColor.withOpacity(1),
-                                  //   ),
-                                  //   itemBuilder: (BuildContext context) =>
-                                  //       <PopupMenuEntry>[
-                                  //     PopupMenuItem(
-                                  //       child: PopupItem(
-                                  //         icon: Icons.delete,
-                                  //         text: 'Delete',
-                                  //         onTap: () {
-                                  //           deleteCat(categories[index]);
-                                  //         },
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  ),
+                                      ))),
                             ),
                           );
                         },

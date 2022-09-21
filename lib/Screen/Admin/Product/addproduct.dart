@@ -68,6 +68,18 @@ class _AddProductState extends State<AddProduct> {
 
   void _addProduct(var img) async {
     print(img);
+
+    if (category != null) {
+      List<Category> childs = Provider.of<Categories>(context, listen: false)
+          .getChildCategories(category!.id);
+
+      if (childs.isNotEmpty) {
+        showSnackBar(
+            context, "You can't assign ${category!.title} as it have child");
+
+        return;
+      }
+    }
     if (productNotEmpty()) {
       setState(() {
         isLoading = true;
@@ -152,7 +164,7 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
-        Provider.of<Categories>(context, listen: true).categories;
+        Provider.of<Categories>(context, listen: true).childCategories;
 
     return Scaffold(
       backgroundColor: backgroundColor,

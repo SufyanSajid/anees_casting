@@ -1,41 +1,30 @@
-import 'package:anees_costing/Functions/showloader.dart';
-import 'package:anees_costing/Helpers/firestore_methods.dart';
-import 'package:anees_costing/Models/auth.dart';
-import 'package:anees_costing/Screen/Admin/Product/content.dart';
-import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
-import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
-import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
-import 'package:anees_costing/Widget/drawer.dart';
-import 'package:anees_costing/Widget/send_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:anees_costing/Models/category.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../Widget/adaptive_indecator.dart';
-import '/Helpers/storage_methods.dart';
-import 'addproduct.dart';
-
-import '/Models/product.dart';
-import '/Widget/appbar.dart';
-import '/Widget/customautocomplete.dart';
-import '/Widget/dropDown.dart';
-import '/Widget/input_feild.dart';
-import '/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../Models/category.dart';
+import '../../../Models/auth.dart';
+import '../../../Models/product.dart';
+import '../../../Widget/adaptive_indecator.dart';
+import '../../../Widget/appbar.dart';
+import '../../../Widget/input_feild.dart';
+import '../../../Widget/send_button.dart';
+import '../../../contant.dart';
+import '../Product/addproduct.dart';
+import '../Product/content.dart';
+import '../Product/functions/getsearchedproducts.dart';
+import '../Product/product_detail.dart';
 
-class ProductScreen extends StatefulWidget {
-  static const routeName = '/productscreen';
-
-  ProductScreen({Key? key}) : super(key: key);
+class CatProductScreen extends StatefulWidget {
+  static const routeName = '/cat-prod';
+  const CatProductScreen({super.key});
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<CatProductScreen> createState() => _CatProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _CatProductScreenState extends State<CatProductScreen> {
   final _productController = TextEditingController();
   bool isFirst = true;
   bool isLoading = false;
@@ -43,14 +32,19 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void didChangeDependencies() {
+    print(123);
+    // TODO: implement didChangeDependencies
     if (isFirst) {
+      print(456);
+      Category cat = ModalRoute.of(context)!.settings.arguments as Category;
       currentUser = Provider.of<Auth>(context).currentUser;
-      if (Provider.of<Products>(context, listen: false).products.isEmpty) {
+      if (Provider.of<Products>(context, listen: false).catProducts.isEmpty) {
+        print(789);
         setState(() {
           isLoading = true;
         });
         Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts(currentUser!.token)
+            .getCatProducts(userToken: currentUser!.token, catId: cat.id)
             .then((value) {
           setState(() {
             isLoading = false;
@@ -109,25 +103,9 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   @override
-  void dispose() {
-    _productController.dispose();
-    super.dispose();
-  }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
   Widget build(BuildContext context) {
-    List<Product> products = Provider.of<Products>(context).products;
-    List<Category> categories =
-        Provider.of<Categories>(context, listen: false).categories;
-
-    String? token = Provider.of<Products>(context).pageToken;
-
+    List<Product> products = Provider.of<Products>(context).catProducts;
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: AppDrawer(),
-      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -143,20 +121,11 @@ class _ProductScreenState extends State<ProductScreen> {
                 },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {
-                  _scaffoldKey.currentState!.openDrawer();
+                  // _scaffoldKey.currentState!.openDrawer();
                 },
               ),
               SizedBox(
                 height: height(context) * 2,
-              ),
-              CustomAutoComplete(
-                categories: categories,
-                onChange: (Category category) {
-                  getProductsByCatId(category.id, context);
-                },
-              ),
-              SizedBox(
-                height: height(context) * 1,
               ),
               Row(
                 children: [
@@ -226,7 +195,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                       },
                                       child: ExtendedImage.network(
                                         products[index].image,
-                                        // height: height(context) * 10,
                                         fit: BoxFit.cover,
                                         cache: true,
                                       )
@@ -251,7 +219,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                         alignment: Alignment.bottomCenter,
                                         child: Text(
                                           products[index].name,
-                                          textAlign: TextAlign.start,
                                           style: GoogleFonts.righteous(
                                             color: headingColor,
                                             fontWeight: FontWeight.w500,
@@ -329,52 +296,6 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ),
       ),
-      floatingActionButton: currentUser!.role!.toLowerCase() == 'admin'
-          ? Row(
-              mainAxisAlignment: token != null
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 30),
-                  decoration: BoxDecoration(
-                      gradient: customGradient, shape: BoxShape.circle),
-                  child: FloatingActionButton(
-                    heroTag: DateTime.now().microsecond,
-                    backgroundColor: Colors.transparent,
-                    child: const Icon(Icons.add),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AddProduct.routeName, arguments: {
-                        "action": "add",
-                      });
-                    },
-                  ),
-                ),
-                if (token != null)
-                  Container(
-                    decoration: BoxDecoration(
-                        gradient: customGradient, shape: BoxShape.circle),
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.transparent,
-                      child: const Text("More"),
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        Provider.of<Products>(context, listen: false)
-                            .fetchAndUpdateProducts(currentUser!.token)
-                            .then((value) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        });
-                      },
-                    ),
-                  ),
-              ],
-            )
-          : null,
     );
   }
 }
