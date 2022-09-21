@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/auth.dart';
+
 class ActivityLogWebContent extends StatefulWidget {
   ActivityLogWebContent({Key? key}) : super(key: key);
 
@@ -22,14 +24,17 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
   bool isFirst = true;
   List<Log>? logs;
   bool isLoading = false;
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() async {
     if (isFirst) {
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       setState(() {
         isLoading = true;
       });
-      await Provider.of<Logs>(context, listen: false).fetchAndSetLogs();
+      await Provider.of<Logs>(context, listen: false)
+          .fetchAndSetLogs(userToken: currentUser!.token);
       setState(() {
         isLoading = false;
       });

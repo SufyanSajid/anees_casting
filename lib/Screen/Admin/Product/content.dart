@@ -198,7 +198,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: width1 < 900 ? 3 : 4,
+                    crossAxisCount: 4,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
                   ),
@@ -212,34 +212,40 @@ class _ProductWebContentState extends State<ProductWebContent> {
                           builder: (ctx) => AlertDialog(
                             content: Hero(
                               tag: products[index].id,
-                              child: Stack(
-                                alignment: Alignment.topCenter,
+                              child: Column(
+                                // alignment: Alignment.topCenter,
                                 children: [
-                                  ExtendedImage.network(
-                                    products[index].image,
-                                    cache: true,
+                                  Expanded(
+                                    flex: 9,
+                                    child: ExtendedImage.network(
+                                      products[index].image,
+                                      cache: true,
+                                    ),
                                   ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Table(
-                                      children: [
-                                        TableRow(children: [
-                                          Text(
-                                              "Title: ${products[index].name}"),
-                                          // Text(
-                                          //     "Cat:  ${products[index].categoryTitle}"),
-                                          Text(
-                                              "Unit:   ${products[index].unit}")
-                                        ]),
-                                        TableRow(children: [
-                                          Text(
-                                              "Length: ${products[index].length}"),
-                                          Text(
-                                              "Width:  ${products[index].width}"),
-                                          Text(
-                                              "Date:   ${products[index].dateTime} ")
-                                        ])
-                                      ],
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: Table(
+                                        children: [
+                                          TableRow(children: [
+                                            Text(
+                                                "Title: ${products[index].name}"),
+                                            Text(
+                                                "Cat:  ${products[index].categoryTitle}"),
+                                            Text(
+                                                "Unit:   ${products[index].unit}")
+                                          ]),
+                                          TableRow(children: [
+                                            Text(
+                                                "Length: ${products[index].length}"),
+                                            Text(
+                                                "Width:  ${products[index].width}"),
+                                            Text(
+                                                "Date:   ${products[index].dateTime} ")
+                                          ])
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],

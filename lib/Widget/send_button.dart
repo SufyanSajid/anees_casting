@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -38,21 +40,21 @@ class _SendProductButtonState extends State<SendProductButton> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Row(
-                  children: [
-                    Expanded(
-                      flex: 15,
-                      child: Text(
+                title: SizedBox(
+                  width: Platform.isAndroid || Platform.isIOS
+                      ? width(context) * 100
+                      : width(context) * 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
                         'Select Users',
                         style: GoogleFonts.righteous(
                           color: headingColor,
                           fontSize: 30,
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
+                      IconButton(
                           onPressed: () {
                             setState(() {
                               isSended = false;
@@ -63,9 +65,9 @@ class _SendProductButtonState extends State<SendProductButton> {
                             Icons.cancel_rounded,
                             color: Colors.red,
                             size: height(context) * 3.5,
-                          )),
-                    )
-                  ],
+                          ))
+                    ],
+                  ),
                 ),
                 content: StatefulBuilder(builder: (context, setState) {
                   Product productToSend = Provider.of<Products>(context)
@@ -183,6 +185,7 @@ class _SendProductButtonState extends State<SendProductButton> {
                                                           userToken:
                                                               currentUser!
                                                                   .token);
+
                                                   setState(
                                                     () {
                                                       isSending = false;
@@ -197,6 +200,24 @@ class _SendProductButtonState extends State<SendProductButton> {
                                                               .toString(),
                                                           productToSend.id
                                                               .toString());
+                                                  Provider.of<Logs>(context,
+                                                          listen: false)
+                                                      .addLog(
+                                                          log: Log(
+                                                              id: DateTime.now()
+                                                                  .microsecond
+                                                                  .toString(),
+                                                              userid:
+                                                                  currentUser
+                                                                      .id,
+                                                              userName:
+                                                                  currentUser
+                                                                      .name!,
+                                                              content:
+                                                                  '${currentUser.name} shared design ${productToSend.name} with ${customers[index].name}',
+                                                              logType: 'Share'),
+                                                          userToken: currentUser
+                                                              .token);
 
                                                   // Navigator.of(ctx).pop();
                                                 },

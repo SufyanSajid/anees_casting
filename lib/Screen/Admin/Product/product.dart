@@ -1,5 +1,4 @@
 import 'package:anees_costing/Functions/showloader.dart';
-import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
@@ -7,7 +6,6 @@ import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/Widget/send_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -255,7 +253,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           style: GoogleFonts.righteous(
                                             color: headingColor,
                                             fontWeight: FontWeight.w500,
-                                            fontSize: 20,
+                                            fontSize: 16,
                                           ),
                                         ),
                                       ),

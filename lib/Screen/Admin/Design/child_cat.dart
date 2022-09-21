@@ -120,7 +120,7 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                                       height: height(context) * 1,
                                     ),
                                     Text(
-                                      categories[index].title,
+                                      categories[index].title.split('-').first,
                                       style: TextStyle(
                                           color: headingColor,
                                           fontWeight: FontWeight.w700,

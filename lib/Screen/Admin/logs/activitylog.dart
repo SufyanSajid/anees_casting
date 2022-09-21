@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
@@ -20,13 +21,16 @@ class ActivityLogScreen extends StatefulWidget {
 class _ActivityLogScreenState extends State<ActivityLogScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLoading = false;
+  CurrentUser? currentUser;
   @override
   void didChangeDependencies() async {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     setState(() {
       isLoading = true;
     });
     // TODO: implement didChangeDependencies
-    await Provider.of<Logs>(context, listen: false).fetchAndSetLogs();
+    await Provider.of<Logs>(context, listen: false)
+        .fetchAndSetLogs(userToken: currentUser!.token);
     setState(() {
       isLoading = false;
     });

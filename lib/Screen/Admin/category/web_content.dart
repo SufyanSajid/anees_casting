@@ -87,11 +87,9 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             setState(() {
               isLoading = true;
             });
-            FirestoreMethods()
-                .deleteRecord(collection: 'categories', prodId: cat.id)
+            Provider.of<Categories>(context, listen: false)
+                .deleteCategory(cat.id, currentUser!.token)
                 .then((value) async {
-              Provider.of<Counts>(context, listen: false)
-                  .decreaseCount(category: 1);
               await Provider.of<Categories>(context, listen: false)
                   .fetchAndUpdateCat(currentUser!.token);
               setState(() {
@@ -193,7 +191,9 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                 title: categories[index].title,
                               ),
                               second: RowItem(
-                                title: categories[index].parentTitle,
+                                title: categories[index].parentTitle.isEmpty
+                                    ? 'P'
+                                    : categories[index].parentTitle,
                               ),
                               third: InkWell(
                                 onTap: () {

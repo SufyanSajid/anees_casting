@@ -400,16 +400,21 @@ class _CustomerProductsState extends State<CustomerProducts> {
   bool productLoading = false;
   bool isFirst = true;
   List<Product> customerProducts = [];
+  CurrentUser? currentUser;
 
   @override
   void didChangeDependencies() async {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     // TODO: implement didChangeDependencies
     if (isFirst) {
       setState(() {
         productLoading = true;
       });
-      // customerProducts = await Provider.of<Products>(context, listen: false)
-      //     .getCustomerProducts(widget.userId);
+      customerProducts = await Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(
+        widget.userId,
+        currentUser!.token,
+      );
       setState(() {
         productLoading = false;
       });

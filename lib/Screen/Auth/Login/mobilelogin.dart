@@ -149,22 +149,22 @@ class _LoginFeildsState extends State<LoginFeilds> {
       });
       print('logged in');
     }).then((value) async {
-      // final DateTime now = DateTime.now();
-      // final DateFormat dayFormatter = DateFormat('yyyy-MM-dd');
-      // final DateFormat timeFormatter = DateFormat('h:mm a');
-      // final String day = dayFormatter.format(now);
-      // final String time = timeFormatter.format(now);
+      final DateTime now = DateTime.now();
+      final DateFormat dayFormatter = DateFormat('yyyy-MM-dd');
+      final DateFormat timeFormatter = DateFormat('h:mm a');
+      final String day = dayFormatter.format(now);
+      final String time = timeFormatter.format(now);
 
       CurrentUser currentUser =
           Provider.of<Auth>(context, listen: false).currentUser!;
-      // Provider.of<Logs>(context, listen: false).addLog(Log(
-      //     id: DateTime.now().microsecond.toString(),
-      //     userid: currentUser.id,
-      //     userName: currentUser.name!,
-      //     content: '${currentUser.name} Loged in at ${time} on ${day}',
-      //     logType: 'Activity'));
-      // bool isBlocked = await Provider.of<Auth>(context, listen: false)
-      //     .isBlocked(currentUser.id);
+      Provider.of<Logs>(context, listen: false).addLog(
+          log: Log(
+              id: DateTime.now().microsecond.toString(),
+              userid: currentUser.id,
+              userName: currentUser.name!,
+              content: '${currentUser.name} Loged in at ${time} on ${day}',
+              logType: 'Activity'),
+          userToken: currentUser.token);
 
       if (currentUser.role!.toLowerCase() == '0') {
         Navigator.of(context)

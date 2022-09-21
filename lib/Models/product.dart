@@ -241,21 +241,6 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<bool> _isProductExist(
-  //     {required String title, required String field}) async {
-  //   http.Response prodRes =
-  //       await FirestoreMethods().searchProduct(title, field);
-
-  //   List<dynamic> docsData = json.decode(prodRes.body);
-
-  //   for (var element in docsData) {
-  //     if (element['document'] == null) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
   Future<void> deleteProduct(String prodId, String userToken) async {
     try {
       final url = Uri.parse('${baseUrl}products/$prodId');

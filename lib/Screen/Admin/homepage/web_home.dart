@@ -43,6 +43,8 @@ class _WebHomeState extends State<WebHome> {
 
       BuildContext ctx = context;
 
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+
       if (Provider.of<Categories>(ctx, listen: false).categories.isEmpty) {
         await Provider.of<Categories>(ctx, listen: false)
             .fetchAndUpdateCat(currentUser!.token);
@@ -67,7 +69,6 @@ class _WebHomeState extends State<WebHome> {
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;
     users = Provider.of<Users>(context, listen: false).users;
-    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
     Widget homeContent = Column(
       children: [
