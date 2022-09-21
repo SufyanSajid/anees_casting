@@ -172,11 +172,12 @@ class _ProductWebContentState extends State<ProductWebContent> {
           dropDown: SizedBox(
             // height: height(context),
             width: 250,
-            child: CustomAutoComplete(
-                onChange: (Category val) {
-                  getProductsByCatId(val.id, context);
-                },
-                categories: categories),
+            child: Container(),
+            // CustomAutoComplete(
+            //     onChange: (Category val) {
+            //       getProductsByCatId(val.id, context);
+            //     },
+            //     categories: categories),
           ),
         ),
         //Filter bar

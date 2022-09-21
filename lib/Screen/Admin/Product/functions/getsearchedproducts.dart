@@ -11,6 +11,21 @@ getSearchedProduct(String search, BuildContext context) {
         .fetchAndUpdateProducts(currentUser!.token);
   } else {
     Provider.of<Products>(context, listen: false)
-        .searchProduct(search, 'productName');
+        .searchProduct(title: search, userToken: currentUser!.token);
+  }
+}
+
+getSearchedProductByCat({
+  required String search,
+  required BuildContext context,
+  required String catId,
+}) {
+  var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+  if (search.isEmpty) {
+    Provider.of<Products>(context, listen: false)
+        .getCatProducts(catId: catId, userToken: currentUser!.token);
+  } else {
+    Provider.of<Products>(context, listen: false).searchProduct(
+        title: search, userToken: currentUser!.token, catId: catId);
   }
 }

@@ -74,19 +74,43 @@ class Auth with ChangeNotifier {
   //   return docsData[0]["document"]["fields"]["isBlocked"]["booleanValue"];
   // }
 
-  // Future<void> changeUserName(String name, String userId) async {
-  //   var body = jsonEncode({
-  //     "fields": {
-  //       "name": {"stringValue": name},
-  //     }
-  //   });
-  //   var response = await FirestoreMethods().updateSingleField(
-  //       collection: 'users',
-  //       documentId: userId,
-  //       fieldName: 'name',
-  //       bodyData: body);
-  //   print(response.body);
-  // }
+  Future<void> changeUserName(
+      {required String name,
+      required String userId,
+      required String phone,
+      required String userToken}) async {
+    final url = Uri.parse('${baseUrl}edit_user');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $userToken',
+      },
+      body: {
+        'user_id': userId,
+        'name': name,
+        'phone': phone,
+      },
+    );
+    print(response.body);
+  }
+
+  Future<void> changePassword(
+      {required String password,
+      required String userId,
+      required String userToken}) async {
+    final url = Uri.parse('${baseUrl}change_password');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $userToken',
+      },
+      body: {
+        'user_id': userId,
+        'new_password': password,
+      },
+    );
+    print(response.body);
+  }
 
   Future<void> LoginWithEmailAndPassword(
     String email,

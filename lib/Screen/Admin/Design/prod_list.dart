@@ -29,6 +29,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
   bool isFirst = true;
   bool isLoading = false;
   CurrentUser? currentUser;
+  Category? cat;
 
   @override
   void didChangeDependencies() {
@@ -36,7 +37,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
     // TODO: implement didChangeDependencies
     if (isFirst) {
       print(456);
-      Category cat = ModalRoute.of(context)!.settings.arguments as Category;
+      cat = ModalRoute.of(context)!.settings.arguments as Category;
       currentUser = Provider.of<Auth>(context).currentUser;
       if (Provider.of<Products>(context, listen: false).catProducts.isEmpty) {
         print(789);
@@ -44,7 +45,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
           isLoading = true;
         });
         Provider.of<Products>(context, listen: false)
-            .getCatProducts(userToken: currentUser!.token, catId: cat.id)
+            .getCatProducts(userToken: currentUser!.token, catId: cat!.id)
             .then((value) {
           setState(() {
             isLoading = false;
@@ -136,7 +137,8 @@ class _CatProductScreenState extends State<CatProductScreen> {
                       validatior: () {},
                       inputController: _productController,
                       submitted: (value) {
-                        getSearchedProduct(value, context);
+                        getSearchedProductByCat(
+                            search: value, context: context, catId: cat!.id);
                       },
                     ),
                   ),

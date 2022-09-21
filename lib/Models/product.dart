@@ -199,44 +199,60 @@ class Products with ChangeNotifier {
         await FirestoreMethods().getChunkRecords(collection: "products");
   }
 
-  Future<void> searchProduct(String title, String field) async {
+  Future<void> searchProduct({
+    required String title,
+    required String userToken,
+    String? catId,
+  }) async {
+    print('yeh ha cat id $catId');
     List<Product> tempProds = [];
-    List<Product> customerProducts = [];
-    http.Response prodRes =
-        await FirestoreMethods().searchProduct(title, field);
-
-    List<dynamic> docsData = json.decode(prodRes.body);
-
-    for (var element in docsData) {
-      if (element['document'] == null) {
-        break;
-      }
-
-      Map fields = element['document']["fields"];
-      String catId = fields["catId"]["stringValue"];
-      String catTitle = fields["catTitle"]["stringValue"];
-      String imageUrl = fields["imageUrl"]["stringValue"];
-      String productName = fields["productName"]["stringValue"];
-      String productWidth = fields["productWidth"]["stringValue"];
-      String productUnit = fields["productUnit"]["stringValue"];
-      String productLength = fields["productLength"]["stringValue"];
-      String id =
-          (element['document']["name"] as String).split("products/").last;
-      String time = element['document']["updateTime"];
-
-      tempProds.add(Product(
-          id: id,
-          name: productName,
-          length: productLength,
-          width: productWidth,
-          unit: productUnit,
-          categoryId: catId,
-          categoryTitle: catTitle,
-          image: imageUrl,
-          dateTime: time));
+    var url;
+    var cat_id = catId == null ? '' : catId;
+    if (cat_id == '') {
+      url = Uri.parse('${baseUrl}search_products?search=$title');
+    } else {
+      print('yes');
+      url =
+          Uri.parse('${baseUrl}search_products?cat_id=${cat_id}&search=$title');
     }
+    var response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $userToken',
+      },
+    );
+    var extractedData = json.decode(response.body);
 
-    _products = tempProds;
+    if (extractedData['success'] == true) {
+      var data = extractedData['data'] as List<dynamic>;
+      data.forEach((prod) {
+        List<String> tempCustomers = [];
+        var customers = prod['customers'] as List<dynamic>;
+        customers.forEach((cust) {
+          tempCustomers.add(cust.toString());
+        });
+        tempProds.add(
+          Product(
+            id: prod['id'].toString(),
+            name: prod['name'],
+            length: prod['length'],
+            width: prod['width'],
+            unit: prod['unit'],
+            customers: tempCustomers,
+            categoryId: prod['category_id'].toString(),
+            categoryTitle: prod['category_name'],
+            image: prod['imageUrl'],
+            dateTime: prod['created_at'],
+          ),
+        );
+        if (cat_id == '') {
+          _products = tempProds;
+        } else {
+          _catProducts = tempProds;
+        }
+        notifyListeners();
+      });
+    }
 
     notifyListeners();
   }

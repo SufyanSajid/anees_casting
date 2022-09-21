@@ -48,22 +48,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error: Empty Feilds'),
       ));
     } else {
-      // setState(() {
-      //   isLoading = true;
-      // });
-      // Provider.of<Auth>(context, listen: false)
-      //     .changeUserName(
-      //         '${_firstNameController.text} ${_lastNameController.text}',
-      //         currentUser.id)
-      //     .then((value) {
-      //   setState(() {
-      //     isLoading = false;
-      //   });
-      // });
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Auth>(context, listen: false)
+          .changeUserName(
+              name: '${_firstNameController.text} ${_lastNameController.text}',
+              userId: currentUser.id,
+              phone: currentUser.phone,
+              userToken: currentUser!.token)
+          .then((value) {
+        _firstNameController.clear();
+
+        _lastNameController.clear();
+        setState(() {
+          isLoading = false;
+        });
+      });
     }
   }
 
@@ -83,26 +88,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         isLoading = true;
       });
-      FirebaseAuth()
+      Provider.of<Auth>(context, listen: false)
           .changePassword(
-              password: _newPasswordController.text.trim(),
-              userId: currentUser.token)
+        userId: currentUser!.id,
+        password: _newPasswordController.text.trim(),
+        userToken: currentUser!.token,
+      )
           .then((value) {
-        setState(() {
-          isLoading = false;
-          _newPasswordController.clear();
-          _confirmPasswordController.clear();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Changed: Password Changed'),
-          ));
-        });
-      }).catchError((error) {
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
         setState(() {
           isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('$error:Login again to change pass'),
-        ));
       });
     }
   }

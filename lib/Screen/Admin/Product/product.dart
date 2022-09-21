@@ -147,15 +147,15 @@ class _ProductScreenState extends State<ProductScreen> {
               SizedBox(
                 height: height(context) * 2,
               ),
-              CustomAutoComplete(
-                categories: categories,
-                onChange: (Category category) {
-                  getProductsByCatId(category.id, context);
-                },
-              ),
-              SizedBox(
-                height: height(context) * 1,
-              ),
+              // CustomAutoComplete(
+              //   categories: categories,
+              //   onChange: (Category category) {
+              //     getProductsByCatId(category.id, context);
+              //   },
+              // ),
+              // SizedBox(
+              //   height: height(context) * 1,
+              // ),
               Row(
                 children: [
                   Expanded(

@@ -60,14 +60,16 @@ class Logs with ChangeNotifier {
   }
 
   Future<void> addLog({required Log log, required String userToken}) async {
+    print(log.logType);
     final url = Uri.parse('${baseUrl}logs');
+    print(url);
 
     var response = await http.post(url, headers: {
       'Authorization': 'Bearer $userToken',
     }, body: {
       'type': log.logType.toString(),
       'content': log.content,
-      'user_id': log..userid,
+      'user_id': log.userid,
     });
 
     print(response.body);
