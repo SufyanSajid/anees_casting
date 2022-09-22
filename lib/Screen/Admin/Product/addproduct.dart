@@ -41,11 +41,13 @@ class _AddProductState extends State<AddProduct> {
   String? imageExtention;
   File? image123;
   String? editImage;
-  String? base64Image;
+  String base64Image = '';
   String? downloadImgUrl;
   bool isLoading = false;
   Map<String, dynamic>? args;
   CurrentUser? currentUser;
+  String editCat = '';
+  String editCatId = '';
 
   @override
   void didChangeDependencies() {
@@ -59,6 +61,8 @@ class _AddProductState extends State<AddProduct> {
         _prodLengthController.text = prod.length;
         _prodWidthController.text = prod.width;
         editImage = prod.image;
+        editCat = prod.categoryTitle;
+        editCatId = prod.categoryId;
       }
       Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
@@ -124,26 +128,24 @@ class _AddProductState extends State<AddProduct> {
 
     if (productNotEmpty()) {
       Product newProduct = Product(
-        id: "",
+        id: prodId,
         name: _prodNameController.text.trim(),
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
-        categoryId: category!.id,
-        categoryTitle: category!.title,
+        categoryId: category == null ? editCatId : category!.id,
+        categoryTitle: category == null ? editCat : category!.title,
         image: img,
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
 
-      newProduct.id = prodId;
-      newProduct.image = imageUrl;
-
       var provider = Provider.of<Products>(context, listen: false);
 
       await provider.updateProduct(
-          product: newProduct,
-          userToken: currentUser!.token,
-          imageExtension: imageExtention!);
+        product: newProduct,
+        userToken: currentUser!.token,
+        imageExtension: imageExtention == null ? '' : imageExtention!,
+      );
 
       clearControllersAndImage();
     }
@@ -205,7 +207,12 @@ class _AddProductState extends State<AddProduct> {
                                 style: BorderStyle.solid,
                               )),
                           child: args!['action'] == 'edit'
-                              ? Image.network(editImage!)
+                              ? image != null
+                                  ? Image.memory(
+                                      image!,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Image.network(editImage!)
                               : image != null
                                   ? Image.memory(
                                       image!,
@@ -233,6 +240,7 @@ class _AddProductState extends State<AddProduct> {
                                   base64Image = base64Encode(
                                       File(selectedImage.path!)
                                           .readAsBytesSync());
+                                  print('this is base $base64Image');
                                   imageExtention =
                                       result1.files.first.extension;
 
@@ -250,6 +258,7 @@ class _AddProductState extends State<AddProduct> {
                     ),
                     CustomAutoComplete(
                       categories: categories,
+                      firstSelction: editCat,
                       onChange: (Category cat) {
                         category = cat;
                       },
@@ -317,9 +326,12 @@ class _AddProductState extends State<AddProduct> {
                                       img: base64Image,
                                       prodId: (args!["product"] as Product).id,
                                       imageUrl:
-                                          (args!["product"] as Product).image);
+                                          (args!["product"] as Product).image,
+                                    );
                             },
-                            title: 'Add Design')
+                            title: args!["action"] == "add"
+                                ? 'Add Design'
+                                : 'Edit Design')
                   ],
                 ),
               ),
@@ -351,8 +363,8 @@ class _AddProductState extends State<AddProduct> {
   }
 
   bool productNotEmpty() {
-    if (image != null &&
-        category != null &&
+    if ((image != null || editCat.isNotEmpty) &&
+        (category != null || editCat.isNotEmpty) &&
         _prodNameController.text.isNotEmpty &&
         _prodLengthController.text.isNotEmpty &&
         _prodWidthController.text.isNotEmpty) {

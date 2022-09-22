@@ -117,6 +117,9 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndUpdateProducts(String userToken) async {
+    if (products.isNotEmpty) {
+      return;
+    }
     List<Product> tempProds = [];
     final url = Uri.parse('${baseUrl}products');
 
@@ -282,17 +285,19 @@ class Products with ChangeNotifier {
       {required Product product,
       required String userToken,
       required String imageExtension}) async {
-    final url = Uri.parse('${baseUrl}edit_product');
+    final url = Uri.parse('${baseUrl}products/${product.id}');
 
-    var response = await http.post(url, headers: {
+    print(product.image);
+
+    var response = await http.patch(url, headers: {
       'Authorization': 'Bearer $userToken',
     }, body: {
       'name': product.name,
-      'image': product.image,
+      if (product.image.isNotEmpty) 'image': product.image,
       'length': product.length,
       'width': product.width,
       'unit': product.unit,
-      'ext': imageExtension,
+      if (product.image.isNotEmpty) 'ext': imageExtension,
       'category_id': product.categoryId,
     });
 
@@ -316,6 +321,7 @@ class Products with ChangeNotifier {
 
   Future<List<Product>> getCustomerProducts(
       String userId, String userToken) async {
+    print(userId);
     List<Product> tempProds = [];
     final url = Uri.parse('${baseUrl}customer_products?user_id=$userId');
 
@@ -362,7 +368,7 @@ class Products with ChangeNotifier {
   }) async {
     print(prodId);
     print(userId);
-    final url = Uri.parse('${baseUrl}delete_customer_product');
+    final url = Uri.parse('${baseUrl}delete_assign_customer');
 
     var response = await http.post(url, headers: {
       'Authorization': 'Bearer $userToken',

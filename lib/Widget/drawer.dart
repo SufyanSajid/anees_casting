@@ -171,7 +171,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           color: Colors.white),
                     ),
                     onTap: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed(AdminHomePage.routeName);
                       Provider.of<Counts>(context, listen: false)
                           .setSelectedIndex(0);
                     },

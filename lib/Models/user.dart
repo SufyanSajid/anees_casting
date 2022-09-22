@@ -111,6 +111,10 @@ class Users with ChangeNotifier {
   }
 
   Future<void> fetchAndUpdateUser({required String userToken}) async {
+    if (_users.isNotEmpty) {
+      print(999);
+      return;
+    }
     List<AUser> tempUsers = [];
     List<AUser> tempCustomers = [];
 

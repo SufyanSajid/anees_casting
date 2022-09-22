@@ -44,7 +44,6 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
       await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
 
-      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
       await Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);
       setState(() {
@@ -66,7 +65,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
-    var products = Provider.of<Products>(context, listen: false).products;
+    var products = Provider.of<Products>(context, listen: true).products;
     var categories = Provider.of<Categories>(context, listen: false).categories;
 
     var height = MediaQuery.of(context).size.height / 100;

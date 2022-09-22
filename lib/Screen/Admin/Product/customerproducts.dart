@@ -5,6 +5,7 @@ import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
@@ -123,7 +124,7 @@ class _AdminSideCustomerProductScreenState
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 15.0,
+                          crossAxisSpacing: 8.0,
                           mainAxisSpacing: 15.0,
                         ),
                         itemCount: products!.length,
@@ -138,7 +139,7 @@ class _AdminSideCustomerProductScreenState
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 15),
+                                      vertical: 5, horizontal: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
@@ -156,8 +157,9 @@ class _AdminSideCustomerProductScreenState
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.network(
+                                      ExtendedImage.network(
                                         products![index].image,
+                                        cache: true,
                                         fit: BoxFit.contain,
                                         height: height(context) * 12,
                                         width: width(context) * 100,
