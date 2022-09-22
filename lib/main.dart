@@ -9,6 +9,7 @@ import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
 import 'package:anees_costing/Screen/Admin/users/customers.dart';
+import 'package:anees_costing/Screen/Auth/forget.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
           CategoryListScreen.routeName: (ctx) => CategoryListScreen(),
           CategoryChildListScreen.routeName: (ctx) => CategoryChildListScreen(),
           CatProductScreen.routeName: (ctx) => CatProductScreen(),
+          ForgetScreen.routeName: (ctx) => ForgetScreen(),
         },
       ),
     );

@@ -49,7 +49,9 @@ class _UserScreenState extends State<UserScreen> {
         child: FloatingActionButton(
           backgroundColor: btnbgColor.withOpacity(0.4),
           onPressed: () {
-            Navigator.of(context).pushNamed(AddUser.routeName);
+            Navigator.of(context).pushNamed(AddUser.routeName, arguments: {
+              'action': 'Add',
+            });
           },
           child: const Icon(
             Icons.add,
@@ -153,25 +155,25 @@ class _ShowUsersState extends State<ShowUsers> {
   //   });
   // }
 
-  _blockUser(
-      {required AUser user, required BuildContext ctx, required bool block}) {
-    String blockMsg = block ? "Block" : "UnBlock";
-    showCustomDialog(
-        context: ctx,
-        title: blockMsg,
-        btn1: "No",
-        content: "Do you wanna $blockMsg \"${user.name}\" user",
-        btn2: "Yes",
-        btn1Pressed: () => Navigator.of(context).pop(),
-        btn2Pressed: () async {
-          var provider = Provider.of<Users>(ctx, listen: false);
-          var navigator = Navigator.of(ctx);
-          await provider.blockUser(user: user, block: block ? true : false);
-          await provider.fetchAndUpdateUser(userToken: currentUser!.token);
+  // _blockUser(
+  //     {required AUser user, required BuildContext ctx, required bool block}) {
+  //   String blockMsg = block ? "Block" : "UnBlock";
+  //   showCustomDialog(
+  //       context: ctx,
+  //       title: blockMsg,
+  //       btn1: "No",
+  //       content: "Do you wanna $blockMsg \"${user.name}\" user",
+  //       btn2: "Yes",
+  //       btn1Pressed: () => Navigator.of(context).pop(),
+  //       btn2Pressed: () async {
+  //         var provider = Provider.of<Users>(ctx, listen: false);
+  //         var navigator = Navigator.of(ctx);
+  //         await provider.blockUser(user: user, block: block ? true : false);
+  //         await provider.fetchAndUpdateUser(userToken: currentUser!.token);
 
-          navigator.pop();
-        });
-  }
+  //         navigator.pop();
+  //       });
+  // }
 
   void _deleteUser(String userId) {
     showCustomDialog(
@@ -187,7 +189,7 @@ class _ShowUsersState extends State<ShowUsers> {
           Provider.of<Users>(context, listen: false)
               .deleteUser(userId: userId, userToken: currentUser!.token)
               .then((value) async {
-            await Provider.of<Users>(context, listen: false)
+            await Provider.of<Users>(context, listen: true)
                 .fetchAndUpdateUser(userToken: currentUser!.token);
             setState(() {
               isLoading = false;
@@ -216,173 +218,257 @@ class _ShowUsersState extends State<ShowUsers> {
             )
           : ListView.builder(
               itemCount: widget.users.length,
-              itemBuilder: (ctx, index) => Stack(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: btnbgColor.withOpacity(0.6), width: 1),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.6),
-                            offset: const Offset(0, 5),
-                            blurRadius: 10,
-                          ),
-                        ]),
-                    margin: const EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: height(context) * 6,
-                              width: height(context) * 6,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      style: BorderStyle.solid,
-                                      width: 2,
-                                      color: btnbgColor.withOpacity(1)),
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.asset(
-                                  'assets/images/person22.jpeg',
-                                  height: height(context) * 10,
-                                  width: height(context) * 10,
-                                  fit: BoxFit.cover,
-                                ),
+              itemBuilder: (ctx, index) => InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                            title: Center(
+                              child: Text(
+                                widget.users[index].name,
+                                style: TextStyle(color: primaryColor),
                               ),
                             ),
-                            SizedBox(
-                              width: width(context) * 4,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.users[index].name,
-                                  style: TextStyle(
-                                    color: headingColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context)
+                                      .pushNamed(AddUser.routeName, arguments: {
+                                    'action': 'edit',
+                                    'data': widget.users[index],
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    primary: primaryColor),
+                                child: Text('Edit User'),
+                              ),
+                            ],
+                            content: Container(
+                              height: height(context) * 20,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UserDetail(
+                                    title: 'Email: ',
+                                    value: widget.users[index].email,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: height(context) * 0.5,
-                                ),
-                                Text(
-                                  widget.users[index].email,
-                                  style: TextStyle(
-                                      color: contentColor, fontSize: 13),
-                                ),
-                              ],
+                                  SizedBox(
+                                    height: height(context) * 1,
+                                  ),
+                                  UserDetail(
+                                    title: 'Phone: ',
+                                    value: widget.users[index].phone,
+                                  )
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                        if (widget.users[index].role != 'Admin')
+                          ));
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: btnbgColor.withOpacity(0.6), width: 1),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.6),
+                              offset: const Offset(0, 5),
+                              blurRadius: 10,
+                            ),
+                          ]),
+                      margin: const EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Row(
                             children: [
-                              if (widget.users[index].role.toLowerCase() ==
-                                      'customer' &&
-                                  Platform.isMacOS)
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        // maximumSize: Size(130, 130),
-                                        minimumSize: Size(100, 35)),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (ctx) => StatefulBuilder(
-                                              builder: ((context, setState) =>
-                                                  AlertDialog(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          widget.users[index]
-                                                              .name,
-                                                          style: GoogleFonts
-                                                              .righteous(
-                                                                  color:
-                                                                      headingColor,
-                                                                  fontSize: 22),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            icon: const Icon(
-                                                              Icons.cancel,
-                                                              color: Colors.red,
-                                                            ))
-                                                      ],
-                                                    ),
-                                                    content: Container(
-                                                        width: width(context) *
-                                                            100,
-                                                        height:
-                                                            height(context) *
-                                                                60,
-                                                        child: CustomerProducts(
-                                                          userId: widget
-                                                              .users[index].id,
-                                                          scaffoldKey: widget
-                                                              .scaffoldKey!,
-                                                        )),
-                                                  ))));
-                                    },
-                                    child: Text('View Products')),
+                              Container(
+                                height: height(context) * 6,
+                                width: height(context) * 6,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 5),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        style: BorderStyle.solid,
+                                        width: 2,
+                                        color: btnbgColor.withOpacity(1)),
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.asset(
+                                    'assets/images/person22.jpeg',
+                                    height: height(context) * 10,
+                                    width: height(context) * 10,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                               SizedBox(
-                                width: width(context) * 1,
+                                width: width(context) * 4,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.users[index].name,
+                                    style: TextStyle(
+                                      color: headingColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: height(context) * 0.5,
+                                  ),
+                                  Text(
+                                    widget.users[index].email,
+                                    style: TextStyle(
+                                        color: contentColor, fontSize: 13),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        if (widget.users[index].role.toLowerCase() != 'admin')
-                          IconButton(
-                            onPressed: () {
-                              _deleteUser(widget.users[index].id);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
+                          if (widget.users[index].role != 'Admin')
+                            Row(
+                              children: [
+                                if (widget.users[index].role.toLowerCase() ==
+                                        'customer' &&
+                                    Platform.isMacOS)
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          // maximumSize: Size(130, 130),
+                                          minimumSize: Size(100, 35)),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (ctx) => StatefulBuilder(
+                                                builder: ((context, setState) =>
+                                                    AlertDialog(
+                                                      title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            widget.users[index]
+                                                                .name,
+                                                            style: GoogleFonts
+                                                                .righteous(
+                                                                    color:
+                                                                        headingColor,
+                                                                    fontSize:
+                                                                        22),
+                                                          ),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              icon: const Icon(
+                                                                Icons.cancel,
+                                                                color:
+                                                                    Colors.red,
+                                                              ))
+                                                        ],
+                                                      ),
+                                                      content: Container(
+                                                          width:
+                                                              width(context) *
+                                                                  100,
+                                                          height:
+                                                              height(context) *
+                                                                  60,
+                                                          child:
+                                                              CustomerProducts(
+                                                            userId: widget
+                                                                .users[index]
+                                                                .id,
+                                                            scaffoldKey: widget
+                                                                .scaffoldKey!,
+                                                          )),
+                                                    ))));
+                                      },
+                                      child: Text('View Products')),
+                                SizedBox(
+                                  width: width(context) * 1,
+                                ),
+                              ],
                             ),
-                          ),
-                      ],
+                          if (widget.users[index].role.toLowerCase() != 'admin')
+                            IconButton(
+                              onPressed: () {
+                                _deleteUser(widget.users[index].id);
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      height: height(context) * 2,
-                      width: width(context) * 20,
-                      decoration: BoxDecoration(
-                          color: btnbgColor.withOpacity(1),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10))),
-                      child: Center(
-                        child: Text(
-                          widget.users[index].role,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: primaryColor),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        height: height(context) * 2,
+                        width: width(context) * 20,
+                        decoration: BoxDecoration(
+                            color: btnbgColor.withOpacity(1),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10))),
+                        child: Center(
+                          child: Text(
+                            widget.users[index].role,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+    );
+  }
+}
+
+class UserDetail extends StatelessWidget {
+  UserDetail({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+  String title;
+  String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(color: headingColor, fontSize: 16),
+        ),
+        SizedBox(
+          height: height(context) * 0.3,
+        ),
+        Text(
+          value,
+          style: TextStyle(color: primaryColor, fontSize: 14),
+        )
+      ],
     );
   }
 }

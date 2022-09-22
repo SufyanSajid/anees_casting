@@ -49,11 +49,15 @@ class _ProductScreenState extends State<ProductScreen> {
         });
         Provider.of<Products>(context, listen: false)
             .fetchAndUpdateProducts(currentUser!.token)
-            .then((value) {
-          setState(() {
-            isLoading = false;
-          });
-        });
+            .then(
+          (value) {
+            setState(
+              () {
+                isLoading = false;
+              },
+            );
+          },
+        );
       }
       isFirst = false;
     }

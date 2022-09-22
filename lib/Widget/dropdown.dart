@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import '../contant.dart';
 
 class CustomDropDown extends StatefulWidget {
-  CustomDropDown({required this.onChanged, required this.items});
+  CustomDropDown({
+    required this.onChanged,
+    required this.items,
+    this.firstSelect,
+  });
 
   Function onChanged;
+  String? firstSelect;
   List<String> items;
 
   @override
@@ -14,9 +19,22 @@ class CustomDropDown extends StatefulWidget {
 
 class _CustomDropDownState extends State<CustomDropDown> {
   int selectedIndex = 0;
+  bool isFirst = true;
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      if (widget.firstSelect != null && widget.firstSelect!.isNotEmpty) {
+        selectedIndex = widget.items.indexOf(widget.firstSelect.toString());
+      }
+      isFirst = false;
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.firstSelect);
     return Container(
       //   width: width(context) * 20,
       padding: const EdgeInsets.symmetric(horizontal: 20),

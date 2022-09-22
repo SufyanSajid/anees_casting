@@ -17,6 +17,7 @@ import '../../../contant.dart';
 import 'package:flutter/material.dart';
 
 import '../../Admin/homepage/admin_home.dart';
+import '../forget.dart';
 
 class MobileLoginScreen extends StatefulWidget {
   MobileLoginScreen({Key? key}) : super(key: key);
@@ -224,20 +225,21 @@ class _LoginFeildsState extends State<LoginFeilds> {
         SizedBox(
           height: height(context) * 2,
         ),
-        // Container(
-        //   alignment: Alignment.bottomRight,
-        //   width: double.infinity,
-        //   child: TextButton(
-        //     onPressed: () {
-        //       // Navigator.of(context)
-        //       //     .pushNamed(ForgetScreen.routeName);
-        //     },
-        //     child: Text(
-        //       'Forget Password!',
-        //       style: TextStyle(color: primaryColor, fontSize: 13),
-        //     ),
-        //   ),
-        // ),
+        Container(
+          alignment: Alignment.bottomRight,
+          width: double.infinity,
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                ForgetScreen.routeName,
+              );
+            },
+            child: Text(
+              'Forget Password!',
+              style: TextStyle(color: primaryColor, fontSize: 13),
+            ),
+          ),
+        ),
         SizedBox(
           height: height(context) * 1,
         ),

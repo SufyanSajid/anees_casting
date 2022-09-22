@@ -75,6 +75,30 @@ class Users with ChangeNotifier {
     }
   }
 
+  Future<void> editrUser({
+    required String userId,
+    required String userName,
+    required String userPhone,
+    required String userToken,
+  }) async {
+    final url = Uri.parse('${baseUrl}edit_user');
+
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken'
+    }, body: {
+      'user_id': userId,
+      'name': userName,
+      'phone': userPhone,
+    });
+    print(response.body);
+  }
+
+  void updateUserLocally(AUser user) {
+    _users.removeWhere((element) => element.id == user.id);
+    _users.add(user);
+    notifyListeners();
+  }
+
   Future<void> updateUserRole(
       {required String userId,
       required String userToken,
@@ -169,30 +193,30 @@ class Users with ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<void> blockUser({required AUser user, required bool block}) async {
-    var body = jsonEncode({
-      "fields": {
-        "isBlocked": {"booleanValue": block ? true : false},
-      }
-    });
-    http.Response res = await FirestoreMethods().updateSingleField(
-        collection: "users",
-        documentId: user.id,
-        fieldName: "isBlocked",
-        bodyData: body);
-    // var res = await FirebaseAuth().deletUser("fl4tlZn5GlSzjHVQj4g3iKtB7vI3");
+  // Future<void> blockUser({required AUser user, required bool block}) async {
+  //   var body = jsonEncode({
+  //     "fields": {
+  //       "isBlocked": {"booleanValue": block ? true : false},
+  //     }
+  //   });
+  //   http.Response res = await FirestoreMethods().updateSingleField(
+  //       collection: "users",
+  //       documentId: user.id,
+  //       fieldName: "isBlocked",
+  //       bodyData: body);
+  //   // var res = await FirebaseAuth().deletUser("fl4tlZn5GlSzjHVQj4g3iKtB7vI3");
 
-    // var res = await FirestoreMethods()
-    // .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
-    // print("Storage");
-    // print(res.statusCode);
-    // print(res.);
-    // print(res.body);
+  //   // var res = await FirestoreMethods()
+  //   // .deleteRecord(collection: "Users", prodId: "QHVDHDxycecWEoT6rIyk  ");
+  //   // print("Storage");
+  //   // print(res.statusCode);
+  //   // print(res.);
+  //   // print(res.body);
 
-    // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
+  //   // res = await FirebaseAuth().deletUser('nm4T8zsUnRT7txBrWbeIJ7t7dPt1');
 
-    print(res.body);
-  }
+  //   print(res.body);
+  // }
 
   getUsersByUser(AUser user) {
     List<AUser> temUsers = [];

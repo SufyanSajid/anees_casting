@@ -62,6 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               phone: currentUser.phone,
               userToken: currentUser!.token)
           .then((value) {
+        Provider.of<Auth>(context, listen: false).currentUser!.name =
+            '${_firstNameController.text} ${_lastNameController.text}';
         _firstNameController.clear();
 
         _lastNameController.clear();

@@ -146,6 +146,8 @@ class _AddProductState extends State<AddProduct> {
         userToken: currentUser!.token,
         imageExtension: imageExtention == null ? '' : imageExtention!,
       );
+      // Provider.of<Products>(context, listen: false)
+      //     .updateProductLocally(newProducts);
 
       clearControllersAndImage();
     }

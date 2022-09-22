@@ -95,6 +95,12 @@ class Products with ChangeNotifier {
     }
   }
 
+  void updateProductLocally(Product prod) {
+    _products.removeWhere((element) => element.id == prod.id);
+    _products.add(prod);
+    notifyListeners();
+  }
+
   void addCustomer(String cusId, String prodId) {
     var prod = _products.firstWhere((element) => element.id == prodId);
     prod.customers!.add(cusId);
@@ -285,6 +291,8 @@ class Products with ChangeNotifier {
       {required Product product,
       required String userToken,
       required String imageExtension}) async {
+    Product prod;
+
     final url = Uri.parse('${baseUrl}products/${product.id}');
 
     print(product.image);
@@ -302,6 +310,33 @@ class Products with ChangeNotifier {
     });
 
     print(response.body);
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      var prod = extractedData['data'];
+
+      List<String> tempCustomers = [];
+      var customers = prod['customers'] as List<dynamic>;
+      customers.forEach((cust) {
+        tempCustomers.add(cust.toString());
+      });
+
+      prod = Product(
+        id: prod['id'].toString(),
+        name: prod['name'],
+        length: prod['length'],
+        width: prod['width'],
+        unit: prod['unit'],
+        customers: tempCustomers,
+        categoryId: prod['category_id'].toString(),
+        categoryTitle: prod['category_name'],
+        image: prod['imageUrl'],
+        dateTime: prod['created_at'],
+      );
+      _products.add(prod);
+      notifyListeners();
+    } else {
+      print('error in updating product');
+    }
   }
 
   Future<void> sendProductToUser({

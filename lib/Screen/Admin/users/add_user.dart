@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/firebase_auth.dart';
 import 'package:anees_costing/Models/auth.dart';
@@ -14,11 +16,36 @@ import 'package:anees_costing/Widget/submitbutton.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
-class AddUser extends StatelessWidget {
+class AddUser extends StatefulWidget {
   static const routeName = '/adduser';
 
   AddUser({Key? key}) : super(key: key);
+
+  @override
+  State<AddUser> createState() => _AddUserState();
+}
+
+class _AddUserState extends State<AddUser> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isFirst = true;
+  String action = '';
+  AUser? user;
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      var routeData =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      action = routeData['action'];
+      if (action == 'edit') {
+        user = routeData['data'];
+
+        print(user!.email);
+      }
+      print(action);
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +77,10 @@ class AddUser extends StatelessWidget {
                     SizedBox(
                       height: height(context) * 2,
                     ),
-                    const AddUserFeilds(),
+                    AddUserFeilds(
+                      action: action,
+                      user: user,
+                    ),
                   ],
                 ),
               ),
@@ -63,8 +93,14 @@ class AddUser extends StatelessWidget {
 }
 
 class AddUserFeilds extends StatefulWidget {
-  const AddUserFeilds({Key? key}) : super(key: key);
+  AddUserFeilds({
+    Key? key,
+    this.action,
+    this.user,
+  }) : super(key: key);
 
+  AUser? user;
+  String? action;
   @override
   State<AddUserFeilds> createState() => _AddUserFeildsState();
 }
@@ -81,6 +117,46 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   String role = "Customer";
   bool isLoading = false;
   bool isPassSecure = true;
+
+  void _editUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    if (role.toLowerCase() != widget.user!.role.toLowerCase()) {
+      print('changing role');
+      Provider.of<Users>(context, listen: false).updateUserRole(
+        userId: widget.user!.id,
+        userToken: currentUser!.token,
+        userRole: role,
+      );
+    }
+    if (_passwordController.text.isNotEmpty) {
+      print('changinb pass');
+      Provider.of<Auth>(context, listen: false).changePassword(
+        password: _passwordController.text.trim(),
+        userId: widget.user!.id,
+        userToken: currentUser!.token,
+      );
+    }
+    await Provider.of<Users>(context, listen: false).editrUser(
+      userId: widget.user!.id,
+      userName: _nameController.text.trim(),
+      userPhone: _phoneController.text.trim(),
+      userToken: currentUser!.token,
+    );
+    AUser newUser = AUser(
+      id: widget.user!.id,
+      name: _nameController.text,
+      email: _emailController.text,
+      phone: _phoneController.text,
+      role: role,
+    );
+    Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   void _sigUpUser() async {
     setState(() {
@@ -138,11 +214,32 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   }
 
   @override
+  void initState() {
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    // TODO: implement initState
+    if (widget.action == 'edit') {
+      print('111111111111${widget.user!.role}');
+      _nameController.text = widget.user!.name;
+      print(_nameController.text);
+      _emailController.text = widget.user!.email;
+      _phoneController.text = widget.user!.phone;
+      setState(() {});
+    } else {
+      _nameController.clear();
+      _emailController.clear();
+      _passwordController.clear();
+      _phoneController.clear();
+    }
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
-    if (isFirst) {
+    if (isFirst && widget.user == null) {
       isFirst = false;
-      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+
       drawerUser = Provider.of<Users>(context, listen: false).drawerUser;
+
       if (drawerUser != null) {
         _nameController.text = drawerUser!.name;
         _emailController.text = drawerUser!.email;
@@ -200,10 +297,12 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 child: CustomDropDown(
                   items: const [
                     'Customer',
-                    'Seller',
                     'Admin',
+                    'Seller',
                   ],
+                  firstSelect: widget.action == 'edit' ? widget.user!.role : '',
                   onChanged: (value) {
+                    print(value);
                     role = value;
                   },
                 ))
@@ -215,6 +314,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         InputFeild(
             suffix: Icons.email_outlined,
             hinntText: 'Email',
+            readOnly: widget.action == 'edit' ? true : false,
             validatior: () {},
             inputController: _emailController),
         SizedBox(
@@ -250,10 +350,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 child: SubmitButton(
                     height: height(context),
                     width: width(context),
-                    onTap: () {
-                      _sigUpUser();
-                    },
-                    title: 'Add User'),
+                    onTap: widget.action == 'edit' ? _editUser : _sigUpUser,
+                    title: widget.action == 'edit' ? 'Edit User' : 'Add User'),
               )
       ],
     );
