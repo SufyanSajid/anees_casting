@@ -1,7 +1,10 @@
+import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Functions/dailog.dart';
+import '../../../Models/auth.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/input_feild.dart';
 
@@ -24,7 +27,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   @override
   void didChangeDependencies() {
     if (isFirst) {
-      // email = ModalRoute.of(context)!.settings.arguments as String;
+      email = ModalRoute.of(context)!.settings.arguments as String;
       isFirst = false;
     }
     // TODO: implement didChangeDependencies
@@ -32,34 +35,51 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   void _submit() {
-    // if (_formKey.currentState!.validate()) {
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-    //   Provider.of<Auth>(context, listen: false)
-    //       .verifyPassword(_codeController.text, email)
-    //       .then((value) {
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-    //     Navigator.of(context)
-    //         .pushReplacementNamed(NewPassScreen.routeName, arguments: {
-    //       'email': email,
-    //       'code': _codeController.text,
-    //     });
-    //   }).catchError((error) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (ctx) => AdaptiveDiaglog(
-    //             ctx: ctx,
-    //             title: "❌",
-    //             content: error.toString(),
-    //             btnYes: "OK",
-    //             yesPressed: () {
-    //               Navigator.of(context).pop();
-    //             }));
-    //   });
-    // }
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Auth>(context, listen: false)
+          .verifyCode(email: email, code: _codeController.text.trim())
+          .then((value) {
+        print(value);
+        print(email);
+        if (value == true) {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.of(context)
+              .pushReplacementNamed(NewPassScreen.routeName, arguments: {
+            'email': email,
+            'code': _codeController.text,
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          showCustomDialog(
+              context: context,
+              title: 'Code',
+              btn1: 'Okay',
+              content: 'Code didnot match',
+              btn1Pressed: () {
+                Navigator.of(context).pop();
+              });
+        }
+      }).catchError((error) {
+        setState(() {
+          isLoading = false;
+        });
+        showCustomDialog(
+            context: context,
+            title: 'Error',
+            btn1: 'Okay',
+            content: error.toString(),
+            btn1Pressed: () {
+              Navigator.of(context).pop();
+            });
+      });
+    }
   }
 
   @override
@@ -157,7 +177,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             )
                           : const Center(
                               child: Text(
-                                'Verificare il codice',
+                                'Verify Code',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Poppins',

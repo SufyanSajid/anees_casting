@@ -1,8 +1,12 @@
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../Models/auth.dart';
+import '../../../Widget/adaptiveDialog.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/input_feild.dart';
+import '../Login/login.dart';
 
 class NewPassScreen extends StatefulWidget {
   static const routeName = '/new-pass';
@@ -17,8 +21,61 @@ class _NewPassScreenState extends State<NewPassScreen> {
   final _confirmPassController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  var data;
+  bool isFirst = true;
   bool isLoading = false;
-  void _submit() {}
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      isFirst = false;
+      data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Auth>(context, listen: false)
+          .forgetChangePassword(
+              email: data['email'],
+              code: data['code'],
+              password: _newPassController.text)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: '✅',
+                content: 'Password Changed Try Login',
+                btnYes: 'OK',
+                yesPressed: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(LoginScreen.routeName);
+                }));
+      }).catchError((error) {
+        showDialog(
+            context: context,
+            builder: (ctx) => AdaptiveDiaglog(
+                ctx: ctx,
+                title: '❌',
+                content: error.toString(),
+                btnYes: 'OK',
+                yesPressed: () {
+                  Navigator.of(context).pop();
+                }));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context).size;

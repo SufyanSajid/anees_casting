@@ -23,6 +23,8 @@ class _ForgetScreenState extends State<ForgetScreen> {
 
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool isFirst = true;
+  var data;
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -35,21 +37,22 @@ class _ForgetScreenState extends State<ForgetScreen> {
         setState(() {
           isLoading = false;
         });
-        _emailController.clear();
+
         Navigator.of(context).pushNamed(VerificationScreen.routeName,
             arguments: _emailController.text);
+        _emailController.clear();
       }).catchError((error) {
         setState(() {
           isLoading = false;
-          showCustomDialog(
-              context: context,
-              title: 'Error',
-              btn1: 'Okay',
-              content: error.toString(),
-              btn1Pressed: () {
-                Navigator.of(context).pop();
-              });
         });
+        showCustomDialog(
+            context: context,
+            title: 'Error',
+            btn1: 'Okay',
+            content: error.toString(),
+            btn1Pressed: () {
+              Navigator.of(context).pop();
+            });
       });
     }
   }

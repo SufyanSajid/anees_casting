@@ -133,6 +133,35 @@ class Auth with ChangeNotifier {
     print(response.body);
   }
 
+  Future<bool> verifyCode({required String email, required String code}) async {
+    final url = Uri.parse('${baseUrl}verify_otp_and_change_password');
+
+    var response = await http.post(url, body: {
+      'email': email,
+      'otp': code,
+    });
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> forgetChangePassword(
+      {required String code,
+      required String email,
+      required String password}) async {
+    final url = Uri.parse('${baseUrl}verify_otp_and_change_password');
+
+    var response = await http.post(url, body: {
+      'email': email,
+      'otp': code,
+      'password': password,
+    });
+    print(response.body);
+  }
+
   Future<void> LoginWithEmailAndPassword(
     String email,
     String password,

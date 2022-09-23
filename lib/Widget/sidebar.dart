@@ -96,23 +96,36 @@ class _SideBarState extends State<SideBar> {
                     });
                   },
                   child: SideBarItem(
-                    title: 'Category',
+                    title: 'Cat List',
                     icon: Icons.interests_outlined,
                     isSelected: select == 3,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      widget.onChanged(4);
+                      select = 4;
+                    });
+                  },
+                  child: SideBarItem(
+                    title: 'Category',
+                    icon: Icons.interests_outlined,
+                    isSelected: select == 4,
                   ),
                 ),
                 if (currentUser.role!.toLowerCase() == 'admin')
                   InkWell(
                     onTap: () {
                       setState(() {
-                        widget.onChanged(4);
-                        select = 4;
+                        widget.onChanged(5);
+                        select = 5;
                       });
                     },
                     child: SideBarItem(
                       title: 'Logs',
                       icon: Icons.recycling,
-                      isSelected: select == 4,
+                      isSelected: select == 5,
                     ),
                   ),
               ],

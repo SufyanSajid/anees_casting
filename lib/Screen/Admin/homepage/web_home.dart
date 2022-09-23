@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/grad_button.dart';
 import '../../../Widget/sidebar.dart';
+import '../Design/web_catlist.dart';
 
 class WebHome extends StatefulWidget {
   WebHome({Key? key}) : super(key: key);
@@ -317,6 +318,7 @@ class _WebHomeState extends State<WebHome> {
       CategoryWebContent(
         scaffoldKey: _ScaffoldKey,
       ),
+      CategoryListWeb(),
       ActivityLogWebContent(),
     ];
 
@@ -367,10 +369,15 @@ class _WebHomeState extends State<WebHome> {
                         onChanged: () {}),
                   if (selectedIndex == 3)
                     WebAppbar(
-                        title: 'Categories',
+                        title: 'Cat List',
                         subTitle: 'Your Categories ',
                         onChanged: () {}),
                   if (selectedIndex == 4)
+                    WebAppbar(
+                        title: 'Category',
+                        subTitle: 'All Users Activities',
+                        onChanged: () {}),
+                  if (selectedIndex == 5)
                     WebAppbar(
                         title: 'Activity Logs',
                         subTitle: 'All Users Activities',
