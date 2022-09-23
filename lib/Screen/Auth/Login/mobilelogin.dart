@@ -1,6 +1,7 @@
 // import 'package:chiarra_fazzini/Models/auth.dart';
 import 'dart:convert';
 
+import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -173,6 +174,18 @@ class _LoginFeildsState extends State<LoginFeilds> {
       } else {
         Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
       }
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      showCustomDialog(
+          context: context,
+          title: 'Error',
+          btn1: 'Okay',
+          content: error.toString(),
+          btn1Pressed: () {
+            Navigator.of(context).pop();
+          });
     });
   }
 

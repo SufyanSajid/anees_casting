@@ -91,7 +91,13 @@ class Auth with ChangeNotifier {
         'phone': phone,
       },
     );
-    print(response.body);
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      print(extractedData['data']);
+    } else {
+      var message = extractedData['message'];
+      throw message;
+    }
   }
 
   Future<void> changePassword(
@@ -109,62 +115,68 @@ class Auth with ChangeNotifier {
         'new_password': password,
       },
     );
-    print(response.body);
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      print(extractedData['data']);
+    } else {
+      var message = extractedData['message'];
+      throw message;
+    }
   }
 
   Future<void> LoginWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    // try {
-    final url = Uri.parse('https://anees-casting.rapidev.tech/api/login');
-    final response = await http.post(
-      url,
-      body: {
-        'email': email,
-        'password': password,
-      },
-    );
-    print(response.body);
+    try {
+      final url = Uri.parse('https://anees-casting.rapidev.tech/api/login');
+      final response = await http.post(
+        url,
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+      print(response.body);
 
-    var extractedData = json.decode(response.body);
+      var extractedData = json.decode(response.body);
 
-    if (extractedData['success'] == true) {
-      String userRole;
-      var userData = extractedData['data'];
-      if (userData['role'] == '0') {
-        userRole = 'customer';
-      } else if (userData['role'] == '1') {
-        userRole = 'admin';
+      if (extractedData['success'] == true) {
+        String userRole;
+        var userData = extractedData['data'];
+        if (userData['role'] == '0') {
+          userRole = 'customer';
+        } else if (userData['role'] == '1') {
+          userRole = 'admin';
+        } else {
+          userRole = 'seller';
+        }
+        currentUser = CurrentUser(
+            id: userData['id'].toString(),
+            email: userData['email'],
+            name: userData['name'],
+            phone: userData['phone'],
+            role: userRole,
+            token: userData['token']);
+
+        notifyListeners();
+        final prefs = await SharedPreferences.getInstance();
+        final userData1 = json.encode({
+          'token': currentUser!.token,
+          'role': currentUser!.role,
+          'name': currentUser!.name,
+          'userId': currentUser!.id,
+          'phone': currentUser!.phone,
+          'email': currentUser!.email,
+        });
+        prefs.setString('userData', userData1);
       } else {
-        userRole = 'seller';
+        var message = extractedData['message'];
+        throw message;
       }
-      currentUser = CurrentUser(
-          id: userData['id'].toString(),
-          email: userData['email'],
-          name: userData['name'],
-          phone: userData['phone'],
-          role: userRole,
-          token: userData['token']);
-
-      notifyListeners();
-      final prefs = await SharedPreferences.getInstance();
-      final userData1 = json.encode({
-        'token': currentUser!.token,
-        'role': currentUser!.role,
-        'name': currentUser!.name,
-        'userId': currentUser!.id,
-        'phone': currentUser!.phone,
-        'email': currentUser!.email,
-      });
-      prefs.setString('userData', userData1);
-    } else {
-      var message = extractedData['message'];
-      throw message;
+    } catch (error) {
+      throw error;
     }
-    // } catch (error) {
-    //   throw error;
-    // }
   }
 
   Future<bool> tryAutoLogin() async {

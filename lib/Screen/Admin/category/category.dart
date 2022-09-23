@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Functions/dailog.dart';
 import '../../../Widget/appbar.dart';
+import '../../../Widget/snakbar.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = '/categoryScreen';
@@ -101,6 +102,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
             Provider.of<Categories>(context, listen: false)
                 .deleteCategory(cat.id, currentUser!.token)
                 .then((value) async {
+              showMySnackBar(
+                  context: context, text: 'Category : Category Deleted');
               await Provider.of<Categories>(context, listen: false)
                   .fetchAndUpdateCat(currentUser!.token);
               setState(() {
@@ -212,7 +215,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                               ? ""
                                               : parentCat!.id,
                                         )
-                                            .catchError((error) {
+                                            .then((value) {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                          showMySnackBar(
+                                              context: context,
+                                              text:
+                                                  'Category : Category Added');
+                                        }).catchError((error) {
                                           showCustomDialog(
                                               context: context,
                                               title: 'Error',

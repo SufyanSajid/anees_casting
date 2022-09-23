@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../Models/sent_products.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
+import '../../../Widget/snakbar.dart';
 
 class AdminSideCustomerProductScreen extends StatefulWidget {
   static const routeName = '/customers-products-details';
@@ -66,17 +67,28 @@ class _AdminSideCustomerProductScreenState
           setState(() {
             isLoading = true;
           });
-          await Provider.of<Products>(context, listen: false)
-              .deleteCustomerProduct(
-                  prodId: prod.id,
-                  userId: cusId,
-                  userToken: currentUser!.token);
           Provider.of<Products>(context, listen: false)
-              .removeCustomer(cusId, prod.id);
-          products = await Provider.of<Products>(context, listen: false)
-              .getCustomerProducts(customer!.id, currentUser!.token);
-          setState(() {
-            isLoading = false;
+              .deleteCustomerProduct(
+                  prodId: prod.id, userId: cusId, userToken: currentUser!.token)
+              .then((value) async {
+            showMySnackBar(
+                context: context, text: 'Customer : Product Deleted');
+            Provider.of<Products>(context, listen: false)
+                .removeCustomer(cusId, prod.id);
+            products = await Provider.of<Products>(context, listen: false)
+                .getCustomerProducts(customer!.id, currentUser!.token);
+            setState(() {
+              isLoading = false;
+            });
+          }).catchError((error) {
+            showCustomDialog(
+                context: context,
+                title: 'Error',
+                btn1: 'Okay',
+                content: error.toString(),
+                btn1Pressed: () {
+                  Navigator.of(context).pop();
+                });
           });
         },
         btn2Pressed: () {

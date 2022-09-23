@@ -90,7 +90,13 @@ class Users with ChangeNotifier {
       'name': userName,
       'phone': userPhone,
     });
-    print(response.body);
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      print(extractedData['data']);
+    } else {
+      var message = extractedData['message'];
+      throw message;
+    }
   }
 
   void updateUserLocally(AUser user) {
@@ -125,13 +131,25 @@ class Users with ChangeNotifier {
 
   Future<void> deleteUser(
       {required String userId, required String userToken}) async {
-    final url = Uri.parse('${baseUrl}delete_user');
+    try {
+      final url = Uri.parse('${baseUrl}delete_user');
 
-    var response = await http.post(url, headers: {
-      'Authorization': 'Bearer $userToken'
-    }, body: {
-      'user_id': userId,
-    });
+      var response = await http.post(url, headers: {
+        'Authorization': 'Bearer $userToken'
+      }, body: {
+        'user_id': userId,
+      });
+      var extractedData = json.decode(response.body);
+      if (extractedData['success'] == true) {
+        print(extractedData['data']);
+      } else {
+        var message = extractedData['message'];
+        print(message);
+        throw message;
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   Future<void> fetchAndUpdateUser({required String userToken}) async {

@@ -9,6 +9,7 @@ import 'package:anees_costing/Widget/drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
+import '../../../Widget/snakbar.dart';
 import '/Models/user.dart';
 import 'add_user.dart';
 import '/Widget/appbar.dart';
@@ -189,11 +190,25 @@ class _ShowUsersState extends State<ShowUsers> {
           Provider.of<Users>(context, listen: false)
               .deleteUser(userId: userId, userToken: currentUser!.token)
               .then((value) async {
-            await Provider.of<Users>(context, listen: true)
+            await Provider.of<Users>(context, listen: false)
                 .fetchAndUpdateUser(userToken: currentUser!.token);
+            showMySnackBar(context: context, text: 'User: User Deleted');
             setState(() {
               isLoading = false;
             });
+          }).catchError((error) {
+            setState(() {
+              isLoading = false;
+            });
+            showCustomDialog(
+              context: context,
+              title: 'Error',
+              btn1: 'Okay',
+              content: error.toString(),
+              btn1Pressed: () {
+                Navigator.of(context).pop();
+              },
+            );
           });
         },
         btn2: 'No',

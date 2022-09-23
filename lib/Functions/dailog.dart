@@ -72,7 +72,7 @@ Future<void> showCustomDialog({
           contentPadding: EdgeInsets.zero,
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            height: height(context) * 22,
+            height: height(context) * 25,
             width: width(context) * 18,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +85,7 @@ Future<void> showCustomDialog({
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     content,
+                    maxLines: 2,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,

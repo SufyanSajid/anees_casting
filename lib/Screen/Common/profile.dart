@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../Functions/dailog.dart';
 import '../../Models/counts.dart';
 import '../../Widget/adaptive_indecator.dart';
 import '../../Widget/drawer.dart';
 import '../../Widget/input_feild.dart';
+import '../../Widget/snakbar.dart';
 import '../../Widget/submitbutton.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -48,9 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Error: Empty Feilds'),
-      ));
+      showMySnackBar(context: context, text: 'Error : Empty Feilds');
     } else {
       setState(() {
         isLoading = true;
@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               phone: currentUser.phone,
               userToken: currentUser!.token)
           .then((value) {
+        showMySnackBar(context: context, text: 'User : Username Changed');
         Provider.of<Auth>(context, listen: false).currentUser!.name =
             '${_firstNameController.text} ${_lastNameController.text}';
         _firstNameController.clear();
@@ -70,6 +71,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           isLoading = false;
         });
+      }).catchError((error) {
+        showCustomDialog(
+            context: context,
+            title: 'Error',
+            btn1: 'Okay',
+            content: error.toString(),
+            btn1Pressed: () {
+              Navigator.of(context).pop();
+            });
       });
     }
   }
@@ -99,9 +109,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .then((value) {
         _newPasswordController.clear();
         _confirmPasswordController.clear();
+        showMySnackBar(context: context, text: 'User : Password Changed');
         setState(() {
           isLoading = false;
         });
+      }).catchError((error) {
+        showCustomDialog(
+            context: context,
+            title: 'Error',
+            btn1: 'Okay',
+            content: error.toString(),
+            btn1Pressed: () {
+              Navigator.of(context).pop();
+            });
       });
     }
   }

@@ -6,6 +6,7 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Widget/drawer.dart';
+import 'package:anees_costing/Widget/snakbar.dart';
 import 'package:provider/provider.dart';
 import '/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
@@ -139,22 +140,38 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         userToken: currentUser!.token,
       );
     }
-    await Provider.of<Users>(context, listen: false).editrUser(
+    await Provider.of<Users>(context, listen: false)
+        .editrUser(
       userId: widget.user!.id,
       userName: _nameController.text.trim(),
       userPhone: _phoneController.text.trim(),
       userToken: currentUser!.token,
-    );
-    AUser newUser = AUser(
-      id: widget.user!.id,
-      name: _nameController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-      role: role,
-    );
-    Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
-    setState(() {
-      isLoading = false;
+    )
+        .then((value) {
+      AUser newUser = AUser(
+        id: widget.user!.id,
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        role: role,
+      );
+      Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
+      setState(() {
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      showCustomDialog(
+        context: context,
+        title: 'Error',
+        btn1: 'Okay',
+        content: error.toString(),
+        btn1Pressed: () {
+          Navigator.of(context).pop();
+        },
+      );
     });
   }
 
@@ -183,6 +200,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       _emailController.clear();
       _phoneController.clear();
       _passwordController.clear();
+      showMySnackBar(context: context, text: 'User Added : Check user list');
     }).catchError((error) {
       setState(() {
         isLoading = false;
@@ -194,10 +212,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         btn1: 'Okay',
         content: error.toString(),
         btn1Pressed: () {
-          _nameController.clear();
-          _emailController.clear();
-          _phoneController.clear();
-          _passwordController.clear();
           Navigator.of(context).pop();
         },
       );
