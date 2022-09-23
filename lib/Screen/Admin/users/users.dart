@@ -190,8 +190,8 @@ class _ShowUsersState extends State<ShowUsers> {
           Provider.of<Users>(context, listen: false)
               .deleteUser(userId: userId, userToken: currentUser!.token)
               .then((value) async {
-            await Provider.of<Users>(context, listen: false)
-                .fetchAndUpdateUser(userToken: currentUser!.token);
+            // await Provider.of<Users>(context, listen: false)
+            //     .fetchAndUpdateUser(userToken: currentUser!.token);
             showMySnackBar(context: context, text: 'User: User Deleted');
             setState(() {
               isLoading = false;

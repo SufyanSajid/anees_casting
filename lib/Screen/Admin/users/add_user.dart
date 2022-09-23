@@ -192,8 +192,16 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
           userId: value.toString(),
           userRole: role,
           userToken: currentUser!.token);
-      await Provider.of<Users>(context, listen: false)
-          .fetchAndUpdateUser(userToken: currentUser!.token);
+
+      AUser newUser = AUser(
+        id: DateTime.now().microsecond.toString(),
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        role: role,
+      );
+      showMySnackBar(context: context, text: 'User : User Added');
+      Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
       setState(() {
         isLoading = false;
       });
@@ -201,7 +209,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       _emailController.clear();
       _phoneController.clear();
       _passwordController.clear();
-      showMySnackBar(context: context, text: 'User : User Added');
     }).catchError((error) {
       setState(() {
         isLoading = false;

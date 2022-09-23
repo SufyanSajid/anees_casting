@@ -131,28 +131,34 @@ class Users with ChangeNotifier {
 
   Future<void> deleteUser(
       {required String userId, required String userToken}) async {
-    try {
-      final url = Uri.parse('${baseUrl}delete_user');
+    // try {
+    final url = Uri.parse('${baseUrl}delete_user');
 
-      var response = await http.post(url, headers: {
-        'Authorization': 'Bearer $userToken'
-      }, body: {
-        'user_id': userId,
-      });
-      var extractedData = json.decode(response.body);
-      if (extractedData['success'] == true) {
-        print(extractedData['data']);
-      } else {
-        var message = extractedData['message'];
-        print(message);
-        throw message;
-      }
-    } catch (error) {
-      throw error;
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken'
+    }, body: {
+      'user_id': userId,
+    });
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      _users.removeWhere(
+        (element) => element.id == userId,
+      );
+      notifyListeners();
+      print(extractedData['data']);
+    } else {
+      var message = extractedData['message'];
+      print(message);
+      throw message;
     }
+    // } catch (error) {
+    //   throw error;
+    // }
   }
 
-  Future<void> fetchAndUpdateUser({required String userToken}) async {
+  Future<void> fetchAndUpdateUser({
+    required String userToken,
+  }) async {
     if (_users.isNotEmpty) {
       print(999);
       return;
