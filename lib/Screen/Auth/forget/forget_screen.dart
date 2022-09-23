@@ -1,6 +1,9 @@
+import 'package:anees_costing/Screen/Auth/forget/verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Functions/dailog.dart';
+import '../../../Models/auth.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
 import '../../../Widget/input_feild.dart';
@@ -22,32 +25,33 @@ class _ForgetScreenState extends State<ForgetScreen> {
   bool isLoading = false;
 
   void _submit() {
-    // if (_formKey.currentState!.validate()) {
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-    //   Provider.of<Auth>(context, listen: false)
-    //       .resetPassword(_emailController.text)
-    //       .then((value) {
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-
-    //     Navigator.of(context).pushNamed(VerificationScreen.routeName,
-    //         arguments: _emailController.text);
-    //   }).catchError((error) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (ctx) => AdaptiveDiaglog(
-    //             ctx: ctx,
-    //             title: '❌',
-    //             content: error.toString(),
-    //             btnYes: 'OK',
-    //             yesPressed: () {
-    //               Navigator.of(context).pop();
-    //             }));
-    //   });
-    // }
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Auth>(context, listen: false)
+          .resetPassword(_emailController.text.trim())
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        _emailController.clear();
+        Navigator.of(context).pushNamed(VerificationScreen.routeName,
+            arguments: _emailController.text);
+      }).catchError((error) {
+        setState(() {
+          isLoading = false;
+          showCustomDialog(
+              context: context,
+              title: 'Error',
+              btn1: 'Okay',
+              content: error.toString(),
+              btn1Pressed: () {
+                Navigator.of(context).pop();
+              });
+        });
+      });
+    }
   }
 
   @override
@@ -62,33 +66,28 @@ class _ForgetScreenState extends State<ForgetScreen> {
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage(
-            'assets/images/background.png',
+            'assets/images/poster.jpeg',
           ),
         ),
       ),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+          ),
+          backgroundColor: Colors.black.withOpacity(0.8),
           body: SingleChildScrollView(
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                //   child: Appbar(
-                //     height: height,
-                //     width: width,
-                //     leading: ArrowBack(),
-                //     center: Container(),
-                //     trailing: Container(),
-                //   ),
-                // ),
                 SizedBox(
                   height: height * 10,
                 ),
                 Center(
                   child: Image.asset(
-                    'assets/images/123.png',
+                    'assets/images/log0_final.png',
+                    fit: BoxFit.cover,
                     height: height * 17,
                   ),
                 ),
@@ -102,10 +101,10 @@ class _ForgetScreenState extends State<ForgetScreen> {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: InputFeild(
-                            hinntText: 'Inserisci la tua email',
+                            hinntText: 'Enter Your Email',
                             validatior: (String value) {
                               if (value.isEmpty) {
-                                return 'Inserisci il tuo indirizzo email';
+                                return '';
                               }
                             },
                             inputController: _emailController),
@@ -134,9 +133,10 @@ class _ForgetScreenState extends State<ForgetScreen> {
                                 )
                               : const Center(
                                   child: Text(
-                                    'Dimenticare la password',
+                                    'Forget Password',
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
+                                        color: Colors.white,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16),
                                   ),

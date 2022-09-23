@@ -76,7 +76,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               onChanged: (value) async {
                 if (value.isEmpty) {
                   Provider.of<Products>(context, listen: false)
-                      .fetchAndUpdateProducts(currentUser!.token);
+                      .fetchAndUpdateProducts(userToken: currentUser!.token);
                 }
               },
               decoration: InputDecoration(

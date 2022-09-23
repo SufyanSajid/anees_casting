@@ -48,7 +48,7 @@ class _ProductScreenState extends State<ProductScreen> {
           isLoading = true;
         });
         Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts(currentUser!.token)
+            .fetchAndUpdateProducts(userToken: currentUser!.token)
             .then(
           (value) {
             setState(
@@ -373,7 +373,8 @@ class _ProductScreenState extends State<ProductScreen> {
                           isLoading = true;
                         });
                         Provider.of<Products>(context, listen: false)
-                            .fetchAndUpdateProducts(currentUser!.token)
+                            .fetchAndUpdateProducts(
+                                userToken: currentUser!.token)
                             .then((value) {
                           setState(() {
                             isLoading = false;

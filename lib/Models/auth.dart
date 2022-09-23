@@ -124,6 +124,15 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    final url = Uri.parse('${baseUrl}send_otp');
+
+    var response = await http.post(url, body: {
+      'email': email,
+    });
+    print(response.body);
+  }
+
   Future<void> LoginWithEmailAndPassword(
     String email,
     String password,

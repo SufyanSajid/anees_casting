@@ -24,7 +24,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   @override
   void didChangeDependencies() {
     if (isFirst) {
-      email = ModalRoute.of(context)!.settings.arguments as String;
+      // email = ModalRoute.of(context)!.settings.arguments as String;
       isFirst = false;
     }
     // TODO: implement didChangeDependencies
@@ -74,13 +74,16 @@ class _VerificationScreenState extends State<VerificationScreen> {
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage(
-            'assets/images/background.png',
+            'assets/images/poster.jpeg',
           ),
         ),
       ),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+          ),
+          backgroundColor: Colors.black.withOpacity(0.8),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -101,32 +104,33 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                   Center(
                     child: Image.asset(
-                      'assets/images/123.png',
+                      'assets/images/logo.png',
                       height: height * 17,
                     ),
                   ),
                   SizedBox(
-                    height: height * 30,
+                    height: height * 26,
                   ),
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        'Inserisci il codice a 6 cifre che viene inviato al tuo indirizzo email',
-                        style: TextStyle(color: primaryColor, fontSize: 14),
+                        'Enter the 6-digit code that is sent to your email address',
+                        style: TextStyle(
+                            color: btnbgColor.withOpacity(1), fontSize: 14),
                       )),
                   SizedBox(
-                    height: height * 1,
+                    height: height * 2,
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: InputFeild(
-                        hinntText: 'Inserire il codice qui',
+                        hinntText: 'Code here',
                         validatior: (String value) {
                           if (value.isEmpty) {
-                            return 'Si prega di inserire il codice inviato sul tuo indirizzo email';
+                            return 'Enter the 6-digit code that is sent to your email address';
                           }
                           if (value.length > 6) {
-                            return 'Codice non VALIDO';
+                            return 'Code invalid';
                           }
                         },
                         inputController: _codeController),
@@ -155,6 +159,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               child: Text(
                                 'Verificare il codice',
                                 style: TextStyle(
+                                    color: Colors.white,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16),

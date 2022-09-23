@@ -122,9 +122,12 @@ class Products with ChangeNotifier {
     return _products.firstWhere((element) => element.id == id);
   }
 
-  Future<void> fetchAndUpdateProducts(String userToken) async {
-    if (products.isNotEmpty) {
-      return;
+  Future<void> fetchAndUpdateProducts(
+      {required String userToken, bool? forced}) async {
+    if (forced == false) {
+      if (products.isNotEmpty) {
+        return;
+      }
     }
     List<Product> tempProds = [];
     final url = Uri.parse('${baseUrl}products');
@@ -332,6 +335,7 @@ class Products with ChangeNotifier {
         image: prod['imageUrl'],
         dateTime: prod['created_at'],
       );
+      _products.removeWhere((element) => element.id == prod.id);
       _products.add(prod);
       notifyListeners();
     } else {

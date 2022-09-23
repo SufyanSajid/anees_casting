@@ -155,6 +155,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         phone: _phoneController.text,
         role: role,
       );
+      showMySnackBar(context: context, text: 'User : User Data Updated');
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
       setState(() {
         isLoading = false;
@@ -200,7 +201,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       _emailController.clear();
       _phoneController.clear();
       _passwordController.clear();
-      showMySnackBar(context: context, text: 'User Added : Check user list');
+      showMySnackBar(context: context, text: 'User : User Added');
     }).catchError((error) {
       setState(() {
         isLoading = false;

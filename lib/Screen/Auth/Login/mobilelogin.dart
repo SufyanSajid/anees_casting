@@ -18,7 +18,7 @@ import '../../../contant.dart';
 import 'package:flutter/material.dart';
 
 import '../../Admin/homepage/admin_home.dart';
-import '../forget.dart';
+import '../forget/forget_screen.dart';
 
 class MobileLoginScreen extends StatefulWidget {
   MobileLoginScreen({Key? key}) : super(key: key);

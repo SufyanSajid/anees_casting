@@ -8,7 +8,7 @@ getSearchedProduct(String search, BuildContext context) {
   var currentUser = Provider.of<Auth>(context, listen: false).currentUser;
   if (search.isEmpty) {
     Provider.of<Products>(context, listen: false)
-        .fetchAndUpdateProducts(currentUser!.token);
+        .fetchAndUpdateProducts(userToken: currentUser!.token, forced: true);
   } else {
     Provider.of<Products>(context, listen: false)
         .searchProduct(title: search, userToken: currentUser!.token);

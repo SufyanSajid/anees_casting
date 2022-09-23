@@ -64,7 +64,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
           isLoading = true;
         });
         await Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts(currentUser!.token)
+            .fetchAndUpdateProducts(userToken: currentUser!.token)
             .then((value) {
           setState(
             () {
@@ -113,8 +113,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                     await productProvider.deleteProduct(
                         prodId, currentUser!.token);
                     countProvider.decreaseCount(product: 1);
-                    await productProvider
-                        .fetchAndUpdateProducts(currentUser!.token);
+                    await productProvider.fetchAndUpdateProducts(
+                        userToken: currentUser!.token);
 
                     setState(() {
                       isLoading = false;
@@ -377,7 +377,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   isLoading = true;
                 });
                 await Provider.of<Products>(context, listen: false)
-                    .fetchAndUpdateProducts(currentUser!.token)
+                    .fetchAndUpdateProducts(userToken: currentUser!.token)
                     .then((value) {
                   setState(
                     () {

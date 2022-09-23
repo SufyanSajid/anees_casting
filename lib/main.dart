@@ -9,7 +9,7 @@ import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
 import 'package:anees_costing/Screen/Admin/users/customers.dart';
-import 'package:anees_costing/Screen/Auth/forget.dart';
+import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
@@ -28,6 +28,8 @@ import 'package:provider/provider.dart';
 import 'Screen/Admin/category/category.dart';
 import 'Screen/Admin/users/users.dart';
 import 'Screen/Auth/Login/login.dart';
+import 'Screen/Auth/forget/forget_screen.dart';
+import 'Screen/Auth/forget/verification_screen.dart';
 
 void main() async {
   debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
@@ -92,6 +94,8 @@ class MyApp extends StatelessWidget {
           CategoryChildListScreen.routeName: (ctx) => CategoryChildListScreen(),
           CatProductScreen.routeName: (ctx) => CatProductScreen(),
           ForgetScreen.routeName: (ctx) => ForgetScreen(),
+          VerificationScreen.routeName: (ctx) => VerificationScreen(),
+          NewPassScreen.routeName: (ctx) => NewPassScreen(),
         },
       ),
     );

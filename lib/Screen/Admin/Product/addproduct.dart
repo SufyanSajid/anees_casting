@@ -38,11 +38,13 @@ class _AddProductState extends State<AddProduct> {
   String prodUnit = "CM";
   Category? category;
   Uint8List? image;
-  String? imageExtention;
+
   File? image123;
   String? editImage;
-  String base64Image = '';
+
   String? downloadImgUrl;
+  String? imageExtention;
+  String base64Image = '';
   bool isLoading = false;
   Map<String, dynamic>? args;
   CurrentUser? currentUser;
