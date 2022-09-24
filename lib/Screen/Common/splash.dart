@@ -1,4 +1,3 @@
-import 'package:anees_costing/Screen/Admin/homepage/mobile.dart';
 import 'package:anees_costing/Screen/Auth/Login/login.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../Models/auth.dart';
 import '../../contant.dart';
 import '../Admin/homepage/admin_home.dart';
-import '../Auth/Login/mobilelogin.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,11 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() async {
     if (isFirst) {
-      await Future.delayed(Duration(seconds: 2)).then((value) async {
+      await Future.delayed(const Duration(seconds: 2)).then((value) async {
         bool isLogin =
             await Provider.of<Auth>(context, listen: false).tryAutoLogin();
-        print(isLogin);
         currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+        
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
           Navigator.of(context)
               .pushReplacementNamed(CustomerProductScreen.routeName);

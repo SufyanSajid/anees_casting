@@ -11,8 +11,8 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      mobileLayout: MobileLoginScreen(),
-      webLayout: WebLogin(),
+      mobileLayout:const  MobileLoginScreen(),
+      webLayout: const WebLogin(),
     );
   }
 }

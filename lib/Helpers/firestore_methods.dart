@@ -148,7 +148,7 @@ class FirestoreMethods {
   getCatById({required String collection, required String catId}) async {
     final URL = Uri.parse("${filterUrl}:runQuery");
     var res = await http.post(
-      URL,
+      URL, 
       body: json.encode({
         'structuredQuery': {
           'from': {'collectionId': collection},

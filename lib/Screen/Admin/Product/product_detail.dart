@@ -11,34 +11,56 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
 
+import '../../../Models/auth.dart';
 import '../../../Widget/appbar.dart';
 import '../../../contant.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   static const routeName = '/product-detail';
-  ProductDetailScreen({Key? key}) : super(key: key);
+  const ProductDetailScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Product? product;
+  bool isLoading = false;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as Product;
+    String role = Provider.of<Auth>(context, listen: false).currentUser!.role!;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final imageUrl = Uri.parse(product!.image);
-          final response = await http.get(imageUrl);
-          final bytes = response.bodyBytes;
+      floatingActionButton: role.toLowerCase() == "customer"
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                final imageUrl = Uri.parse(product!.image);
+                final response = await http.get(imageUrl);
+                final bytes = response.bodyBytes;
 
-          final temp = await getTemporaryDirectory();
-          final path = '${temp.path}/image.jpg';
-          File(path).writeAsBytesSync(bytes);
-          await Share.shareFiles([path]);
-        },
-        backgroundColor: primaryColor,
-        child: const Icon(Icons.share),
-      ),
+                final temp = await getTemporaryDirectory();
+                final path = '${temp.path}/image.jpg';
+                File(path).writeAsBytesSync(bytes);
+                await Share.shareFiles([path]);
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              backgroundColor: primaryColor,
+              child: isLoading
+                  ? CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Icon(Icons.share),
+            ),
       key: _scaffoldKey,
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,

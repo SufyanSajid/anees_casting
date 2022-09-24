@@ -21,7 +21,7 @@ import '../../Admin/homepage/admin_home.dart';
 import '../forget/forget_screen.dart';
 
 class MobileLoginScreen extends StatefulWidget {
-  MobileLoginScreen({Key? key}) : super(key: key);
+  const MobileLoginScreen({Key? key}) : super(key: key);
 
   @override
   State<MobileLoginScreen> createState() => _MobileLoginScreenState();
@@ -104,7 +104,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                         SizedBox(
                           height: height * 4,
                         ),
-                        LoginFeilds(),
+                        const LoginFeilds(),
                       ],
                     ),
                   ),
@@ -168,7 +168,9 @@ class _LoginFeildsState extends State<LoginFeilds> {
               logType: 'Activity'),
           userToken: currentUser.token);
 
-      if (currentUser.role!.toLowerCase() == '0') {
+      print("currentUser.role ${currentUser.role}");
+      if (currentUser.role!.toLowerCase() == 'customer') {
+        print("Customer");
         Navigator.of(context)
             .pushReplacementNamed(CustomerProductScreen.routeName);
       } else {

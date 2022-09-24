@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 class AddUser extends StatefulWidget {
   static const routeName = '/adduser';
 
-  AddUser({Key? key}) : super(key: key);
+  const AddUser({Key? key}) : super(key: key);
 
   @override
   State<AddUser> createState() => _AddUserState();

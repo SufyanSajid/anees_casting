@@ -13,7 +13,7 @@ import '../../Widget/input_feild.dart';
 
 class CustomerProductScreen extends StatefulWidget {
   static const routeName = '/customer-products';
-  CustomerProductScreen({super.key});
+  const CustomerProductScreen({super.key});
 
   @override
   State<CustomerProductScreen> createState() => _CustomerProductScreenState();
@@ -32,8 +32,10 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
         isLoading = true;
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-      // products = await Provider.of<Products>(context)
-      //     .getCustomerProducts(currentUser!.id);
+      products = currentUser == null
+          ? []
+          : await Provider.of<Products>(context)
+              .getCustomerProducts(currentUser!.id, currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -50,7 +52,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Column(
