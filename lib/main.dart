@@ -10,6 +10,7 @@ import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Screen/Admin/logs/activitylog.dart';
 import 'package:anees_costing/Screen/Admin/users/customers.dart';
 import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
+import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
@@ -77,22 +78,25 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (ctx) => const SplashScreen(),
+          ProfileScreen.routeName: (context) => ProfileScreen(),
           LoginScreen.routeName: (ctx) => const LoginScreen(),
           AdminHomePage.routeName: (ctx) => const AdminHomePage(),
           CategoryScreen.routeName: (ctx) => CategoryScreen(),
           UserScreen.routeName: (ctx) => const UserScreen(),
           CustomerScreen.routeName: (ctx) => CustomerScreen(),
           AdminSideCustomerProductScreen.routeName: (ctx) =>
-            const  AdminSideCustomerProductScreen(),
+              const AdminSideCustomerProductScreen(),
           ProductScreen.routeName: (ctx) => ProductScreen(),
           AddProduct.routeName: (ctx) => const AddProduct(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           AddUser.routeName: (ctx) => AddUser(),
-          CustomerProductScreen.routeName: (ctx) => const CustomerProductScreen(),
+          CustomerProductScreen.routeName: (ctx) =>
+              const CustomerProductScreen(),
           ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
           CategoryListScreen.routeName: (ctx) => const CategoryListScreen(),
-          CategoryChildListScreen.routeName: (ctx) =>const CategoryChildListScreen(),
-          CatProductScreen.routeName: (ctx) =>  const CatProductScreen(),
+          CategoryChildListScreen.routeName: (ctx) =>
+              const CategoryChildListScreen(),
+          CatProductScreen.routeName: (ctx) => const CatProductScreen(),
           ForgetScreen.routeName: (ctx) => ForgetScreen(),
           VerificationScreen.routeName: (ctx) => VerificationScreen(),
           NewPassScreen.routeName: (ctx) => const NewPassScreen(),

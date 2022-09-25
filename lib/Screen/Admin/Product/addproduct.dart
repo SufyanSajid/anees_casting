@@ -152,6 +152,7 @@ class _AddProductState extends State<AddProduct> {
       //     .updateProductLocally(newProducts);
 
       clearControllersAndImage();
+      Navigator.of(context).pop();
     }
     setState(() {
       isLoading = false;
@@ -262,7 +263,8 @@ class _AddProductState extends State<AddProduct> {
                     ),
                     CustomAutoComplete(
                       categories: categories,
-                      firstSelction: editCat,
+                      firstSelction:
+                          editCat.isEmpty ? "Select Category" : editCat,
                       onChange: (Category cat) {
                         category = cat;
                       },
@@ -364,6 +366,7 @@ class _AddProductState extends State<AddProduct> {
     _prodLengthController.clear();
     _prodWidthController.clear();
     _prodNameController.clear();
+    editCat = "";
   }
 
   bool productNotEmpty() {

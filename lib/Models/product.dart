@@ -34,6 +34,7 @@ class Product {
 class Products with ChangeNotifier {
   List<Product> _products = [];
   List<Product> _catProducts = [];
+  List<Product> _cutomerProducts = [];
   Product? drawerProduct;
   String? pageToken;
 
@@ -43,6 +44,10 @@ class Products with ChangeNotifier {
 
   List<Product> get products {
     return [..._products];
+  }
+
+  List<Product> get customerProducts {
+    return [..._cutomerProducts];
   }
 
   List<Product> get catProducts {
@@ -358,8 +363,7 @@ class Products with ChangeNotifier {
     });
   }
 
-  Future<List<Product>> getCustomerProducts(
-      String userId, String userToken) async {
+  Future<void> getCustomerProducts(String userId, String userToken) async {
     print(userId);
     List<Product> tempProds = [];
     final url = Uri.parse('${baseUrl}customer_products?user_id=$userId');
@@ -391,7 +395,9 @@ class Products with ChangeNotifier {
           ),
         );
       });
-      return tempProds;
+      _cutomerProducts = tempProds;
+      notifyListeners();
+      
     } else {
       var message = extractedResponse['message'];
       throw message;

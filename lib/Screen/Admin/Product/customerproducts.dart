@@ -44,7 +44,7 @@ class _AdminSideCustomerProductScreenState
 
       customer = ModalRoute.of(context)!.settings.arguments as AUser;
 
-      products = await Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .getCustomerProducts(customer!.id, currentUser!.token);
       setState(() {
         isLoading = false;
@@ -75,7 +75,7 @@ class _AdminSideCustomerProductScreenState
                 context: context, text: 'Customer : Product Deleted');
             Provider.of<Products>(context, listen: false)
                 .removeCustomer(cusId, prod.id);
-            products = await Provider.of<Products>(context, listen: false)
+            await Provider.of<Products>(context, listen: false)
                 .getCustomerProducts(customer!.id, currentUser!.token);
             setState(() {
               isLoading = false;
@@ -98,6 +98,7 @@ class _AdminSideCustomerProductScreenState
 
   @override
   Widget build(BuildContext context) {
+    products = Provider.of<Products>(context).customerProducts;
     return Scaffold(
       key: _scaffoldKey,
       drawer: AppDrawer(),

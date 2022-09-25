@@ -100,8 +100,19 @@ class Users with ChangeNotifier {
   }
 
   void updateUserLocally(AUser user) {
-    _users.removeWhere((element) => element.id == user.id);
-    _users.add(user);
+    if (user.role.toLowerCase() == "customer") {
+      int customerIndex =
+          _customers.indexWhere((element) => element.id == user.id);
+
+      customerIndex == -1
+          ? _customers.add(user)
+          : _customers.removeAt(customerIndex);
+    } else {
+      int userIndex = _users.indexWhere((element) => element.id == user.id);
+
+      userIndex == -1 ? _users.add(user) : _users.removeAt(userIndex);
+    }
+
     notifyListeners();
   }
 

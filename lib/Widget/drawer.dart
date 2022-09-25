@@ -4,6 +4,8 @@ import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Screen/Auth/Login/mobilelogin.dart';
+import 'package:anees_costing/Screen/Common/profile.dart';
+import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -171,13 +173,34 @@ class _AppDrawerState extends State<AppDrawer> {
                           color: Colors.white),
                     ),
                     onTap: () {
+                      if (currentUser.role == "customer") {
+                        Navigator.of(context)
+                            .pushNamed(CustomerProductScreen.routeName);
+                        return;
+                      }
                       Navigator.of(context).pushNamed(AdminHomePage.routeName);
                       Provider.of<Counts>(context, listen: false)
                           .setSelectedIndex(0);
                     },
                   ),
-                  if (currentUser.role!.toLowerCase() == 'admin')
-                    const Divider(),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.person_outline_outlined,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'Profile',
+                      style: TextStyle(
+                          fontFamily: 'Poppins-thin',
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, ProfileScreen.routeName);
+                      Provider.of<Counts>(context, listen: false)
+                          .setSelectedIndex(0);
+                    },
+                  ),
                   if (currentUser.role!.toLowerCase() == 'admin')
                     ListTile(
                       leading: const Icon(

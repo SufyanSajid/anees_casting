@@ -176,7 +176,7 @@ class _ShowUsersState extends State<ShowUsers> {
   //       });
   // }
 
-  void _deleteUser(String userId) {
+  void _deleteUser(AUser aUser) {
     showCustomDialog(
         context: context,
         title: 'Delete User',
@@ -188,10 +188,12 @@ class _ShowUsersState extends State<ShowUsers> {
             isLoading = true;
           });
           Provider.of<Users>(context, listen: false)
-              .deleteUser(userId: userId, userToken: currentUser!.token)
+              .deleteUser(userId: aUser.id, userToken: currentUser!.token)
               .then((value) async {
             // await Provider.of<Users>(context, listen: false)
             //     .fetchAndUpdateUser(userToken: currentUser!.token);
+
+            Provider.of<Users>(context, listen: false).updateUserLocally(aUser);
             showMySnackBar(context: context, text: 'User: User Deleted');
             setState(() {
               isLoading = false;
@@ -420,9 +422,9 @@ class _ShowUsersState extends State<ShowUsers> {
                           if (widget.users[index].role.toLowerCase() != 'admin')
                             IconButton(
                               onPressed: () {
-                                _deleteUser(widget.users[index].id);
+                                _deleteUser(widget.users[index]);
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.delete,
                                 color: Colors.red,
                               ),
@@ -511,8 +513,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
       setState(() {
         productLoading = true;
       });
-      customerProducts = await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
+      await Provider.of<Products>(context, listen: false).getCustomerProducts(
         widget.userId,
         currentUser!.token,
       );
@@ -526,6 +527,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
 
   @override
   Widget build(BuildContext context) {
+    customerProducts = Provider.of<Products>(context).customerProducts;
     return productLoading
         ? Center(
             child: AdaptiveIndecator(

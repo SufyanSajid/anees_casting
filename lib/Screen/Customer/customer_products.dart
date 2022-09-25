@@ -23,6 +23,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
   final _productController = TextEditingController();
   CurrentUser? currentUser;
   List<Product>? products;
+  String search = "";
   bool isLoading = false;
   bool isFirst = true;
   @override
@@ -32,10 +33,8 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
         isLoading = true;
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-      products = currentUser == null
-          ? []
-          : await Provider.of<Products>(context)
-              .getCustomerProducts(currentUser!.id, currentUser!.token);
+      await Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(currentUser!.id, currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -50,6 +49,11 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (search.isEmpty) {
+      products = Provider.of<Products>(context).customerProducts;
+    }
+
+    print(search);
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),
@@ -131,47 +135,45 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                 validatior: () {},
                 onChanged: (value) {
                   if (value.isEmpty) {
-                    // Provider.of<Products>(context, listen: false)
-                    //     .getCustomerProducts(currentUser!.id)
-                    //     .then((value) {
-                    //   setState(() {
-                    //     products = value;
-                    //   });
-                    // });
+                    setState(() {
+                      search = value;
+                    });
                   } else {
                     setState(
                       () {
-                        products = products!
-                            .where((element) =>
-                                element.name.toLowerCase() ==
-                                value.toLowerCase())
+                        search = value;
+                        products = Provider.of<Products>(context, listen: false)
+                            .customerProducts
+                            .where((element) => element.name
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
                             .toList();
                       },
                     );
                   }
                 },
                 inputController: _productController,
-                submitted: (value) {
-                  if (value.isEmpty) {
-                    // Provider.of<Products>(context, listen: false)
-                    //     .getCustomerProducts(currentUser!.id)
-                    //     .then((value) {
-                    //   setState(() {
-                    //     products = value;
-                    //   });
-                    // });
-                  } else {
-                    setState(
-                      () {
-                        products = products!
-                            .where((element) =>
-                                element.name.toLowerCase() ==
-                                value.toLowerCase())
-                            .toList();
-                      },
-                    );
-                  }
-                },
+                // submitted: (value) {
+                //   if (value.isEmpty) {
+                //     // Provider.of<Products>(context, listen: false)
+                //     //     .getCustomerProducts(currentUser!.id)
+                //     //     .then((value) {
+                //     //   setState(() {
+                //     //     products = value;
+                //     //   });
+                //     // });
+                //   } else {
+                //     setState(
+                //       () {
+                //         products = products!
+                //             .where((element) =>
+                //                 element.name.toLowerCase() ==
+                //                 value.toLowerCase())
+                //             .toList();
+                //       },
+                //     );
+                // }
+                // },
               ),
             ),
             SizedBox(

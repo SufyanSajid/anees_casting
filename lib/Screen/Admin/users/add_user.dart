@@ -201,6 +201,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         role: role,
       );
       showMySnackBar(context: context, text: 'User : User Added');
+      // Provider.of<Users>(context, listen: false)
+      //     .fetchAndUpdateUser(userToken: currentUser!.token);
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
       setState(() {
         isLoading = false;

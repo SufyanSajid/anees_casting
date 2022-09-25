@@ -1,5 +1,7 @@
 import 'package:anees_costing/Helpers/firebase_auth.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import '../../Widget/drawer.dart';
 import '../../Widget/input_feild.dart';
 import '../../Widget/snakbar.dart';
 import '../../Widget/submitbutton.dart';
+import '../Customer/customer_products.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profileScreen';
@@ -149,6 +152,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     svgIcon: 'assets/icons/profile.svg',
                     leadingIcon: Icons.home,
                     leadingTap: () {
+                      if (currentUser.role == "customer") {
+                        Navigator.of(context).pushReplacementNamed(
+                            CustomerProductScreen.routeName);
+                      } else {
+                        Navigator.of(context)
+                            .pushReplacementNamed(AdminHomePage.routeName);
+                      }
                       Provider.of<Counts>(context, listen: false)
                           .setSelectedIndex(0);
                     },

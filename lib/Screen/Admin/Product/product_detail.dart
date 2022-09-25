@@ -35,32 +35,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     String role = Provider.of<Auth>(context, listen: false).currentUser!.role!;
 
     return Scaffold(
-      floatingActionButton: role.toLowerCase() == "admin"
-          ? FloatingActionButton(
-              onPressed: () async {
-                setState(() {
-                  isLoading = true;
-                });
-                final imageUrl = Uri.parse(product!.image);
-                final response = await http.get(imageUrl);
-                final bytes = response.bodyBytes;
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          setState(() {
+            isLoading = true;
+          });
+          final imageUrl = Uri.parse(product!.image);
+          final response = await http.get(imageUrl);
+          final bytes = response.bodyBytes;
 
-                final temp = await getTemporaryDirectory();
-                final path = '${temp.path}/image.jpg';
-                File(path).writeAsBytesSync(bytes);
-                await Share.shareFiles([path]);
-                setState(() {
-                  isLoading = false;
-                });
-              },
-              backgroundColor: primaryColor,
-              child: isLoading
-                  ? CircularProgressIndicator(
-                      color: Colors.white,
-                    )
-                  : const Icon(Icons.share),
-            )
-          : Container(),
+          final temp = await getTemporaryDirectory();
+          final path = '${temp.path}/image.jpg';
+          File(path).writeAsBytesSync(bytes);
+          await Share.shareFiles([path]);
+          setState(() {
+            isLoading = false;
+          });
+        },
+        backgroundColor: primaryColor,
+        child: isLoading
+            ? CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : const Icon(Icons.share),
+      ),
       key: _scaffoldKey,
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,

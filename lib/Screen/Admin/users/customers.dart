@@ -30,7 +30,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     customers = Provider.of<Users>(context, listen: false).customers;
     return Scaffold(
       key: _scaffoldKey,
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(
