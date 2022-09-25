@@ -35,9 +35,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     String role = Provider.of<Auth>(context, listen: false).currentUser!.role!;
 
     return Scaffold(
-      floatingActionButton: role.toLowerCase() == "customer"
-          ? Container()
-          : FloatingActionButton(
+      floatingActionButton: role.toLowerCase() == "admin"
+          ? FloatingActionButton(
               onPressed: () async {
                 setState(() {
                   isLoading = true;
@@ -60,7 +59,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       color: Colors.white,
                     )
                   : const Icon(Icons.share),
-            ),
+            )
+          : Container(),
       key: _scaffoldKey,
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,
