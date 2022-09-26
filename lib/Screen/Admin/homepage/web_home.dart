@@ -12,6 +12,7 @@ import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/product.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/grad_button.dart';
 import '../../../Widget/sidebar.dart';
@@ -41,25 +42,25 @@ class _WebHomeState extends State<WebHome> {
       setState(() {
         isLoading = true;
       });
-
-      BuildContext ctx = context;
-
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
-      if (Provider.of<Categories>(ctx, listen: false).categories.isEmpty) {
-        await Provider.of<Categories>(ctx, listen: false)
-            .fetchAndUpdateCat(currentUser!.token);
-      }
-      if (Provider.of<Users>(ctx, listen: false).users.isEmpty) {
-        await Provider.of<Users>(ctx, listen: false)
-            .fetchAndUpdateUser(userToken: currentUser!.token);
-      }
-      Provider.of<Counts>(ctx, listen: false).fetchtAndUpdateCount();
+      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
+
+      await Provider.of<Users>(context, listen: false)
+          .fetchAndUpdateUser(userToken: currentUser!.token);
+      setState(() {
+        isLoading = false;
+      });
+      Provider.of<Categories>(context, listen: false)
+          .fetchAndUpdateCat(currentUser!.token);
+      Provider.of<Products>(context, listen: false)
+          .fetchAndUpdateProducts(userToken: currentUser!.token);
+
+      setState(() {
+        isLoading = false;
+      });
+      isFirst = false;
     }
-    setState(() {
-      isLoading = false;
-    });
-    isFirst = false;
     super.didChangeDependencies();
   }
 
@@ -70,7 +71,8 @@ class _WebHomeState extends State<WebHome> {
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;
     users = Provider.of<Users>(context, listen: false).users;
-
+    var products = Provider.of<Products>(context, listen: true).products;
+    var categories = Provider.of<Categories>(context, listen: false).categories;
     Widget homeContent = Column(
       children: [
         //home bar
@@ -156,8 +158,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Designs',
-                value:
-                    counts == null ? "waiting..." : "${counts!.productsCount}",
+                value: isLoading ? '...' : products.length.toString(),
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -166,8 +167,13 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
-                title: 'Total Users',
-                value: usersCount.toString(),
+                title: 'Total Clients',
+                value: isLoading
+                    ? '...'
+                    : Provider.of<Users>(context, listen: true)
+                        .customers
+                        .length
+                        .toString(),
                 icon: Icons.groups_outlined,
               ),
             ),
@@ -177,7 +183,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: 'Total Categories',
-                value: categoriesCount.toString(),
+                value: isLoading ? '...' : categories.length.toString(),
                 icon: Icons.diamond_outlined,
               ),
             ),
@@ -318,6 +324,7 @@ class _WebHomeState extends State<WebHome> {
       CategoryWebContent(
         scaffoldKey: _ScaffoldKey,
       ),
+      CategoryListWeb(),
       ActivityLogWebContent(),
     ];
 

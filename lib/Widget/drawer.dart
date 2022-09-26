@@ -201,7 +201,8 @@ class _AppDrawerState extends State<AppDrawer> {
                           .setSelectedIndex(0);
                     },
                   ),
-                  if (currentUser.role!.toLowerCase() == 'admin')
+                  if (currentUser.role!.toLowerCase() == 'admin' ||
+                      currentUser.role!.toLowerCase() == 'seller')
                     ListTile(
                       leading: const Icon(
                         Icons.home_outlined,
@@ -220,7 +221,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             .pushNamed(CustomerScreen.routeName);
                       },
                     ),
-                  const Divider(),
+                  // const Divider(),
                   ListTile(
                     leading: const Icon(
                       Icons.logout,
