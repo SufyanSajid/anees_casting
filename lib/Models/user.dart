@@ -100,18 +100,37 @@ class Users with ChangeNotifier {
   }
 
   void updateUserLocally(AUser user) {
-    if (user.role.toLowerCase() == "customer") {
-      int customerIndex =
-          _customers.indexWhere((element) => element.id == user.id);
+    int customerIndex =
+        _customers.indexWhere((element) => element.id == user.id);
+    int userIndex = _users.indexWhere((element) => element.id == user.id);
 
-      customerIndex == -1
-          ? _customers.add(user)
-          : _customers.removeAt(customerIndex);
+    if (userIndex == -1) {
+      _users.add(user);
     } else {
-      int userIndex = _users.indexWhere((element) => element.id == user.id);
-
-      userIndex == -1 ? _users.add(user) : _users.removeAt(userIndex);
+      _users.removeAt(userIndex);
     }
+
+    if (customerIndex == -1) {
+      _customers.add(user);
+    } else {
+      _customers.removeAt(customerIndex);
+    }
+
+    // if (user.role.toLowerCase() == "customer") {
+    //   int customerIndex =
+    //       _customers.indexWhere((element) => element.id == user.id);
+
+    //   if (customerIndex == -1) {
+    //     _customers.add(user);
+    //     _users.add(user);
+    //   } else {
+    //     _customers.removeAt(customerIndex);
+    //   }
+    // } else {
+    //   int userIndex = _users.indexWhere((element) => element.id == user.id);
+
+    //   userIndex == -1 ? _users.add(user) : _users.removeAt(userIndex);
+    // }
 
     notifyListeners();
   }
@@ -213,8 +232,6 @@ class Users with ChangeNotifier {
       });
       _customers = tempCustomers;
       _users = tempUsers;
-      print(_users.length);
-      print(_customers.length);
 
       notifyListeners();
     } else {

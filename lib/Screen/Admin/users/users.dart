@@ -182,18 +182,18 @@ class _ShowUsersState extends State<ShowUsers> {
         title: 'Delete User',
         btn1: 'Yes',
         content: 'Do you want to delete user ?',
-        btn1Pressed: () {
+        btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
             isLoading = true;
           });
-          Provider.of<Users>(context, listen: false)
+          Provider.of<Users>(context, listen: false).updateUserLocally(aUser);
+          await Provider.of<Users>(context, listen: false)
               .deleteUser(userId: aUser.id, userToken: currentUser!.token)
               .then((value) async {
-            // await Provider.of<Users>(context, listen: false)
-            //     .fetchAndUpdateUser(userToken: currentUser!.token);
+            await Provider.of<Users>(context, listen: false)
+                .fetchAndUpdateUser(userToken: currentUser!.token);
 
-            Provider.of<Users>(context, listen: false).updateUserLocally(aUser);
             showMySnackBar(context: context, text: 'User: User Deleted');
             setState(() {
               isLoading = false;
