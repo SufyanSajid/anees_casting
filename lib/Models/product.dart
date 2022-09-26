@@ -210,6 +210,7 @@ class Products with ChangeNotifier {
             dateTime: prod['created_at'],
           ),
         );
+        print('yeh ha cat prods ${tempProds.length}');
         _catProducts = tempProds;
         notifyListeners();
       });

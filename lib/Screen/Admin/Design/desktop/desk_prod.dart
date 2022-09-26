@@ -43,6 +43,7 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
       setState(() {
         isLoading = true;
       });
+      Provider.of<Products>(context, listen: false).catProducts != [];
       Provider.of<Products>(context, listen: false)
           .getCatProducts(userToken: currentUser!.token, catId: cat!.id)
           .then((value) {
