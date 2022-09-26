@@ -359,7 +359,7 @@ class _ShowUsersState extends State<ShowUsers> {
                               children: [
                                 if (widget.users[index].role.toLowerCase() ==
                                         'customer' &&
-                                    Platform.isMacOS)
+                                    (Platform.isMacOS || Platform.isWindows))
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           // maximumSize: Size(130, 130),
