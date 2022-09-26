@@ -60,6 +60,8 @@ class _UserScreenState extends State<UserScreen> {
           ),
         ),
       ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: Padding(

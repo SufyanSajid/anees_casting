@@ -347,6 +347,8 @@ class Products with ChangeNotifier {
       );
       _products.removeWhere((element) => element.id == prod.id);
       _products.add(prod);
+      _catProducts.removeWhere((element) => element.id == prod.id);
+      _catProducts.add(prod);
       notifyListeners();
     } else {
       print('error in updating product');

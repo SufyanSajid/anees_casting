@@ -22,12 +22,30 @@ class _CustomerScreenState extends State<CustomerScreen> {
   List<AUser>? customers;
   bool isLoading = false;
   CurrentUser? currentUser;
+  bool isFirst = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void didChangeDependencies() async {
+    if (isFirst) {
+      currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+      // setState(() {
+      //   isLoading = true;
+      // });
+
+      // await Provider.of<Users>(context, listen: false)
+      //     .fetchAndUpdateUser(userToken: currentUser!.token);
+      // setState(() {
+      //   isLoading = false;
+      // });
+      isFirst = false;
+    }
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-    customers = Provider.of<Users>(context, listen: false).customers;
+    customers = Provider.of<Users>(context).customers;
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),

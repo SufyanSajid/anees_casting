@@ -157,6 +157,9 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       );
       showMySnackBar(context: context, text: 'User : User Data Updated');
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
+      Provider.of<Users>(context, listen: false)
+          .fetchAndUpdateUser(userToken: currentUser!.token);
+
       setState(() {
         isLoading = false;
       });
@@ -180,6 +183,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     setState(() {
       isLoading = true;
     });
+    var userId;
     Provider.of<Users>(context, listen: false)
         .createUser(
             name: _nameController.text.trim(),
@@ -187,6 +191,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
             phone: _phoneController.text.trim(),
             password: _passwordController.text.trim())
         .then((value) async {
+      userId = value;
       print('yeh h userId $value');
       await Provider.of<Users>(context, listen: false).updateUserRole(
           userId: value.toString(),
@@ -194,10 +199,10 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
           userToken: currentUser!.token);
 
       AUser newUser = AUser(
-        id: DateTime.now().microsecond.toString(),
-        name: _nameController.text,
-        email: _emailController.text,
-        phone: _phoneController.text,
+        id: userId,
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
         role: role,
       );
       showMySnackBar(context: context, text: 'User : User Added');

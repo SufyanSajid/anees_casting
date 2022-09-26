@@ -100,21 +100,35 @@ class Users with ChangeNotifier {
   }
 
   void updateUserLocally(AUser user) {
-    int customerIndex =
-        _customers.indexWhere((element) => element.id == user.id);
-    int userIndex = _users.indexWhere((element) => element.id == user.id);
-
-    if (userIndex == -1) {
+    print('yeh ha role ${user.role}');
+    if (user.role.toLowerCase() == 'customer') {
+      print('yes');
+      _customers.removeWhere((element) => element.id == user.id);
       _users.add(user);
+      _customers.add(user);
+      notifyListeners();
     } else {
-      _users.removeAt(userIndex);
+      _customers.removeWhere((element) => element.id == user.id);
+      _users.removeWhere((element) => element.id == user.id);
+      _users.add(user);
+      notifyListeners();
     }
 
-    if (customerIndex == -1) {
-      _customers.add(user);
-    } else {
-      _customers.removeAt(customerIndex);
-    }
+    // int customerIndex =
+    //     _customers.indexWhere((element) => element.id == user.id);
+    // int userIndex = _users.indexWhere((element) => element.id == user.id);
+
+    // if (userIndex == -1) {
+    //   _users.add(user);
+    // } else {
+    //   _users.removeAt(userIndex);
+    // }
+
+    // if (customerIndex == -1) {
+    //   _customers.add(user);
+    // } else {
+    //   _customers.removeAt(customerIndex);
+    // }
 
     // if (user.role.toLowerCase() == "customer") {
     //   int customerIndex =
