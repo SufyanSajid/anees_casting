@@ -296,6 +296,21 @@ class Users with ChangeNotifier {
     // notifyListeners();
   }
 
+  List<AUser> getFilteredUsers(String filter) {
+    if (filter == "Customer") {
+      return _customers;
+    }
+
+    if (filter == "Seller") {
+      return _users.where((element) => element.role == "Seller").toList();
+    }
+
+    if (filter == "Admin") {
+      return _users.where((element) => element.role == "Admin").toList();
+    }
+    return _users;
+  }
+
   resetSearchedUser() {
     _searchedUsers = [];
   }

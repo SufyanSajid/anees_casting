@@ -29,11 +29,14 @@ class _UserScreenState extends State<UserScreen> {
   bool isFirst = true;
   List<AUser> users = [];
   bool isLoading = false;
+  bool isFilter = false;
+  String selectedFilter = "All";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    users = Provider.of<Users>(context, listen: true).users;
+    users = Provider.of<Users>(context, listen: true)
+        .getFilteredUsers(selectedFilter);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -66,38 +69,80 @@ class _UserScreenState extends State<UserScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
+          child: Stack(
             children: [
-              Appbar(
-                title: 'User',
-                subtitle: 'All users here',
-                svgIcon: 'assets/icons/users.svg',
-                leadingIcon: Icons.home,
-                leadingTap: () {
-                  Provider.of<Counts>(context, listen: false)
-                      .setSelectedIndex(0);
-                },
-                tarilingIcon: Icons.filter_list,
-                tarilingTap: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
+              Column(
+                children: [
+                  Appbar(
+                    title: 'User',
+                    subtitle: 'All users here',
+                    svgIcon: 'assets/icons/users.svg',
+                    leadingIcon: Icons.home,
+                    leadingTap: () {
+                      Provider.of<Counts>(context, listen: false)
+                          .setSelectedIndex(0);
+                    },
+                    tarilingIcon: Icons.more_vert,
+                    tarilingTap: () {
+                      setState(() {
+                        isFilter = true;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: height(context) * 2,
+                  ),
+                  isLoading
+                      ? Center(
+                          child: AdaptiveIndecator(
+                            color: primaryColor,
+                          ),
+                        )
+                      : ShowUsers(
+                          users: users,
+                          isWeb: false,
+                        ),
+                ],
               ),
-              SizedBox(
-                height: height(context) * 2,
-              ),
-              isLoading
-                  ? Center(
-                      child: AdaptiveIndecator(
+              if (isFilter)
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
                         color: primaryColor,
-                      ),
-                    )
-                  : ShowUsers(
-                      users: users,
-                      isWeb: false,
-                    ),
+                        borderRadius: BorderRadius.circular(15)),
+                    // height: 300,
+                    width: 200,
+                    child: Column(children: [
+                      filterListItem("Admin"),
+                      filterListItem("Seller"),
+                      filterListItem("Customer"),
+                      filterListItem("All")
+                    ]),
+                  ),
+                )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget filterListItem(String title) {
+    return ListTile(
+      onTap: () {
+        setState(() {
+          selectedFilter = title;
+          isFilter = false;
+        });
+      },
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+            fontSize: 20),
       ),
     );
   }

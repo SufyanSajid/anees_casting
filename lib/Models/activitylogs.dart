@@ -28,6 +28,17 @@ class Logs with ChangeNotifier {
     return [..._logs];
   }
 
+  List<Log> getFilteredLog(String filter) {
+    if (filter == "Share") {
+      return _logs.where((element) => element.logType == "Share").toList();
+    }
+
+    if (filter == "Activity") {
+      return _logs.where((element) => element.logType == "Activity").toList();
+    }
+    return _logs;
+  }
+
   Future<void> fetchAndSetLogs({
     required String userToken,
   }) async {
@@ -60,9 +71,7 @@ class Logs with ChangeNotifier {
   }
 
   Future<void> addLog({required Log log, required String userToken}) async {
-    print(log.logType);
     final url = Uri.parse('${baseUrl}logs');
-    print(url);
 
     var response = await http.post(url, headers: {
       'Authorization': 'Bearer $userToken',
@@ -72,7 +81,6 @@ class Logs with ChangeNotifier {
       'user_id': log.userid,
     });
 
-    print(response.body);
 
     _logs.add(log);
     notifyListeners();
