@@ -318,7 +318,6 @@ class _WebHomeState extends State<WebHome> {
       CategoryWebContent(
         scaffoldKey: _ScaffoldKey,
       ),
-      CategoryListWeb(),
       ActivityLogWebContent(),
     ];
 

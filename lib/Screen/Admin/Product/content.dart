@@ -4,6 +4,7 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Models/user.dart';
+import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/customautocomplete.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
@@ -58,6 +59,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
     if (isFirst) {
       //FirestoreMethods().getProductsByCatId();
       currentUser = Provider.of<Auth>(context).currentUser;
+      Provider.of<Products>(context, listen: false)
+          .setScaffoldKey(widget.scaffoldKey);
       isFirst = false;
       if (Provider.of<Products>(context, listen: false).products.isEmpty) {
         setState(() {
@@ -164,6 +167,12 @@ class _ProductWebContentState extends State<ProductWebContent> {
           searchSubmitted: (val) => getSearchedProduct(val, context),
           context: context,
           searchConttroller: _designController,
+          CustomWidget: GradientButton(
+            onTap: () {
+              Navigator.of(context).pushNamed(CategoryListScreen.routeName);
+            },
+            title: 'View by  Category',
+          ),
           btnTap: () {
             Provider.of<Products>(context, listen: false).drawerProduct = null;
             widget.scaffoldKey.currentState!.openEndDrawer();
@@ -304,10 +313,15 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                               text: 'Edit',
                                               onTap: () {
                                                 Navigator.of(context).pop();
+
                                                 Provider.of<Products>(context,
                                                         listen: false)
                                                     .setProduct(
                                                         products[index]);
+                                                Provider.of<Products>(context,
+                                                        listen: false)
+                                                    .setScaffoldKey(
+                                                        widget.scaffoldKey);
 
                                                 widget.scaffoldKey.currentState!
                                                     .openEndDrawer();

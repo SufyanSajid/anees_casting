@@ -4,6 +4,7 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Screen/Admin/Design/child_cat.dart';
+import 'package:anees_costing/Screen/Admin/Design/desktop/desk_prod.dart';
 import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
@@ -100,6 +101,7 @@ class MyApp extends StatelessWidget {
           ForgetScreen.routeName: (ctx) => ForgetScreen(),
           VerificationScreen.routeName: (ctx) => VerificationScreen(),
           NewPassScreen.routeName: (ctx) => const NewPassScreen(),
+          DesktopCategoryProduct.routeName: (ctx) => DesktopCategoryProduct(),
         },
       ),
     );

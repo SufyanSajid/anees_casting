@@ -37,9 +37,14 @@ class Products with ChangeNotifier {
   List<Product> _cutomerProducts = [];
   Product? drawerProduct;
   String? pageToken;
+  GlobalKey<ScaffoldState>? scaffoldKey;
 
   void setProduct(Product prod) {
     drawerProduct = prod;
+  }
+
+  void setScaffoldKey(var key) {
+    scaffoldKey = key;
   }
 
   List<Product> get products {
@@ -397,7 +402,6 @@ class Products with ChangeNotifier {
       });
       _cutomerProducts = tempProds;
       notifyListeners();
-      
     } else {
       var message = extractedResponse['message'];
       throw message;

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
+import 'package:anees_costing/Screen/Admin/Design/desktop/desk_prod.dart';
 import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/contant.dart';
@@ -40,23 +43,29 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: backgroundColor,
+        appBar: Platform.isAndroid || Platform.isIOS
+            ? null
+            : AppBar(
+                backgroundColor: primaryColor,
+              ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                Appbar(
-                  title: 'Category',
-                  subtitle: cat!.title,
-                  svgIcon: 'assets/icons/category.svg',
-                  leadingIcon: Icons.arrow_back,
-                  leadingTap: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(CategoryListScreen.routeName);
-                  },
-                  tarilingIcon: Icons.filter_list,
-                  tarilingTap: () {},
-                ),
+                if (Platform.isIOS || Platform.isAndroid)
+                  Appbar(
+                    title: 'Category',
+                    subtitle: cat!.title,
+                    svgIcon: 'assets/icons/category.svg',
+                    leadingIcon: Icons.arrow_back,
+                    leadingTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(CategoryListScreen.routeName);
+                    },
+                    tarilingIcon: Icons.filter_list,
+                    tarilingTap: () {},
+                  ),
                 SizedBox(
                   height: height(context) * 3,
                 ),
@@ -68,10 +77,17 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                       : GridView.builder(
                           shrinkWrap: true,
                           gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                Platform.isAndroid || Platform.isIOS ? 2 : 5,
+                            crossAxisSpacing:
+                                Platform.isAndroid || Platform.isIOS
+                                    ? 10.0
+                                    : 20,
+                            mainAxisSpacing:
+                                Platform.isAndroid || Platform.isIOS
+                                    ? 10.0
+                                    : 20,
                           ),
                           itemCount: categories.length,
                           itemBuilder: (context, index) {
@@ -83,9 +99,15 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                                         listen: false)
                                     .getChildCategories(categories[index].id);
                                 if (cats.isEmpty) {
-                                  Navigator.of(context).pushNamed(
-                                      CatProductScreen.routeName,
-                                      arguments: categories[index]);
+                                  if (Platform.isAndroid || Platform.isIOS) {
+                                    Navigator.of(context).pushNamed(
+                                        CatProductScreen.routeName,
+                                        arguments: categories[index]);
+                                  } else {
+                                    Navigator.of(context).pushNamed(
+                                        DesktopCategoryProduct.routeName,
+                                        arguments: categories[index]);
+                                  }
                                 } else {
                                   Navigator.of(context).pushReplacementNamed(
                                       CategoryChildListScreen.routeName,

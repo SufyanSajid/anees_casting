@@ -14,6 +14,7 @@ Widget buildFilterBar(
     required void Function()? btnTap,
     required String? btnText,
     required Widget? dropDown,
+    required Widget? CustomWidget,
     required Function searchSubmitted}) {
   var currentUser = Provider.of<Auth>(context).currentUser;
   return Container(
@@ -58,6 +59,10 @@ Widget buildFilterBar(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (dropDown != null) dropDown,
+              SizedBox(
+                width: width(context) * 2,
+              ),
+              CustomWidget!,
               SizedBox(
                 width: width(context) * 2,
               ),
