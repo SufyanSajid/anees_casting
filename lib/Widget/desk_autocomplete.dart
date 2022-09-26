@@ -110,10 +110,7 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
                               options = const Iterable.empty();
                             },
                             child: ListTile(
-                              title: Text(
-                                  option.parentId == ""
-                                      ? option.title
-                                      : "${option.title} - ${option.parentTitle}",
+                              title: Text(option.title,
                                   style: const TextStyle(color: Colors.white)),
                             ),
                           );

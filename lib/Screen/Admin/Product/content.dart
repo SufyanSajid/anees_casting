@@ -208,7 +208,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: width(context) * 100 > 900 ? 4 : 3,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
                   ),

@@ -32,10 +32,11 @@ class _CatProductScreenState extends State<CatProductScreen> {
   Category? cat;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     print(123);
     // TODO: implement didChangeDependencies
     if (isFirst) {
+      print('did');
       print(456);
       cat = ModalRoute.of(context)!.settings.arguments as Category;
       currentUser = Provider.of<Auth>(context).currentUser;
@@ -44,12 +45,11 @@ class _CatProductScreenState extends State<CatProductScreen> {
       setState(() {
         isLoading = true;
       });
-      Provider.of<Products>(context, listen: false)
-          .getCatProducts(userToken: currentUser!.token, catId: cat!.id)
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
+      await Provider.of<Products>(context, listen: false)
+          .getCatProducts(userToken: currentUser!.token, catId: cat!.id);
+
+      setState(() {
+        isLoading = false;
       });
     }
     isFirst = false;

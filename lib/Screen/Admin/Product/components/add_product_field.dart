@@ -266,6 +266,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                           .pickFiles(withData: true, type: FileType.image);
 
                       setState(() {
+                        prodImageUrl = null;
                         image = result1?.files.first.bytes;
                       });
                       var selectedImage = result1!.files.first;

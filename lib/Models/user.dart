@@ -185,7 +185,7 @@ class Users with ChangeNotifier {
     });
     var extractedData = json.decode(response.body);
     if (extractedData['success'] == true) {
-      _customers.where((element) => element.id == userId);
+      _customers.removeWhere((element) => element.id == userId);
       _users.removeWhere(
         (element) => element.id == userId,
       );

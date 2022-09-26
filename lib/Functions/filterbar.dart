@@ -25,57 +25,62 @@ Widget buildFilterBar(
       boxShadow: shadow,
       borderRadius: customRadius,
     ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        //search box
+    child: LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        width: constraints.maxWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            //search box
 
-        Expanded(
-          flex: 2,
-          child: TextField(
-            style: TextStyle(color: headingColor),
-            controller: searchConttroller,
-            onSubmitted: (val) => searchSubmitted(val),
-            decoration: InputDecoration(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-              hintText: 'Search Here',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey.withOpacity(1),
+            Expanded(
+              flex: 2,
+              child: TextField(
+                style: TextStyle(color: headingColor),
+                controller: searchConttroller,
+                onSubmitted: (val) => searchSubmitted(val),
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  hintText: 'Search Here',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.withOpacity(1),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-        //search box
+            //search box
 
-        Expanded(
-          flex: 8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (dropDown != null) dropDown,
-              SizedBox(
-                width: width(context) * 2,
-              ),
-              CustomWidget!,
-              SizedBox(
-                width: width(context) * 2,
-              ),
-              if (currentUser!.role!.toLowerCase() == 'admin')
-                if (btnTap != null && btnText != null)
-                  GradientButton(
-                    onTap: btnTap,
-                    title: btnText,
+            Expanded(
+              flex: 8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (dropDown != null) dropDown,
+                  SizedBox(
+                    width: width(context) * 2,
                   ),
-            ],
-          ),
+                  CustomWidget!,
+                  SizedBox(
+                    width: width(context) * 2,
+                  ),
+                  if (currentUser!.role!.toLowerCase() == 'admin')
+                    if (btnTap != null && btnText != null)
+                      GradientButton(
+                        onTap: btnTap,
+                        title: btnText,
+                      ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
+      );
+    }),
   );
 }
