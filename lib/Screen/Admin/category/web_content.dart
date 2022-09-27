@@ -11,8 +11,10 @@ import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/contant.dart';
 
 import '../../../Models/category.dart';
+import '../../../Models/product.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/grad_button.dart';
+import '../../../Widget/snakbar.dart';
 
 class CategoryWebContent extends StatefulWidget {
   const CategoryWebContent({
@@ -56,7 +58,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
     super.didChangeDependencies();
   }
 
-  void deleteCat(Category cat) {
+  void deleteCat(Category cat) async {
     bool isParent = false;
     List<Category> childCat =
         Provider.of<Categories>(context, listen: false).childCategories;
@@ -67,6 +69,8 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
       }
     }
     if (isParent) {
+      var provider = Provider.of<Products>(context, listen: false);
+      provider.setLoader(false);
       showCustomDialog(
           context: context,
           title: "Parent Category",
@@ -76,30 +80,52 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
           btn1Pressed: null,
           btn2Pressed: () => Navigator.of(context).pop());
     } else {
-      showCustomDialog(
-          context: context,
-          title: 'Delete',
-          btn1: 'Yes',
-          content: 'Do You want to "${cat.title}" Category?',
-          btn2: 'No',
-          btn1Pressed: () {
-            Navigator.of(context).pop();
-            setState(() {
-              isLoading = true;
+      var provider = Provider.of<Products>(context, listen: false);
+      await Provider.of<Products>(context, listen: false)
+          .getCatProducts(userToken: currentUser!.token, catId: cat.id);
+      List<Product> prods =
+          Provider.of<Products>(context, listen: false).catProducts;
+      provider.setLoader(false);
+      print('${prods.length}');
+      if (prods.isNotEmpty) {
+        provider.setLoader(false);
+        showCustomDialog(
+            context: context,
+            title: 'Delete',
+            btn1: 'Okay',
+            content: 'This Category contains products cannot delete',
+            btn1Pressed: () {
+              Navigator.of(context).pop();
             });
-            Provider.of<Categories>(context, listen: false)
-                .deleteCategory(cat.id, currentUser!.token)
-                .then((value) async {
-              await Provider.of<Categories>(context, listen: false)
-                  .fetchAndUpdateCat(currentUser!.token);
+        return;
+      } else {
+        showCustomDialog(
+            context: context,
+            title: 'Delete',
+            btn1: 'Yes',
+            content: 'Do You want to "${cat.title}" Category?',
+            btn2: 'No',
+            btn1Pressed: () {
+              Navigator.of(context).pop();
               setState(() {
-                isLoading = false;
+                isLoading = true;
               });
+              Provider.of<Categories>(context, listen: false)
+                  .deleteCategory(cat.id, currentUser!.token)
+                  .then((value) async {
+                showMySnackBar(
+                    context: context, text: 'Category : Category Deleted');
+                await Provider.of<Categories>(context, listen: false)
+                    .fetchAndUpdateCat(currentUser!.token);
+                setState(() {
+                  isLoading = false;
+                });
+              });
+            },
+            btn2Pressed: () {
+              Navigator.of(context).pop();
             });
-          },
-          btn2Pressed: () {
-            Navigator.of(context).pop();
-          });
+      }
     }
   }
 
@@ -195,42 +221,62 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                     ? 'P'
                                     : categories[index].parentTitle,
                               ),
-                              third: InkWell(
-                                onTap: () {
-                                  if (currentUser!.role!.toLowerCase() !=
-                                      'admin') {
-                                    showDialog(
-                                        context: context,
-                                        builder: (ctx) => AdaptiveDiaglog(
-                                            ctx: ctx,
-                                            title: 'Access Denied',
-                                            content:
-                                                'Only admin can delete Categories',
-                                            btnYes: 'Okay',
-                                            yesPressed: () {
-                                              Navigator.of(context).pop();
-                                            }));
-                                  } else {
-                                    deleteCat(categories[index]);
-                                  }
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey,
-                                            offset: Offset(0, 5),
-                                            blurRadius: 5),
-                                      ]),
-                                  padding: const EdgeInsets.all(10),
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
+                              third: Consumer<Products>(
+                                  builder: (context, prods, _) {
+                                return prods.deleteLoader &&
+                                        prods.deleteCatId ==
+                                            categories[index].id
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        height: height(context) * 3,
+                                        width: height(context) * 3,
+                                        child: CircularProgressIndicator(
+                                          color: btnbgColor.withOpacity(1),
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          if (currentUser!.role!
+                                                  .toLowerCase() !=
+                                              'admin') {
+                                            showDialog(
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    AdaptiveDiaglog(
+                                                        ctx: ctx,
+                                                        title: 'Access Denied',
+                                                        content:
+                                                            'Only admin can delete Categories',
+                                                        btnYes: 'Okay',
+                                                        yesPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }));
+                                          } else {
+                                            prods.setDeleteCatId(
+                                                categories[index].id);
+                                            prods.setLoader(true);
+                                            deleteCat(categories[index]);
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.grey,
+                                                    offset: Offset(0, 5),
+                                                    blurRadius: 5),
+                                              ]),
+                                          padding: const EdgeInsets.all(10),
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      );
+                              }),
                               isHeading: false),
                         ),
                 ),
@@ -275,7 +321,7 @@ class RowItem extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: FontWeight.bold,
         color: headingColor,
       ),
@@ -301,7 +347,10 @@ class RowDetail extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-            border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),
+            border: Border.all(
+              color: btnbgColor.withOpacity(0.6),
+              width: 1,
+            ),
             color: isHeading ? btnbgColor.withOpacity(0.5) : Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
