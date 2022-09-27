@@ -68,6 +68,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
         // ),
 
         PopupMenuButton(
+          tooltip: 'Filters',
           icon: Icon(
             Icons.more_vert,
             color: primaryColor,

@@ -19,11 +19,12 @@ class GradientButton extends StatelessWidget {
           onPressed: onTap,
           style: ElevatedButton.styleFrom(
             primary: Colors.transparent,
-            maximumSize: Size(120, 50),
-            minimumSize: Size(120, 50),
+            maximumSize: Size(150, 50),
+            minimumSize: Size(150, 50),
           ),
           child: Text(
             title,
+            textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: width(context) * 100 > 900 ? 12 : 12),

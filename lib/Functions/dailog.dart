@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +74,9 @@ Future<void> showCustomDialog({
           contentPadding: EdgeInsets.zero,
           content: Container(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            height: height(context) * 25,
+            height: Platform.isAndroid || Platform.isIOS
+                ? height(context) * 25
+                : 200,
             width: width(context) * 18,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +84,6 @@ Future<void> showCustomDialog({
               children: [
                 buildTopTitle(context,
                     title: title, image: 'assets/images/logo.png'),
-                SizedBox(height: height(context) * 01),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(

@@ -107,6 +107,7 @@ class _UserWebContentState extends State<UserWebContent> {
           height: height(context) * 2,
         ),
         PopupMenuButton(
+          tooltip: 'Filters',
           icon: Icon(
             Icons.more_vert,
             color: primaryColor,

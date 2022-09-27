@@ -55,37 +55,67 @@ class _AddUserState extends State<AddUser> {
       drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            children: [
-              Appbar(
-                title: 'User',
-                subtitle: 'Add New User',
-                svgIcon: 'assets/icons/users.svg',
-                leadingIcon: Icons.arrow_back,
-                leadingTap: () {
-                  Navigator.of(context).pop();
-                },
-                tarilingIcon: Icons.filter_list,
-                tarilingTap: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                },
-              ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: height(context) * 2,
+        child: Center(
+          child: Container(
+            width: (Platform.isMacOS || Platform.isWindows)
+                ? width(context) * 50
+                : width(context) * 100,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Appbar(
+                //   title: 'User',
+                //   subtitle: 'Add New User',
+                //   svgIcon: 'assets/icons/users.svg',
+                //   leadingIcon: Icons.arrow_back,
+                //   leadingTap: () {
+                //     Navigator.of(context).pop();
+                //   },
+                //   tarilingIcon: Icons.filter_list,
+                //   tarilingTap: () {
+                //     _scaffoldKey.currentState!.openDrawer();
+                //   },
+                // ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0, 5),
+                              blurRadius: 5),
+                        ]),
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: btnbgColor.withOpacity(1),
                     ),
-                    AddUserFeilds(
-                      action: action,
-                      user: user,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: height(context) * 2,
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: height(context) * 2,
+                      ),
+                      AddUserFeilds(
+                        action: action,
+                        user: user,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

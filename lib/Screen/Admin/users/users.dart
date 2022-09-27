@@ -6,6 +6,7 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Functions/popup.dart';
@@ -34,6 +35,7 @@ class _UserScreenState extends State<UserScreen> {
   String selectedFilter = "All";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     users = Provider.of<Users>(context, listen: true)
@@ -714,7 +716,8 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                 borderRadius: customRadius),
                             child: Hero(
                               tag: customerProducts[index].id,
-                              child: Image.network(
+                              child: ExtendedImage.network(
+                                cache: true,
                                 key: ValueKey(customerProducts[index].id),
                                 customerProducts[index].image,
                               ),
@@ -731,33 +734,35 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                   context: widget.scaffoldKey.currentContext!,
                                   title: 'Delete',
                                   btn1: 'Yes',
-                                  content: 'Delete this product from this list',
+                                  content:
+                                      'Product will be deleted from the list permamently',
                                   btn2: 'No',
                                   btn1Pressed: () async {
                                     Navigator.of(context).pop();
                                     setState(() {
                                       productLoading = true;
                                     });
-                                    // await Provider.of<SentProducts>(context,
-                                    //         listen: false)
-                                    //     .deleteSentProduct(
-                                    //         product: customerProducts[index],
-                                    //         userId: widget.userId);
-
-                                    // Provider.of<Products>(
-                                    //         widget.scaffoldKey.currentContext!,
-                                    //         listen: false)
-                                    //     .removeCustomer(widget.userId,
-                                    //         customerProducts[index].id);
-                                    // customerProducts = await Provider.of<
-                                    //             Products>(
-                                    //         widget.scaffoldKey.currentContext!,
-                                    //         listen: false)
-                                    //     .getCustomerProducts(widget.userId);
+                                    await Provider.of<Products>(context,
+                                            listen: false)
+                                        .deleteCustomerProduct(
+                                            prodId: customerProducts[index].id,
+                                            userId: widget.userId,
+                                            userToken: currentUser!.token);
+                                    Provider.of<Products>(
+                                            widget.scaffoldKey.currentContext!,
+                                            listen: false)
+                                        .removeCustomer(widget.userId,
+                                            customerProducts[index].id);
+                                    await Provider.of<Products>(
+                                            widget.scaffoldKey.currentContext!,
+                                            listen: false)
+                                        .getCustomerProducts(
+                                            widget.userId, currentUser!.token);
 
                                     setState(() {
                                       productLoading = false;
                                     });
+                                    Navigator.of(context).pop();
                                   },
                                   btn2Pressed: () {
                                     Navigator.of(context).pop();
