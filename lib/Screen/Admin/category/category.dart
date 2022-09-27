@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Functions/dailog.dart';
+import '../../../Models/product.dart';
 import '../../../Widget/appbar.dart';
 import '../../../Widget/snakbar.dart';
 
@@ -68,7 +69,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     super.dispose();
   }
 
-  void deleteCat(Category cat) {
+  void deleteCat(Category cat) async {
     bool isParent = false;
     List<Category> childCat =
         Provider.of<Categories>(context, listen: false).childCategories;
@@ -79,6 +80,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       }
     }
     if (isParent) {
+      var provider = Provider.of<Products>(context, listen: false);
+      provider.setLoader(false);
       showCustomDialog(
           context: context,
           title: "Parent Category",
@@ -88,32 +91,52 @@ class _CategoryScreenState extends State<CategoryScreen> {
           btn1Pressed: null,
           btn2Pressed: () => Navigator.of(context).pop());
     } else {
-      showCustomDialog(
-          context: context,
-          title: 'Delete',
-          btn1: 'Yes',
-          content: 'Do You want to "${cat.title}" Category?',
-          btn2: 'No',
-          btn1Pressed: () {
-            Navigator.of(context).pop();
-            setState(() {
-              isLoading = true;
+      var provider = Provider.of<Products>(context, listen: false);
+      await Provider.of<Products>(context, listen: false)
+          .getCatProducts(userToken: currentUser!.token, catId: cat.id);
+      List<Product> prods =
+          Provider.of<Products>(context, listen: false).catProducts;
+      provider.setLoader(false);
+      print('${prods.length}');
+      if (prods.isNotEmpty) {
+        provider.setLoader(false);
+        showCustomDialog(
+            context: context,
+            title: 'Delete',
+            btn1: 'Okay',
+            content: 'This Category contains products cannot delete',
+            btn1Pressed: () {
+              Navigator.of(context).pop();
             });
-            Provider.of<Categories>(context, listen: false)
-                .deleteCategory(cat.id, currentUser!.token)
-                .then((value) async {
-              showMySnackBar(
-                  context: context, text: 'Category : Category Deleted');
-              await Provider.of<Categories>(context, listen: false)
-                  .fetchAndUpdateCat(currentUser!.token);
+        return;
+      } else {
+        showCustomDialog(
+            context: context,
+            title: 'Delete',
+            btn1: 'Yes',
+            content: 'Do You want to "${cat.title}" Category?',
+            btn2: 'No',
+            btn1Pressed: () {
+              Navigator.of(context).pop();
               setState(() {
-                isLoading = false;
+                isLoading = true;
               });
+              Provider.of<Categories>(context, listen: false)
+                  .deleteCategory(cat.id, currentUser!.token)
+                  .then((value) async {
+                showMySnackBar(
+                    context: context, text: 'Category : Category Deleted');
+                await Provider.of<Categories>(context, listen: false)
+                    .fetchAndUpdateCat(currentUser!.token);
+                setState(() {
+                  isLoading = false;
+                });
+              });
+            },
+            btn2Pressed: () {
+              Navigator.of(context).pop();
             });
-          },
-          btn2Pressed: () {
-            Navigator.of(context).pop();
-          });
+      }
     }
   }
 
@@ -323,14 +346,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     style: TextStyle(
                                         color: contentColor, fontSize: 12),
                                   ),
-                                  trailing: IconButton(
-                                      onPressed: () {
-                                        deleteCat(categories[index]);
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ))),
+                                  trailing: Consumer<Products>(
+                                      builder: (context, prods, _) {
+                                    return prods.deleteLoader &&
+                                            prods.deleteCatId ==
+                                                categories[index].id
+                                        ? Container(
+                                            alignment: Alignment.centerRight,
+                                            height: height(context) * 2,
+                                            width: height(context) * 2,
+                                            child: CircularProgressIndicator(
+                                              color: btnbgColor.withOpacity(1),
+                                            ),
+                                          )
+                                        : IconButton(
+                                            onPressed: () {
+                                              prods.setDeleteCatId(
+                                                  categories[index].id);
+                                              prods.setLoader(true);
+                                              deleteCat(categories[index]);
+                                            },
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ));
+                                  })),
                             ),
                           );
                         },

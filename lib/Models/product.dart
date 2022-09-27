@@ -14,7 +14,7 @@ class Product {
   String unit;
   String image;
   String dateTime;
-  List<String>? customers;
+  List<String> customers;
   String categoryTitle;
 
   Product({
@@ -26,7 +26,7 @@ class Product {
     required this.categoryId,
     required this.categoryTitle,
     required this.image,
-    this.customers,
+    required this.customers,
     required this.dateTime,
   });
 }
@@ -59,6 +59,20 @@ class Products with ChangeNotifier {
     return [..._catProducts];
   }
 
+  bool deleteLoader = false;
+
+  String? deleteCatId;
+
+  void setDeleteCatId(String value) {
+    deleteCatId = value;
+    notifyListeners();
+  }
+
+  void setLoader(bool value) {
+    deleteLoader = value;
+    notifyListeners();
+  }
+
   Future<void> addProduct({
     required Product product,
     required userToken,
@@ -88,6 +102,7 @@ class Products with ChangeNotifier {
             length: data['length'],
             width: data['width'],
             unit: data['unit'],
+            customers: [],
             categoryId: data['category_id'].toString(),
             categoryTitle: data['category_name'],
             image: data['imageUrl'],
@@ -113,7 +128,7 @@ class Products with ChangeNotifier {
 
   void addCustomer(String cusId, String prodId) {
     var prod = _products.firstWhere((element) => element.id == prodId);
-    prod.customers!.add(cusId);
+    prod.customers.add(cusId);
 
     notifyListeners();
   }
@@ -123,7 +138,7 @@ class Products with ChangeNotifier {
         _products.where((element) => element.id == prodId).toList();
     if (prods.isNotEmpty) {
       var prod = _products.firstWhere((element) => element.id == prodId);
-      prod.customers!.remove(cusId);
+      prod.customers.remove(cusId);
     }
     notifyListeners();
   }

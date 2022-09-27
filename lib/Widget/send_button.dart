@@ -154,7 +154,7 @@ class _SendProductButtonState extends State<SendProductButton> {
                                             ),
                                           )
                                         : productToSend.customers != null &&
-                                                productToSend.customers!
+                                                productToSend.customers
                                                     .contains(
                                                         customers[index].id)
                                             ? IconButton(

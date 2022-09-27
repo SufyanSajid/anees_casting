@@ -89,6 +89,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   Product prodObj() {
     return Product(
         id: "",
+          customers: [],
         name: _prodNameController.text.trim(),
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
@@ -157,6 +158,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       Product newProduct = Product(
         id: "",
         name: _prodNameController.text.trim(),
+          customers: [],
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
@@ -211,6 +213,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         categoryId: category == null ? editCatId : category!.id,
         categoryTitle: category == null ? editCat : category!.title,
         image: img,
+          customers: [],
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
 

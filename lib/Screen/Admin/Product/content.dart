@@ -74,20 +74,22 @@ class _ProductWebContentState extends State<ProductWebContent> {
     super.didChangeDependencies();
   }
 
-  _deleteProduct({required imgUrl, required prodId}) {
+  _deleteProduct({required imgUrl, required Product prod}) {
     showCustomDialog(
         context: context,
         title: 'Delete',
         btn1: 'Yes',
         content: 'Do You want to delete this product',
         btn1Pressed: () async {
+
+
           Navigator.of(context).pop();
           setState(() {
             isLoading = true;
           });
           var provider = Provider.of<Products>(context, listen: false);
 
-          await provider.deleteProduct(prodId, currentUser!.token);
+          await provider.deleteProduct(prod.id, currentUser!.token);
 
           setState(() {
             isLoading = false;
@@ -304,7 +306,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                                 _deleteProduct(
                                                     imgUrl:
                                                         products[index].image,
-                                                    prodId: products[index].id);
+                                                    prod: products[index]);
                                               },
                                             ),
                                           ),

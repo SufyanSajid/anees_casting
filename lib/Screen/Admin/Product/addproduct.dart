@@ -98,6 +98,7 @@ class _AddProductState extends State<AddProduct> {
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
+        customers: [],
         categoryId: category!.id,
         categoryTitle: category!.title,
         image: img,
@@ -131,6 +132,7 @@ class _AddProductState extends State<AddProduct> {
     if (productNotEmpty()) {
       Product newProduct = Product(
         id: prodId,
+          customers: [],
         name: _prodNameController.text.trim(),
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
@@ -352,6 +354,7 @@ class _AddProductState extends State<AddProduct> {
     return Product(
         id: "",
         name: _prodNameController.text.trim(),
+          customers: [],
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
         unit: prodUnit,

@@ -65,7 +65,9 @@ class _ProductScreenState extends State<ProductScreen> {
     super.didChangeDependencies();
   }
 
-  _deleteProduct({required imgUrl, required prodId}) {
+  _deleteProduct({required imgUrl, required prodId}) async {
+    var provider = Provider.of<Products>(context, listen: false);
+
     showCustomDialog(
         context: context,
         title: 'Delete',
@@ -76,10 +78,8 @@ class _ProductScreenState extends State<ProductScreen> {
           setState(() {
             isLoading = true;
           });
-          var provider = Provider.of<Products>(context, listen: false);
 
           await provider.deleteProduct(prodId, currentUser!.token);
-
           setState(() {
             isLoading = false;
           });
