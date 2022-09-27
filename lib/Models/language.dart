@@ -21,20 +21,26 @@ class Language extends ChangeNotifier {
     'customers': 'Customers',
     'app_user': 'App User',
     'view_all': 'View All',
-    'language': 'English'
+    'User': ' User',
+    'all users here': 'All users here',
+    'all': "all",
+    'language': 'English',
   };
   Map<String, String> urdu = {
     'welcome': 'خوش آمدید',
     'admin': 'ایڈمن',
-    'customer': 'صارف',
-    'seller': 'بیچنے والے',
+    'customer': 'گاہک',
+    'seller': 'سیلر',
     'quick_links': 'فوری رابطے',
     'designs': 'ڈیزائنز',
     'categories': 'اقسام',
-    'categories_list': 'زمرہ جات کی فہرست',
+    'categories_list': ' اقسام کی فہرست',
     'customers': 'گاہک',
     'app_user': 'ایپ صارف',
     'view_all': 'سب دیکھیں',
+    'all': "تمام",
+    'user': ' صارف',
+    'all users here': 'تمام صارف',
     'language': 'اردو',
   };
 

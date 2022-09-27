@@ -75,6 +75,7 @@ class _WebHomeState extends State<WebHome> {
     users = Provider.of<Users>(context, listen: false).users;
     var products = Provider.of<Products>(context, listen: true).products;
     var categories = Provider.of<Categories>(context, listen: false).categories;
+
     Widget homeContent = Column(
       children: [
         //home bar
@@ -171,6 +172,16 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
+                title: 'Categories',
+                value: isLoading ? '...' : categories.length.toString(),
+                icon: Icons.category_outlined,
+              ),
+            ),
+            SizedBox(
+              width: width(context) * 1,
+            ),
+            Expanded(
+              child: TotalBlock(
                 title: 'Clients',
                 value: isLoading
                     ? '...'
@@ -179,16 +190,6 @@ class _WebHomeState extends State<WebHome> {
                         .length
                         .toString(),
                 icon: Icons.groups_outlined,
-              ),
-            ),
-            SizedBox(
-              width: width(context) * 1,
-            ),
-            Expanded(
-              child: TotalBlock(
-                title: 'Categories',
-                value: isLoading ? '...' : categories.length.toString(),
-                icon: Icons.diamond_outlined,
               ),
             ),
           ],
@@ -358,81 +359,85 @@ class _WebHomeState extends State<WebHome> {
       ActivityLogWebContent(),
     ];
 
-    return Scaffold(
-      endDrawer: WebDrawer(
-        selectedIndex: selectedIndex,
-      ),
-      endDrawerEnableOpenDragGesture: true,
-      key: _ScaffoldKey,
-      backgroundColor: backgroundColor,
-      body: Row(
-        children: [
-          //side bar area
-          Expanded(
-            flex: 2,
-            child: SideBar(
-              selectedIndex: selectedIndex,
-              onChanged: (value) {
-                setState(() {
-                  selectedIndex = value;
-                });
-              },
-            ),
-          ),
-          //sidebar area end
-
-          //apbar and main area
-          Expanded(
-            flex: 11,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: Column(
-                children: [
-                  if (selectedIndex == 0)
-                    WebAppbar(
-                        title: 'Dashboard',
-                        subTitle: 'Contains all data',
-                        onChanged: () {}),
-                  if (selectedIndex == 1)
-                    WebAppbar(
-                        title: 'Design',
-                        subTitle: 'Your Designs',
-                        onChanged: () {}),
-                  if (selectedIndex == 2)
-                    WebAppbar(
-                        title: 'Users',
-                        subTitle: 'All Users',
-                        onChanged: () {}),
-                  if (selectedIndex == 3)
-                    WebAppbar(
-                        title: 'Cat List',
-                        subTitle: 'Your Categories ',
-                        onChanged: () {}),
-                  if (selectedIndex == 4)
-                    WebAppbar(
-                        title: 'Category',
-                        subTitle: 'All Users Activities',
-                        onChanged: () {}),
-                  if (selectedIndex == 5)
-                    WebAppbar(
-                        title: 'Activity Logs',
-                        subTitle: 'All Users Activities',
-                        onChanged: () {}),
-
-                  SizedBox(
-                    height: height(context) * 4,
-                  ),
-                  //home bar
-                  Expanded(
-                    child: _tabs[selectedIndex],
-                  ),
-                  //activity logs eng
-                ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        endDrawer: WebDrawer(
+          selectedIndex: selectedIndex,
+        ),
+        endDrawerEnableOpenDragGesture: true,
+        key: _ScaffoldKey,
+        backgroundColor: backgroundColor,
+        body: Row(
+          children: [
+            //side bar area
+            Expanded(
+              flex: 2,
+              child: SideBar(
+                selectedIndex: selectedIndex,
+                onChanged: (value) {
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
               ),
             ),
-          ),
-          //appbar and main area end
-        ],
+            //sidebar area end
+
+            //apbar and main area
+            Expanded(
+              flex: 11,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                child: Column(
+                  children: [
+                    if (selectedIndex == 0)
+                      WebAppbar(
+                          title: langProvider.get('Dashboard'),
+                          subTitle: langProvider.get('Contains all data'),
+                          onChanged: () {}),
+                    if (selectedIndex == 1)
+                      WebAppbar(
+                          title: langProvider.get('designs'),
+                          subTitle: langProvider.get('Your Designs'),
+                          onChanged: () {}),
+                    if (selectedIndex == 2)
+                      WebAppbar(
+                          title: langProvider.get('Users'),
+                          subTitle: langProvider.get('All Users'),
+                          onChanged: () {}),
+                    if (selectedIndex == 3)
+                      WebAppbar(
+                          title: langProvider.get('Cat List'),
+                          subTitle: langProvider.get('Your Categories'),
+                          onChanged: () {}),
+                    if (selectedIndex == 4)
+                      WebAppbar(
+                          title: langProvider.get('Category'),
+                          subTitle: langProvider.get('All Users Activities'),
+                          onChanged: () {}),
+                    if (selectedIndex == 5)
+                      WebAppbar(
+                          title: langProvider.get('Activity'),
+                          subTitle: langProvider.get('All Users Activities'),
+                          onChanged: () {}),
+
+                    SizedBox(
+                      height: height(context) * 4,
+                    ),
+                    //home bar
+                    Expanded(
+                      child: _tabs[selectedIndex],
+                    ),
+                    //activity logs eng
+                  ],
+                ),
+              ),
+            ),
+            //appbar and main area end
+          ],
+        ),
       ),
     );
   }

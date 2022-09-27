@@ -260,9 +260,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     },
                   ),
 
-                    ListTile(
+                  ListTile(
                     leading: const Icon(
-                      Icons.logout,
+                      Icons.abc_outlined,
                       color: Colors.white,
                     ),
                     title: const Text(
@@ -273,14 +273,14 @@ class _AppDrawerState extends State<AppDrawer> {
                           color: Colors.white),
                     ),
                     onTap: () {
-                     langProvider.setLang(language.English);
+                      langProvider.setLang(language.English);
+                      Navigator.of(context).pop();
                     },
                   ),
 
-
-                    ListTile(
+                  ListTile(
                     leading: const Icon(
-                      Icons.logout,
+                      Icons.translate_outlined,
                       color: Colors.white,
                     ),
                     title: const Text(
@@ -291,8 +291,8 @@ class _AppDrawerState extends State<AppDrawer> {
                           color: Colors.white),
                     ),
                     onTap: () {
-                     langProvider.setLang(language.Urdu);
-                     
+                      langProvider.setLang(language.Urdu);
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],

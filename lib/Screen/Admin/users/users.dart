@@ -4,12 +4,12 @@ import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Functions/popup.dart';
+import '../../../Models/language.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/snakbar.dart';
 import '/Models/user.dart';
@@ -40,6 +40,7 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     users = Provider.of<Users>(context, listen: true)
         .getFilteredUsers(selectedFilter);
+    var langProvider = Provider.of<Language>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -77,8 +78,8 @@ class _UserScreenState extends State<UserScreen> {
               Column(
                 children: [
                   Appbar(
-                    title: 'User',
-                    subtitle: 'All users here',
+                    title: langProvider.get('User'),
+                    subtitle: langProvider.get('all users here'),
                     svgIcon: 'assets/icons/users.svg',
                     leadingIcon: Icons.home,
                     leadingTap: () {
@@ -95,7 +96,7 @@ class _UserScreenState extends State<UserScreen> {
                             });
                           },
                           child: Text(
-                            'All',
+                            langProvider.get('All'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -107,7 +108,7 @@ class _UserScreenState extends State<UserScreen> {
                             });
                           },
                           child: Text(
-                            'Admin',
+                            langProvider.get('Admin'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -119,7 +120,7 @@ class _UserScreenState extends State<UserScreen> {
                             });
                           },
                           child: Text(
-                            'Seller',
+                            langProvider.get('Seller'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -131,7 +132,7 @@ class _UserScreenState extends State<UserScreen> {
                             });
                           },
                           child: Text(
-                            'Customer',
+                            langProvider.get('Customer'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -168,10 +169,18 @@ class _UserScreenState extends State<UserScreen> {
                     // height: 300,
                     width: 200,
                     child: Column(children: [
-                      filterListItem("Admin"),
-                      filterListItem("Seller"),
-                      filterListItem("Customer"),
-                      filterListItem("All")
+                      filterListItem(
+                        langProvider.get('Admin'),
+                      ),
+                      filterListItem(
+                        langProvider.get('Seller'),
+                      ),
+                      filterListItem(
+                        langProvider.get('Customer'),
+                      ),
+                      filterListItem(
+                        langProvider.get('All'),
+                      )
                     ]),
                   ),
                 )
@@ -246,37 +255,6 @@ class _ShowUsersState extends State<ShowUsers> {
     super.didChangeDependencies();
   }
 
-  // Future<void> getCustomerProducts(String userId) async {
-  //   setState(() {
-  //     productLoading = true;
-  //   });
-  //   customerProducts = await Provider.of<Products>(context, listen: false)
-  //       .getCustomerProducts(userId);
-  //   setState(() {
-  //     productLoading = false;
-  //   });
-  // }
-
-  // _blockUser(
-  //     {required AUser user, required BuildContext ctx, required bool block}) {
-  //   String blockMsg = block ? "Block" : "UnBlock";
-  //   showCustomDialog(
-  //       context: ctx,
-  //       title: blockMsg,
-  //       btn1: "No",
-  //       content: "Do you wanna $blockMsg \"${user.name}\" user",
-  //       btn2: "Yes",
-  //       btn1Pressed: () => Navigator.of(context).pop(),
-  //       btn2Pressed: () async {
-  //         var provider = Provider.of<Users>(ctx, listen: false);
-  //         var navigator = Navigator.of(ctx);
-  //         await provider.blockUser(user: user, block: block ? true : false);
-  //         await provider.fetchAndUpdateUser(userToken: currentUser!.token);
-
-  //         navigator.pop();
-  //       });
-  // }
-
   void _deleteUser(AUser aUser) {
     showCustomDialog(
         context: context,
@@ -327,6 +305,8 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
+        var langProvider = Provider.of<Language>(context);
+
     return Expanded(
       child: isLoading
           ? Center(
@@ -358,8 +338,8 @@ class _ShowUsersState extends State<ShowUsers> {
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    primary: primaryColor),
-                                child: Text('Edit User'),
+                                    backgroundColor: primaryColor),
+                                child:  Text(langProvider.get('Edit User') ),
                               ),
                             ],
                             content: Container(
@@ -368,14 +348,14 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   UserDetail(
-                                    title: 'Email: ',
+                                    title: langProvider.get('Email') ,
                                     value: widget.users[index].email,
                                   ),
                                   SizedBox(
                                     height: height(context) * 1,
                                   ),
                                   UserDetail(
-                                    title: 'Phone: ',
+                                    title: langProvider.get('Phone') ,
                                     value: widget.users[index].phone,
                                   )
                                 ],
@@ -434,6 +414,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
+                                  
                                     widget.users[index].name,
                                     style: TextStyle(
                                       color: headingColor,
