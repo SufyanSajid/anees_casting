@@ -218,24 +218,29 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')) {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('userData')) {
+        return false;
+      }
+
+      final extractedUserData =
+          json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
+
+      currentUser = CurrentUser(
+        id: extractedUserData['userId'] as String,
+        role: extractedUserData['role'] as String,
+        token: extractedUserData['token'] as String,
+        name: extractedUserData['name'] as String,
+        phone: extractedUserData['phone'] as String,
+        email: extractedUserData['email'] as String,
+      );
+      notifyListeners();
+      // autologout();
+      return true;
+    } catch (e) {
       return false;
     }
-    final extractedUserData =
-        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
-
-    currentUser = CurrentUser(
-      id: extractedUserData['userId'] as String,
-      role: extractedUserData['role'] as String,
-      token: extractedUserData['token'] as String,
-      name: extractedUserData['name'] as String,
-      phone: extractedUserData['phone'] as String,
-      email: extractedUserData['email'] as String,
-    );
-    notifyListeners();
-    // autologout();
-    return true;
   }
 
   Future<void> logout() async {
