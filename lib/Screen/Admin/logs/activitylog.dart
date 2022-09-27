@@ -1,3 +1,4 @@
+import 'package:anees_costing/Functions/popup.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -67,9 +68,48 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                     },
                     tarilingIcon: Icons.more_vert,
                     tarilingTap: () {
-                      setState(() {
-                        isFilter = true;
-                      });
+                      showPopupMenu(popups: [
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'All';
+                            });
+                          },
+                          child: Text(
+                            'All',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'Share';
+                            });
+                          },
+                          child: Text(
+                            'Share',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'Activity';
+                            });
+                          },
+                          child: Text(
+                            'Activity',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                      ], context: context);
+
+                      // setState(() {
+                      //   isFilter = true;
+                      // });
                     },
                   ),
                   SizedBox(

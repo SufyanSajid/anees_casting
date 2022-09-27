@@ -8,6 +8,7 @@ import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../Functions/popup.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/snakbar.dart';
 import '/Models/user.dart';
@@ -84,9 +85,60 @@ class _UserScreenState extends State<UserScreen> {
                     },
                     tarilingIcon: Icons.more_vert,
                     tarilingTap: () {
-                      setState(() {
-                        isFilter = true;
-                      });
+                      showPopupMenu(popups: [
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'All';
+                            });
+                          },
+                          child: Text(
+                            'All',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'Admin';
+                            });
+                          },
+                          child: Text(
+                            'Admin',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'Seller';
+                            });
+                          },
+                          child: Text(
+                            'Seller',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            setState(() {
+                              selectedFilter = 'Customer';
+                            });
+                          },
+                          child: Text(
+                            'Customer',
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.9)),
+                          ),
+                        ),
+                      ], context: context);
+
+                      // setState(() {
+                      //   isFilter = true;
+                      // });
                     },
                   ),
                   SizedBox(
