@@ -10,6 +10,7 @@ import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Models/language.dart';
 import '../Screen/Admin/users/customers.dart';
 import '../Screen/Auth/Login/login.dart';
 import '../contant.dart';
@@ -31,6 +32,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    var langProvider = Provider.of<Language>(context);
     var mediaQuery = MediaQuery.of(context).size;
     var height = mediaQuery.height / 100;
     var width = mediaQuery.width / 100;
@@ -255,6 +257,42 @@ class _AppDrawerState extends State<AppDrawer> {
                                   Navigator.of(ctx).pop();
                                 },
                               ));
+                    },
+                  ),
+
+                    ListTile(
+                    leading: const Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'English',
+                      style: TextStyle(
+                          fontFamily: 'Poppins-thin',
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                    onTap: () {
+                     langProvider.setLang(language.English);
+                    },
+                  ),
+
+
+                    ListTile(
+                    leading: const Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'اردو',
+                      style: TextStyle(
+                          fontFamily: 'Poppins-thin',
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                    onTap: () {
+                     langProvider.setLang(language.Urdu);
+                     
                     },
                   ),
                 ],

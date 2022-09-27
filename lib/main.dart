@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Screen/Admin/Design/child_cat.dart';
@@ -73,6 +74,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => SentProducts(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Language(),
         ),
       ],
       child: MaterialApp(

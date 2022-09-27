@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/Login/login.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() async {
     if (isFirst) {
+      Provider.of<Language>(context, listen: false).defaultLang();
       await Future.delayed(const Duration(seconds: 2)).then((value) async {
         bool isLogin =
             await Provider.of<Auth>(context, listen: false).tryAutoLogin();
         currentUser = Provider.of<Auth>(context, listen: false).currentUser;
-        
+
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
           Navigator.of(context)
               .pushReplacementNamed(CustomerProductScreen.routeName);

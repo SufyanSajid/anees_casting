@@ -12,6 +12,7 @@ import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/language.dart';
 import '../../../Models/product.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/grad_button.dart';
@@ -67,6 +68,7 @@ class _WebHomeState extends State<WebHome> {
   @override
   Widget build(BuildContext context) {
     counts = Provider.of<Counts>(context).getCount;
+    var langProvider = Provider.of<Language>(context);
 
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;

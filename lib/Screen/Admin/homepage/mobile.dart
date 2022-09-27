@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
@@ -63,6 +64,9 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    var langProvider = Provider.of<Language>(context);
+
     selectIndex = Provider.of<Counts>(context).selectedIndex;
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     count = Provider.of<Counts>(context, listen: false).getCount;
@@ -74,359 +78,363 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
     var homePage = SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin:
-                Platform.isAndroid ? EdgeInsets.only(top: 10) : EdgeInsets.zero,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: height * 7.5,
-                      width: height * 7.5,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              style: BorderStyle.solid,
-                              width: 2,
-                              color: btnbgColor.withOpacity(1)),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          'assets/images/person22.jpeg',
-                          height: height * 10,
-                          width: height * 10,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 2,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome Back',
-                          style: TextStyle(
-                              color: secondaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          currentUser!.role!,
-                          style: GoogleFonts.righteous(
-                            color: primaryColor,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                InkWell(
-                  onTap: () {
-                    _scaffoldKey.currentState!.openDrawer();
-                  },
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0, 5),
-                              blurRadius: 5),
-                        ]),
-                    padding: const EdgeInsets.all(10),
-                    child: Icon(
-                      Icons.filter_list,
-                      color: btnbgColor.withOpacity(1),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: height * 1.5,
-          ),
-          Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 40),
-            decoration: BoxDecoration(
-              gradient: customGradient,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: const [
-                BoxShadow(
-                    color: Color.fromRGBO(94, 89, 89, 0.11),
-                    offset: Offset(0, 10),
-                    blurRadius: 20),
-              ],
-            ),
-
-            //width: double.infinity,
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DisplayBox(
-                  height: height,
-                  title: 'Products',
-                  value: isLoading ? '...' : products.length.toString(),
-                ),
-                Container(
-                  height: height * 5,
-                  width: width * 0.2,
-                  color: secondaryColor.withOpacity(0.5),
-                ),
-                DisplayBox(
-                  height: height,
-                  title: 'Categories',
-                  value: isLoading
-                      ? '...'
-                      : Provider.of<Categories>(context)
-                          .categories
-                          .length
-                          .toString(),
-                ),
-                Container(
-                  height: height * 5,
-                  width: width * 0.2,
-                  color: secondaryColor.withOpacity(0.5),
-                ),
-                DisplayBox(
-                  height: height,
-                  title: 'Clients',
-                  value: isLoading
-                      ? '...'
-                      : Provider.of<Users>(context, listen: true)
-                          .customers
-                          .length
-                          .toString(),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: height * 1.5,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              'Quick Links',
-              style: GoogleFonts.righteous(fontSize: 18, color: primaryColor),
-            ),
-          ),
-          SizedBox(
-            height: height * 1.5,
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: height * 18,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                QuickChecks(
-                  width: width,
-                  height: height,
-                  title: 'Design',
-                  subtitle: 'Click to view',
-                  icon: Icons.inventory_2_outlined,
-                  onTap: () {
-                    Navigator.pushNamed(context, ProductScreen.routeName);
-                  },
-                ),
-                QuickChecks(
-                  width: width,
-                  height: height,
-                  title: 'Categories',
-                  subtitle: 'Click to view',
-                  icon: Icons.document_scanner_sharp,
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(CategoryListScreen.routeName);
-                  },
-                ),
-                if (currentUser!.role!.toLowerCase() == 'admin')
-                  QuickChecks(
-                    width: width,
-                    height: height,
-                    title: 'Categories List',
-                    subtitle: 'Click to view',
-                    icon: Icons.list,
-                    onTap: () {
-                      Navigator.of(context).pushNamed(CategoryScreen.routeName);
-                    },
-                  ),
-                QuickChecks(
-                  width: width,
-                  height: height,
-                  title: 'Customers',
-                  subtitle: 'Click to view',
-                  icon: Icons.person_pin_circle_outlined,
-                  onTap: () {
-                    Navigator.of(context).pushNamed(CustomerScreen.routeName);
-                  },
-                ),
-              ],
-            ),
-          ),
-          if (currentUser!.role!.toLowerCase() == 'admin')
-            Padding(
+      child: Directionality(
+        textDirection:langProvider.currentLang == language.Urdu? TextDirection.rtl:TextDirection.ltr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin:
+                  Platform.isAndroid ? EdgeInsets.only(top: 10) : EdgeInsets.zero,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'App User',
-                    style: GoogleFonts.righteous(
-                        fontSize: 18, color: primaryColor),
+                  Row(
+                    children: [
+                      Container(
+                        height: height * 7.5,
+                        width: height * 7.5,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 5),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                style: BorderStyle.solid,
+                                width: 2,
+                                color: btnbgColor.withOpacity(1)),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/images/person22.jpeg',
+                            height: height * 10,
+                            width: height * 10,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * 2,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            langProvider.get('welcome'),
+                            style: TextStyle(
+                                color: secondaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                             langProvider.get( currentUser!.role!)
+                           ,
+                            style: GoogleFonts.righteous(
+                              color: primaryColor,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Provider.of<Counts>(context, listen: false)
-                          .setSelectedIndex(1);
+                  InkWell(
+                    onTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
                     },
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.ubuntu(
-                          fontSize: 15, color: secondaryColor),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0, 5),
+                                blurRadius: 5),
+                          ]),
+                      padding: const EdgeInsets.all(10),
+                      child: Icon(
+                        Icons.filter_list,
+                        color: btnbgColor.withOpacity(1),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          SizedBox(
-            height: height * 1,
-          ),
-          if (currentUser!.role!.toLowerCase() == 'admin')
-            Expanded(
-              child: isLoading
-                  ? Center(
-                      child: AdaptiveIndecator(color: primaryColor),
-                    )
-                  : ListView.builder(
-                      itemCount: 4,
-                      itemBuilder: (ctx, index) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 5),
-                        child: Stack(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: btnbgColor.withOpacity(0.6),
-                                      width: 1),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.6),
-                                      offset: const Offset(0, 5),
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
-                              // margin: const EdgeInsets.only(
-                              //     bottom: 20, left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: height * 6,
-                                        width: height * 6,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 5),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                style: BorderStyle.solid,
-                                                width: 2,
-                                                color:
-                                                    btnbgColor.withOpacity(1)),
+            SizedBox(
+              height: height * 1.5,
+            ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 40),
+              decoration: BoxDecoration(
+                gradient: customGradient,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color.fromRGBO(94, 89, 89, 0.11),
+                      offset: Offset(0, 10),
+                      blurRadius: 20),
+                ],
+              ),
+      
+              //width: double.infinity,
+      
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DisplayBox(
+                    height: height,
+                    title: langProvider.get( 'designs'),
+                    value: isLoading ? '...' : products.length.toString(),
+                  ),
+                  Container(
+                    height: height * 5,
+                    width: width * 0.2,
+                    color: secondaryColor.withOpacity(0.5),
+                  ),
+                  DisplayBox(
+                    height: height,
+                    title: langProvider.get( 'categories'),
+                    value: isLoading
+                        ? '...'
+                        : Provider.of<Categories>(context)
+                            .categories
+                            .length
+                            .toString(),
+                  ),
+                  Container(
+                    height: height * 5,
+                    width: width * 0.2,
+                    color: secondaryColor.withOpacity(0.5),
+                  ),
+                  DisplayBox(
+                    height: height,
+                    title: langProvider.get( 'customers'),
+                    value: isLoading
+                        ? '...'
+                        : Provider.of<Users>(context, listen: true)
+                            .customers
+                            .length
+                            .toString(),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: height * 1.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                langProvider.get( 'quick_links'),
+                style: GoogleFonts.righteous(fontSize: 18, color: primaryColor),
+              ),
+            ),
+            SizedBox(
+              height: height * 1.5,
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              height: height * 18,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  QuickChecks(
+                    width: width,
+                    height: height,
+                    title:  langProvider.get( 'designs'),
+                    subtitle: 'Click to view',
+                    icon: Icons.inventory_2_outlined,
+                    onTap: () {
+                      Navigator.pushNamed(context, ProductScreen.routeName);
+                    },
+                  ),
+                  QuickChecks(
+                    width: width,
+                    height: height,
+                    title:  langProvider.get( 'categories'),
+                    subtitle: 'Click to view',
+                    icon: Icons.document_scanner_sharp,
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(CategoryListScreen.routeName);
+                    },
+                  ),
+                  if (currentUser!.role!.toLowerCase() == 'admin')
+                    QuickChecks(
+                      width: width,
+                      height: height,
+                      title:  langProvider.get( 'categories_list'),
+                      subtitle: 'Click to view',
+                      icon: Icons.list,
+                      onTap: () {
+                        Navigator.of(context).pushNamed(CategoryScreen.routeName);
+                      },
+                    ),
+                  QuickChecks(
+                    width: width,
+                    height: height,
+                    title:  langProvider.get( 'customers'),
+                    subtitle: 'Click to view',
+                    icon: Icons.person_pin_circle_outlined,
+                    onTap: () {
+                      Navigator.of(context).pushNamed(CustomerScreen.routeName);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            if (currentUser!.role!.toLowerCase() == 'admin')
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                       langProvider.get( 'app_user'),
+                      style: GoogleFonts.righteous(
+                          fontSize: 18, color: primaryColor),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Provider.of<Counts>(context, listen: false)
+                            .setSelectedIndex(1);
+                      },
+                      child: Text(
+                        langProvider.get( 'view_all'),
+                        style: GoogleFonts.ubuntu(
+                            fontSize: 15, color: secondaryColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            SizedBox(
+              height: height * 1,
+            ),
+            if (currentUser!.role!.toLowerCase() == 'admin')
+              Expanded(
+                child: isLoading
+                    ? Center(
+                        child: AdaptiveIndecator(color: primaryColor),
+                      )
+                    : ListView.builder(
+                        itemCount: 4,
+                        itemBuilder: (ctx, index) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          child: Stack(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: btnbgColor.withOpacity(0.6),
+                                        width: 1),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.6),
+                                        offset: const Offset(0, 5),
+                                        blurRadius: 10,
+                                      ),
+                                    ]),
+                                // margin: const EdgeInsets.only(
+                                //     bottom: 20, left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: height * 6,
+                                          width: height * 6,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 5),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  style: BorderStyle.solid,
+                                                  width: 2,
+                                                  color:
+                                                      btnbgColor.withOpacity(1)),
+                                              borderRadius:
+                                                  BorderRadius.circular(50)),
+                                          child: ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(50)),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          child: Image.asset(
-                                            'assets/images/person22.jpeg',
-                                            height: height * 10,
-                                            width: height * 10,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width * 4,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            users![index].name,
-                                            style: TextStyle(
-                                              color: headingColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
+                                                BorderRadius.circular(50),
+                                            child: Image.asset(
+                                              'assets/images/person22.jpeg',
+                                              height: height * 10,
+                                              width: height * 10,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: height * 0.5,
-                                          ),
-                                          Text(
-                                            users![index].phone,
-                                            style: TextStyle(
-                                                color: contentColor,
-                                                fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        ),
+                                        SizedBox(
+                                          width: width * 4,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              users![index].name,
+                                              style: TextStyle(
+                                                color: headingColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: height * 0.5,
+                                            ),
+                                            Text(
+                                              users![index].phone,
+                                              style: TextStyle(
+                                                  color: contentColor,
+                                                  fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                height: height * 2,
-                                width: width * 20,
-                                decoration: BoxDecoration(
-                                    color: btnbgColor.withOpacity(1),
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10))),
-                                child: Center(
-                                  child: Text(
-                                    users![index].role,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: primaryColor),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: Container(
+                                  height: height * 2,
+                                  width: width * 20,
+                                  decoration: BoxDecoration(
+                                      color: btnbgColor.withOpacity(1),
+                                      borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(10))),
+                                  child: Center(
+                                    child: Text(
+                                 langProvider.get( users![index].role,), 
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: primaryColor),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-            ),
-        ],
+              ),
+          ],
+        ),
       ),
     );
     List<Widget> _tabs = [
