@@ -435,7 +435,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                     widget.users[index].name,
                                     style: TextStyle(
                                       color: headingColor,
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -445,7 +445,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                   Text(
                                     widget.users[index].email,
                                     style: TextStyle(
-                                        color: contentColor, fontSize: 13),
+                                        color: contentColor, fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -453,12 +453,14 @@ class _ShowUsersState extends State<ShowUsers> {
                           ),
                           if (widget.users[index].role != 'Admin')
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 if (widget.users[index].role.toLowerCase() ==
                                         'customer' &&
                                     (Platform.isMacOS || Platform.isWindows))
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                          backgroundColor: primaryColor,
                                           // maximumSize: Size(130, 130),
                                           minimumSize: Size(100, 35)),
                                       onPressed: () {
@@ -516,17 +518,18 @@ class _ShowUsersState extends State<ShowUsers> {
                                 SizedBox(
                                   width: width(context) * 1,
                                 ),
+                                if (widget.users[index].role.toLowerCase() !=
+                                    'admin')
+                                  IconButton(
+                                    onPressed: () {
+                                      _deleteUser(widget.users[index]);
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
                               ],
-                            ),
-                          if (widget.users[index].role.toLowerCase() != 'admin')
-                            IconButton(
-                              onPressed: () {
-                                _deleteUser(widget.users[index]);
-                              },
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
                             ),
                         ],
                       ),
@@ -539,12 +542,13 @@ class _ShowUsersState extends State<ShowUsers> {
                         width: width(context) * 20,
                         decoration: BoxDecoration(
                             color: btnbgColor.withOpacity(1),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(10))),
                         child: Center(
                           child: Text(
                             widget.users[index].role,
                             style: TextStyle(
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: primaryColor),
                           ),

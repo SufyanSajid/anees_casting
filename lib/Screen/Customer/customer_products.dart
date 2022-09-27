@@ -4,6 +4,7 @@ import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -80,8 +81,8 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                             borderRadius: BorderRadius.circular(50)),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://media.istockphoto.com/photos/one-beautiful-woman-looking-at-the-camera-in-profile-picture-id1303539316?s=612x612',
+                          child: Image.asset(
+                            'assets/images/person22.jpeg',
                             height: height(context) * 10,
                             width: height(context) * 10,
                             fit: BoxFit.cover,
@@ -225,8 +226,9 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.network(
+                                  ExtendedImage.network(
                                     products![index].image,
+                                    cache: true,
                                     fit: BoxFit.contain,
                                     height: height(context) * 12,
                                     width: width(context) * 100,

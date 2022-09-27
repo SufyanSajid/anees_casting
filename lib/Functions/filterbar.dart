@@ -29,12 +29,12 @@ Widget buildFilterBar(
       return SizedBox(
         width: constraints.maxWidth,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             //search box
 
             Expanded(
-              flex: 2,
+              flex: width(context) * 100 > 900 ? 2 : 4,
               child: TextField(
                 style: TextStyle(color: headingColor),
                 controller: searchConttroller,
@@ -54,17 +54,18 @@ Widget buildFilterBar(
                 ),
               ),
             ),
+
             //search box
 
             Expanded(
-              flex: 8,
+              flex: width(context) * 100 > 900 ? 8 : 6,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if (dropDown != null) dropDown,
-                  SizedBox(
-                    width: width(context) * 2,
-                  ),
+                  //   if (dropDown != null) dropDown,
+                  // SizedBox(
+                  //   width: width(context) * 2,
+                  // ),
                   CustomWidget!,
                   SizedBox(
                     width: width(context) * 2,

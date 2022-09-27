@@ -1,26 +1,19 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
-import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Models/product.dart';
-import 'package:anees_costing/Models/sent_products.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
-import 'package:anees_costing/Widget/customautocomplete.dart';
-import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:anees_costing/Widget/grad_button.dart';
 import 'package:anees_costing/contant.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Functions/dailog.dart';
 import '../../../Functions/filterbar.dart';
-import '../../../Helpers/storage_methods.dart';
 import '../../../Widget/send_button.dart';
-import 'functions/getproductbycatid.dart';
 import 'functions/getsearchedproducts.dart';
 
 class ProductWebContent extends StatefulWidget {
@@ -82,57 +75,28 @@ class _ProductWebContentState extends State<ProductWebContent> {
   }
 
   _deleteProduct({required imgUrl, required prodId}) {
-    showDialog(
+    showCustomDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-              backgroundColor: btnbgColor.withOpacity(0.8),
-              title: const Text(
-                'Are Your sure ?',
-                style: TextStyle(color: Colors.white),
-              ),
-              content: const Text(
-                'Design will be deleted Permanently',
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    // if (isLoading) {
-                    //   setState(() {
-                    //     showLoaderDialog(context, 'Loading..');
-                    //   });
-                    // }
-                    setState(() {
-                      isLoading = true;
-                    });
-                    var productProvider =
-                        Provider.of<Products>(context, listen: false);
-                    var countProvider =
-                        Provider.of<Counts>(context, listen: false);
+        title: 'Delete',
+        btn1: 'Yes',
+        content: 'Do You want to delete this product',
+        btn1Pressed: () async {
+          Navigator.of(context).pop();
+          setState(() {
+            isLoading = true;
+          });
+          var provider = Provider.of<Products>(context, listen: false);
 
-                    await StorageMethods().deleteImage(imgUrl: imgUrl);
+          await provider.deleteProduct(prodId, currentUser!.token);
 
-                    await productProvider.deleteProduct(
-                        prodId, currentUser!.token);
-                    countProvider.decreaseCount(product: 1);
-                    await productProvider.fetchAndUpdateProducts(
-                        userToken: currentUser!.token);
-
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-                  child: const Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('No'),
-                ),
-              ],
-            ));
+          setState(() {
+            isLoading = false;
+          });
+        },
+        btn2: 'No',
+        btn2Pressed: () {
+          Navigator.of(context).pop();
+        });
   }
 
   // getSearchedProduct(String search) {
@@ -171,7 +135,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
             onTap: () {
               Navigator.of(context).pushNamed(CategoryListScreen.routeName);
             },
-            title: 'View by  Category',
+            title: 'By Category',
           ),
           btnTap: () {
             Provider.of<Products>(context, listen: false).drawerProduct = null;
@@ -272,7 +236,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                         child: GridTile(
                           footer: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            height: height(context) * 5,
+                            // height: height(context) * 5,
+
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(10),
@@ -286,12 +251,12 @@ class _ProductWebContentState extends State<ProductWebContent> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 FittedBox(
-                                  fit: BoxFit.contain,
                                   child: Text(
                                     products[index].name,
                                     style: GoogleFonts.righteous(
                                       color: Colors.black54,
-                                      fontSize: 25,
+                                      fontSize:
+                                          width(context) * 100 > 900 ? 18 : 12,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -308,8 +273,10 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                         itemBuilder: (BuildContext context) =>
                                             <PopupMenuEntry>[
                                           PopupMenuItem(
+                                          
                                             child: PopupItem(
                                               icon: Icons.edit_outlined,
+                                              
                                               text: 'Edit',
                                               onTap: () {
                                                 Navigator.of(context).pop();

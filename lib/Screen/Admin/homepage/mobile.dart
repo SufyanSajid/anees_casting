@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Models/counts.dart';
@@ -75,7 +77,9 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          Container(
+            margin:
+                Platform.isAndroid ? EdgeInsets.only(top: 10) : EdgeInsets.zero,
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,7 +380,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                             users![index].name,
                                             style: TextStyle(
                                               color: headingColor,
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
@@ -384,10 +388,10 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                             height: height * 0.5,
                                           ),
                                           Text(
-                                            users![index].role,
+                                            users![index].phone,
                                             style: TextStyle(
                                                 color: contentColor,
-                                                fontSize: 13),
+                                                fontSize: 12),
                                           ),
                                         ],
                                       ),
@@ -404,12 +408,13 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                 width: width * 20,
                                 decoration: BoxDecoration(
                                     color: btnbgColor.withOpacity(1),
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(10))),
                                 child: Center(
                                   child: Text(
                                     users![index].role,
                                     style: TextStyle(
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: primaryColor),
                                   ),

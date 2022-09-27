@@ -48,52 +48,55 @@ class WebDrawer extends StatelessWidget {
       color: Colors.white,
       child: SizedBox(
         height: height(context) * 100,
-        child: Column(
-          children: [
-            if (selectedIndex == 1)
-              DrawerAppbar(
-                title: 'Design',
-                subTitle:
-                    isProductEmpty(context) ? 'Add New Design' : 'Edit Design',
-                svgIcon: 'assets/icons/daimond.svg',
-              ),
-            if (selectedIndex == 3)
-              DrawerAppbar(
-                title: 'Category',
-                subTitle: isCategoryEmpty(context)
-                    ? 'Add New Category'
-                    : 'Edit Category',
-                svgIcon: 'assets/icons/category.svg',
-              ),
-            if (selectedIndex == 2)
-              const DrawerAppbar(
-                title: 'Users',
-                subTitle: 'Add New Users',
-                svgIcon: 'assets/icons/profile.svg',
-              ),
-            SizedBox(
-              height: height(context) * 5,
-            ),
-
-            //Feilds Area
-            if (selectedIndex == 1)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: AddProductFeilds(),
-              ),
-            if (selectedIndex == 2)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: AddUserFeilds(),
-              ),
-            if (selectedIndex == 3)
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: AddCategoryFeilds(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (selectedIndex == 1)
+                DrawerAppbar(
+                  title: 'Design',
+                  subTitle: isProductEmpty(context)
+                      ? 'Add New Design'
+                      : 'Edit Design',
+                  svgIcon: 'assets/icons/daimond.svg',
+                ),
+              if (selectedIndex == 3)
+                DrawerAppbar(
+                  title: 'Category',
+                  subTitle: isCategoryEmpty(context)
+                      ? 'Add New Category'
+                      : 'Edit Category',
+                  svgIcon: 'assets/icons/category.svg',
+                ),
+              if (selectedIndex == 2)
+                const DrawerAppbar(
+                  title: 'Users',
+                  subTitle: 'Add New Users',
+                  svgIcon: 'assets/icons/profile.svg',
+                ),
+              SizedBox(
+                height: height(context) * 5,
               ),
 
-            //Feilds Area End
-          ],
+              //Feilds Area
+              if (selectedIndex == 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: AddProductFeilds(),
+                ),
+              if (selectedIndex == 2)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: AddUserFeilds(),
+                ),
+              if (selectedIndex == 3)
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: AddCategoryFeilds(),
+                ),
+
+              //Feilds Area End
+            ],
+          ),
         ),
       ),
     );
@@ -142,14 +145,21 @@ class DrawerAppbar extends StatelessWidget {
                   color: const Color.fromRGBO(197, 154, 120, 1),
                 ),
               ),
+              SizedBox(
+                width: 5,
+              ),
               Expanded(
                 flex: 1,
                 child: Center(
+                    child: FittedBox(
                   child: Text(
                     subTitle,
                     style: TextStyle(color: contentColor),
                   ),
-                ),
+                )),
+              ),
+              SizedBox(
+                width: 5,
               ),
               Expanded(
                 flex: 1,

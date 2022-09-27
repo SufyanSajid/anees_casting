@@ -23,6 +23,7 @@ class _UserWebContentState extends State<UserWebContent> {
   List<AUser> searchedUsers = [];
   bool isFirst = true;
   bool isLoading = false;
+  String selectedFilter = 'All';
   CurrentUser? currentUser;
 
   refreshSearchedUsers(AUser user) {
@@ -55,7 +56,8 @@ class _UserWebContentState extends State<UserWebContent> {
   @override
   Widget build(BuildContext context) {
     print("main build");
-    users = Provider.of<Users>(context, listen: true).users;
+    users = Provider.of<Users>(context, listen: true)
+        .getFilteredUsers(selectedFilter);
     searchedUsers = Provider.of<Users>(context, listen: false).searchedUsers;
 
     if (searchedUsers.isNotEmpty) {
@@ -64,6 +66,7 @@ class _UserWebContentState extends State<UserWebContent> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 1.5, horizontal: 10),
@@ -101,7 +104,63 @@ class _UserWebContentState extends State<UserWebContent> {
           ),
         ),
         SizedBox(
-          height: height(context) * 4,
+          height: height(context) * 2,
+        ),
+        PopupMenuButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: primaryColor,
+          ),
+          color: btnbgColor.withOpacity(1),
+          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'All';
+                });
+              },
+              child: const Text(
+                'All',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'Seller';
+                });
+              },
+              child: const Text(
+                'Seller',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'Customer';
+                });
+              },
+              child: const Text(
+                'Customer',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'Admin';
+                });
+              },
+              child: const Text(
+                'Admin',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: height(context) * 1,
         ),
         isLoading
             ? Center(

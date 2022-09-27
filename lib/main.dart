@@ -15,6 +15,7 @@ import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import './Models/category.dart';
 import './Models/product.dart';
@@ -34,8 +35,12 @@ import 'Screen/Auth/forget/forget_screen.dart';
 import 'Screen/Auth/forget/verification_screen.dart';
 
 void main() async {
-  debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
   WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
 
   runApp(const MyApp());
 }

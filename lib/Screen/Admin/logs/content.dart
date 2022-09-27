@@ -25,6 +25,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
   List<Log>? logs;
   bool isLoading = false;
   CurrentUser? currentUser;
+  String selectedFilter = 'All';
 
   @override
   void didChangeDependencies() async {
@@ -46,8 +47,10 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
 
   @override
   Widget build(BuildContext context) {
-    var logs = Provider.of<Logs>(context, listen: false).logs;
+    var logs = Provider.of<Logs>(context, listen: false)
+        .getFilteredLog(selectedFilter);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         // buildFilterBar(
         //   searchSubmitted: () {},
@@ -63,6 +66,52 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
         // SizedBox(
         //   height: height(context) * 3,
         // ),
+
+        PopupMenuButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: primaryColor,
+          ),
+          color: btnbgColor.withOpacity(1),
+          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'All';
+                });
+              },
+              child: const Text(
+                'All',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'Share';
+                });
+              },
+              child: const Text(
+                'Share',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                setState(() {
+                  selectedFilter = 'Activity';
+                });
+              },
+              child: const Text(
+                'Activity',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: height(context) * 1,
+        ),
         Expanded(
           child: isLoading
               ? Center(

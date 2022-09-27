@@ -100,12 +100,14 @@ class _WebHomeState extends State<WebHome> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      'Welcome to Anees Casting',
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold),
+                    FittedBox(
+                      child: Text(
+                        'Welcome to Anees Casting',
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(right: 50),
@@ -157,7 +159,7 @@ class _WebHomeState extends State<WebHome> {
           children: [
             Expanded(
               child: TotalBlock(
-                title: 'Total Designs',
+                title: 'Designs',
                 value: isLoading ? '...' : products.length.toString(),
                 icon: Icons.diamond_outlined,
               ),
@@ -167,7 +169,7 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
-                title: 'Total Clients',
+                title: 'Clients',
                 value: isLoading
                     ? '...'
                     : Provider.of<Users>(context, listen: true)
@@ -182,7 +184,7 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
-                title: 'Total Categories',
+                title: 'Categories',
                 value: isLoading ? '...' : categories.length.toString(),
                 icon: Icons.diamond_outlined,
               ),
@@ -438,10 +440,12 @@ class TotalBlock extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: contentColor,
+              FittedBox(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: contentColor,
+                  ),
                 ),
               ),
               SizedBox(
@@ -451,7 +455,7 @@ class TotalBlock extends StatelessWidget {
                 value,
                 style: TextStyle(
                     color: primaryColor,
-                    fontSize: 34,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold),
               )
             ],
@@ -489,10 +493,10 @@ class BarButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(15)),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: FittedBox(
-          fit: BoxFit.contain,
           child: Text(
             title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: primaryColor, fontWeight: FontWeight.w500, fontSize: 12),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anees_costing/Models/product.dart';
+import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
@@ -47,14 +48,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           final temp = await getTemporaryDirectory();
           final path = '${temp.path}/image.jpg';
           File(path).writeAsBytesSync(bytes);
-          await Share.shareFiles([path]);
+          await Share.shareFiles(
+            [path],
+            text: 'Article no: ${product!.name}',
+          );
           setState(() {
             isLoading = false;
           });
         },
         backgroundColor: primaryColor,
         child: isLoading
-            ? CircularProgressIndicator(
+            ? AdaptiveIndecator(
                 color: Colors.white,
               )
             : const Icon(Icons.share),
