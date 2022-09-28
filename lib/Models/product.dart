@@ -306,6 +306,7 @@ class Products with ChangeNotifier {
       var extractedResponse = json.decode(response.body);
       if (extractedResponse['success'] == true) {
         print(extractedResponse['message']);
+        _catProducts.removeWhere((element) => element.id==prodId);
         _products.removeWhere((element) => element.id == prodId);
         notifyListeners();
       } else {

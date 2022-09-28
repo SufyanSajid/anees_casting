@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../Functions/dailog.dart';
 import '../../../../Models/auth.dart';
 import '../../../../Models/category.dart';
 import '../../../../Models/product.dart';
@@ -57,50 +58,29 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
     super.didChangeDependencies();
   }
 
-  _deleteProduct({required imgUrl, required prodId}) {
-    showDialog(
+  _deleteProduct({required imgUrl, required Product prod}) {
+    showCustomDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-              backgroundColor: btnbgColor.withOpacity(0.8),
-              title: const Text(
-                'Are Your sure ?',
-                style: TextStyle(color: Colors.white),
-              ),
-              content: const Text(
-                'Design will be deleted Permanently',
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    // if (isLoading) {
-                    //   setState(() {
-                    //     showLoaderDialog(context, 'Loading..');
-                    //   });
-                    // }
-                    setState(() {
-                      isLoading = true;
-                    });
-                    var provider =
-                        Provider.of<Products>(context, listen: false);
+        title: 'Delete',
+        btn1: 'Yes',
+        content: 'Do You want to delete this product',
+        btn1Pressed: () async {
+          Navigator.of(context).pop();
+          setState(() {
+            isLoading = true;
+          });
+          var provider = Provider.of<Products>(context, listen: false);
 
-                    await provider.deleteProduct(prodId, currentUser!.token);
+          await provider.deleteProduct(prod.id, currentUser!.token);
 
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-                  child: Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('No'),
-                ),
-              ],
-            ));
+          setState(() {
+            isLoading = false;
+          });
+        },
+        btn2: 'No',
+        btn2Pressed: () {
+          Navigator.of(context).pop();
+        });
   }
 
   @override
@@ -301,9 +281,8 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
                                                             imgUrl:
                                                                 products[index]
                                                                     .image,
-                                                            prodId:
-                                                                products[index]
-                                                                    .id);
+                                                            prod: products[
+                                                                index]);
                                                       },
                                                     ),
                                                   ),

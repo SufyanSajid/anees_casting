@@ -27,6 +27,12 @@ class CurrentUser {
 class Auth with ChangeNotifier {
   CurrentUser? currentUser;
 
+
+  void setName(String name){
+currentUser!.name=name;
+notifyListeners();
+  }
+
   // String? _token;
   // DateTime? _expiryDate;
   // String? _userId;
