@@ -213,7 +213,7 @@ class _WebHomeState extends State<WebHome> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Activity Logs',
+                  'Users',
                   style: TextStyle(
                       fontSize: 20,
                       color: primaryColor,

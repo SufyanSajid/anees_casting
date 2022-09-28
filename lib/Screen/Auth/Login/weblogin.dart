@@ -8,6 +8,8 @@ class WebLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    print(width);
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
@@ -35,28 +37,31 @@ class WebLogin extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              flex: 5,
-              child: Stack(
-                children: [
-                  Image.asset(
-                    'assets/images/poster.jpeg',
-                    fit: BoxFit.cover,
-                    height: height(context) * 100,
-                  ),
-                  Container(
-                    color: Colors.black.withOpacity(0.8),
-                    height: height(context) * 100,
-                  ),
-                  Center(
+            if (width > 1000)
+              Expanded(
+                flex: 5,
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      'assets/images/poster.jpeg',
+                      fit: BoxFit.cover,
+                      height: height(context) * 100,
+                    ),
+                    Container(
+                      color: Colors.black.withOpacity(0.8),
+                      height: height(context) * 100,
+                    ),
+                    Center(
+                        child: FittedBox(
                       child: Text(
-                    'Welcome To Anees Casting',
-                    style: GoogleFonts.berkshireSwash(
-                        fontSize: 54, color: primaryColor),
-                  ))
-                ],
+                        'Welcome To Anees Casting',
+                        style: GoogleFonts.berkshireSwash(
+                            fontSize: 54, color: primaryColor),
+                      ),
+                    ))
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -106,88 +108,98 @@ class _VerificationScreenState extends State<VerificationScreen> {
           backgroundColor: Colors.black.withOpacity(0.8),
           body: Form(
             key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  //   child: Appbar(
-                  //     height: height,
-                  //     width: width,
-                  //     leading: ArrowBack(),
-                  //     center: Container(),
-                  //     trailing: Container(),
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: height * 10,
+            child: Center(
+              child: Container(
+                width: Platform.isAndroid || Platform.isIOS
+                    ? double.infinity
+                    : width * 50,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      //   child: Appbar(
+                      //     height: height,
+                      //     width: width,
+                      //     leading: ArrowBack(),
+                      //     center: Container(),
+                      //     trailing: Container(),
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: height * 10,
+                      ),
+                      Center(
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          height: height * 17,
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 26,
+                      ),
+                      Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Enter the 6-digit code that is sent to your email address',
+                            style: TextStyle(
+                                color: btnbgColor.withOpacity(1), fontSize: 14),
+                          )),
+                      SizedBox(
+                        height: height * 2,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: InputFeild(
+                            hinntText: 'Code here',
+                            validatior: (String value) {
+                              if (value.isEmpty) {
+                                return 'Enter the 6-digit code that is sent to your email address';
+                              }
+                              if (value.length > 6) {
+                                return 'Code invalid';
+                              }
+                            },
+                            inputController: _codeController),
+                      ),
+                      SizedBox(
+                        height: height * 2,
+                      ),
+                      GestureDetector(
+                        onTap: _submit,
+                        child: Container(
+                          height: currentOrientation == Orientation.landscape
+                              ? height * 5
+                              : height * 5,
+                          width: currentOrientation == Orientation.landscape
+                              ? width * 15
+                              : width * 60,
+                          margin: const EdgeInsets.only(top: 15),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: primaryColor),
+                          child: isLoading
+                              ? AdaptiveIndecator(
+                                  color: Colors.white,
+                                )
+                              : Center(
+                                  child: FittedBox(
+                                    child: Text(
+                                      'Verify Code',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      )
+                    ],
                   ),
-                  Center(
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      height: height * 17,
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 26,
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Enter the 6-digit code that is sent to your email address',
-                        style: TextStyle(
-                            color: btnbgColor.withOpacity(1), fontSize: 14),
-                      )),
-                  SizedBox(
-                    height: height * 2,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: InputFeild(
-                        hinntText: 'Code here',
-                        validatior: (String value) {
-                          if (value.isEmpty) {
-                            return 'Enter the 6-digit code that is sent to your email address';
-                          }
-                          if (value.length > 6) {
-                            return 'Code invalid';
-                          }
-                        },
-                        inputController: _codeController),
-                  ),
-                  SizedBox(
-                    height: height * 2,
-                  ),
-                  GestureDetector(
-                    onTap: _submit,
-                    child: Container(
-                      height: currentOrientation == Orientation.landscape
-                          ? height * 10
-                          : height * 5,
-                      width: currentOrientation == Orientation.landscape
-                          ? width * 40
-                          : width * 60,
-                      margin: const EdgeInsets.only(top: 15),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: primaryColor),
-                      child: isLoading
-                          ? AdaptiveIndecator(
-                              color: Colors.white,
-                            )
-                          : const Center(
-                              child: Text(
-                                'Verify Code',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16),
-                              ),
-                            ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
           ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anees_costing/Screen/Auth/forget/verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -79,77 +81,89 @@ class _ForgetScreenState extends State<ForgetScreen> {
             backgroundColor: Colors.transparent,
           ),
           backgroundColor: Colors.black.withOpacity(0.8),
-          body: SingleChildScrollView(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: Center(
+            child: Container(
+              width: Platform.isAndroid || Platform.isIOS
+                  ? double.infinity
+                  : width * 50,
+              child: SingleChildScrollView(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-              children: [
-                SizedBox(
-                  height: height * 10,
-                ),
-                Center(
-                  child: Image.asset(
-                    'assets/images/log0_final.png',
-                    fit: BoxFit.cover,
-                    height: height * 17,
-                  ),
-                ),
-                SizedBox(
-                  height: height * 30,
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: InputFeild(
-                            hinntText: 'Enter Your Email',
-                            validatior: (String value) {
-                              if (value.isEmpty) {
-                                return '';
-                              }
-                            },
-                            inputController: _emailController),
+                  children: [
+                    SizedBox(
+                      height: height * 10,
+                    ),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/log0_final.png',
+                        fit: BoxFit.cover,
+                        height: height * 17,
                       ),
-                      SizedBox(
-                        height: height * 2,
+                    ),
+                    SizedBox(
+                      height: height * 30,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: InputFeild(
+                                hinntText: 'Enter Your Email',
+                                validatior: (String value) {
+                                  if (value.isEmpty) {
+                                    return '';
+                                  }
+                                },
+                                inputController: _emailController),
+                          ),
+                          SizedBox(
+                            height: height * 2,
+                          ),
+                          GestureDetector(
+                            onTap: _submit,
+                            child: Container(
+                              height:
+                                  currentOrientation == Orientation.landscape
+                                      ? height * 5
+                                      : height * 5,
+                              width: currentOrientation == Orientation.landscape
+                                  ? width * 15
+                                  : width * 60,
+                              margin: const EdgeInsets.only(top: 15),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: primaryColor),
+                              // padding:isLoading?EdgeInsets.symmetric(horizontal: 0,vertical: 16): const EdgeInsets.symmetric(
+                              //     horizontal: 60, vertical: 16),
+                              child: isLoading
+                                  ? AdaptiveIndecator(
+                                      color: Colors.white,
+                                    )
+                                  : Center(
+                                      child: FittedBox(
+                                        child: Text(
+                                          'Forget Password',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16),
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          )
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: _submit,
-                        child: Container(
-                          height: currentOrientation == Orientation.landscape
-                              ? height * 10
-                              : height * 5,
-                          width: currentOrientation == Orientation.landscape
-                              ? width * 40
-                              : width * 60,
-                          margin: const EdgeInsets.only(top: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: primaryColor),
-                          // padding:isLoading?EdgeInsets.symmetric(horizontal: 0,vertical: 16): const EdgeInsets.symmetric(
-                          //     horizontal: 60, vertical: 16),
-                          child: isLoading
-                              ? AdaptiveIndecator(
-                                  color: Colors.white,
-                                )
-                              : const Center(
-                                  child: Text(
-                                    'Forget Password',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
