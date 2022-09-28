@@ -64,7 +64,6 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     var langProvider = Provider.of<Language>(context);
 
     selectIndex = Provider.of<Counts>(context).selectedIndex;
@@ -79,13 +78,16 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     var width = MediaQuery.of(context).size.width / 100;
     var homePage = SafeArea(
       child: Directionality(
-        textDirection:langProvider.currentLang == language.Urdu? TextDirection.rtl:TextDirection.ltr,
+        textDirection: langProvider.currentLang == language.Urdu
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin:
-                  Platform.isAndroid ? EdgeInsets.only(top: 10) : EdgeInsets.zero,
+              margin: Platform.isAndroid
+                  ? EdgeInsets.only(top: 10)
+                  : EdgeInsets.zero,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,8 +129,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                             langProvider.get( currentUser!.role!)
-                           ,
+                            langProvider.get(currentUser!.role!),
                             style: GoogleFonts.righteous(
                               color: primaryColor,
                               fontSize: 20,
@@ -179,15 +180,15 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                       blurRadius: 20),
                 ],
               ),
-      
+
               //width: double.infinity,
-      
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DisplayBox(
                     height: height,
-                    title: langProvider.get( 'designs'),
+                    title: langProvider.get('designs'),
                     value: isLoading ? '...' : products.length.toString(),
                   ),
                   Container(
@@ -197,7 +198,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   ),
                   DisplayBox(
                     height: height,
-                    title: langProvider.get( 'categories'),
+                    title: langProvider.get('categories'),
                     value: isLoading
                         ? '...'
                         : Provider.of<Categories>(context)
@@ -212,7 +213,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   ),
                   DisplayBox(
                     height: height,
-                    title: langProvider.get( 'customers'),
+                    title: langProvider.get('customers'),
                     value: isLoading
                         ? '...'
                         : Provider.of<Users>(context, listen: true)
@@ -229,7 +230,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
-                langProvider.get( 'quick_links'),
+                langProvider.get('quick_links'),
                 style: GoogleFonts.righteous(fontSize: 18, color: primaryColor),
               ),
             ),
@@ -245,7 +246,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   QuickChecks(
                     width: width,
                     height: height,
-                    title:  langProvider.get( 'designs'),
+                    title: langProvider.get('designs'),
                     subtitle: 'Click to view',
                     icon: Icons.inventory_2_outlined,
                     onTap: () {
@@ -255,7 +256,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   QuickChecks(
                     width: width,
                     height: height,
-                    title:  langProvider.get( 'categories'),
+                    title: langProvider.get('categories'),
                     subtitle: 'Click to view',
                     icon: Icons.document_scanner_sharp,
                     onTap: () {
@@ -267,17 +268,18 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                     QuickChecks(
                       width: width,
                       height: height,
-                      title:  langProvider.get( 'categories_list'),
+                      title: langProvider.get('categories_list'),
                       subtitle: 'Click to view',
                       icon: Icons.list,
                       onTap: () {
-                        Navigator.of(context).pushNamed(CategoryScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(CategoryScreen.routeName);
                       },
                     ),
                   QuickChecks(
                     width: width,
                     height: height,
-                    title:  langProvider.get( 'customers'),
+                    title: langProvider.get('customers'),
                     subtitle: 'Click to view',
                     icon: Icons.person_pin_circle_outlined,
                     onTap: () {
@@ -294,7 +296,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                       langProvider.get( 'app_user'),
+                      langProvider.get('app_user'),
                       style: GoogleFonts.righteous(
                           fontSize: 18, color: primaryColor),
                     ),
@@ -304,7 +306,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                             .setSelectedIndex(1);
                       },
                       child: Text(
-                        langProvider.get( 'view_all'),
+                        langProvider.get('view_all'),
                         style: GoogleFonts.ubuntu(
                             fontSize: 15, color: secondaryColor),
                       ),
@@ -361,8 +363,8 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                               border: Border.all(
                                                   style: BorderStyle.solid,
                                                   width: 2,
-                                                  color:
-                                                      btnbgColor.withOpacity(1)),
+                                                  color: btnbgColor
+                                                      .withOpacity(1)),
                                               borderRadius:
                                                   BorderRadius.circular(50)),
                                           child: ClipRRect(
@@ -419,7 +421,9 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                                           bottomLeft: Radius.circular(10))),
                                   child: Center(
                                     child: Text(
-                                 langProvider.get( users![index].role,), 
+                                      langProvider.get(
+                                        users![index].role,
+                                      ),
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,

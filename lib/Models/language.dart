@@ -24,6 +24,24 @@ class Language extends ChangeNotifier {
     'User': ' User',
     'all users here': 'All users here',
     'all': "all",
+    'password': 'Password',
+    'email': 'email',
+    'name': 'name',
+    'phone': 'phone',
+    'add user': 'add user',
+    'edit user': 'edit user',
+    'log': 'Log',
+    'users activities': 'users activities',
+    'share': 'Share',
+    'activity': 'Activity',
+    'profile': 'Profile',
+    'edit your profile': 'Edit Your Profile',
+    'change name': 'Change Name',
+    'change password': 'Change Password',
+    'new password': 'New Password',
+    'confirm new password': 'Confirm New Password',
+    'first name': 'First Name',
+    'last name': 'Last Name',
     'language': 'English',
   };
   Map<String, String> urdu = {
@@ -41,6 +59,24 @@ class Language extends ChangeNotifier {
     'all': "تمام",
     'user': ' صارف',
     'all users here': 'تمام صارف',
+    'password': 'پاس ورڈ',
+    'email': 'ای میل',
+    'name': 'نام',
+    'phone': 'موبائل نمبر',
+    'edit user': 'تبدیل کریں',
+    'add user': 'اندراج کریں',
+    'log': 'لاگ',
+    'users activities': 'صارف کی سرگرمیاں',
+    'share': 'شیئر',
+    'activity': 'سرگرمی',
+    'profile': 'پروفائل',
+    'edit your profile': 'پروفائل تبدیل کریں',
+    'change name': 'نام تبدیل کریں',
+    'change password': 'پاس ورڈ تبدیل کریں',
+    'new password': 'نیا پاس ورڈ',
+    'confirm new password': 'نیا پاس ورڈ',
+    'first name': 'پہلا نام',
+    'last name': 'آخری نام',
     'language': 'اردو',
   };
 
@@ -63,7 +99,6 @@ class Language extends ChangeNotifier {
     var shared = await SharedPreferences.getInstance();
     if (shared.containsKey('language')) {
       var lang = shared.get('language');
-      print('gsdhsgfgshddfhs');
       currentLang = lang == language.English.toString()
           ? language.English
           : language.Urdu;

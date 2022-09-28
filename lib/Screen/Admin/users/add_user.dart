@@ -8,6 +8,7 @@ import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/Widget/snakbar.dart';
 import 'package:provider/provider.dart';
+import '../../../Models/language.dart';
 import '/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/appbar.dart';
@@ -155,7 +156,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     });
 
     if (role.toLowerCase() != widget.user!.role.toLowerCase()) {
-      print('changing role');
       Provider.of<Users>(context, listen: false).updateUserRole(
         userId: widget.user!.id,
         userToken: currentUser!.token,
@@ -163,7 +163,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       );
     }
     if (_passwordController.text.isNotEmpty) {
-      print('changinb pass');
       Provider.of<Auth>(context, listen: false).changePassword(
         password: _passwordController.text.trim(),
         userId: widget.user!.id,
@@ -222,7 +221,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
             password: _passwordController.text.trim())
         .then((value) async {
       userId = value;
-      print('yeh h userId $value');
       await Provider.of<Users>(context, listen: false).updateUserRole(
           userId: value.toString(),
           userRole: role,
@@ -277,7 +275,6 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     // TODO: implement initState
     if (widget.action == 'edit') {
-      print('111111111111${widget.user!.role}');
       _nameController.text = widget.user!.name;
       print(_nameController.text);
       _emailController.text = widget.user!.email;
@@ -315,6 +312,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
   @override
   Widget build(BuildContext context) {
+    var langProvider = Provider.of<Language>(context);
+
     return Column(
       children: [
         Container(
@@ -344,7 +343,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
             Expanded(
               flex: 7,
               child: InputFeild(
-                  hinntText: 'Name',
+                  hinntText: langProvider.get('Name'),
                   validatior: () {},
                   inputController: _nameController),
             ),
@@ -352,19 +351,19 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
               width: width(context) * 3,
             ),
             Expanded(
-                flex: 5,
-                child: CustomDropDown(
-                  items: const [
-                    'Customer',
-                    'Admin',
-                    'Seller',
-                  ],
-                  firstSelect: widget.action == 'edit' ? widget.user!.role : '',
-                  onChanged: (value) {
-                    print(value);
-                    role = value;
-                  },
-                ))
+              flex: 5,
+              child: CustomDropDown(
+                items: [
+                  langProvider.get('Customer'),
+                  langProvider.get('Admin'),
+                  langProvider.get('Seller'),
+                ],
+                firstSelect: widget.action == 'edit' ? langProvider.get(widget.user!.role)  : '',
+                onChanged: (value) {
+                  role = value;
+                },
+              ),
+            )
           ],
         ),
         SizedBox(
@@ -372,7 +371,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         ),
         InputFeild(
             suffix: Icons.email_outlined,
-            hinntText: 'Email',
+            hinntText: langProvider.get('Email'),
             readOnly: widget.action == 'edit' ? true : false,
             validatior: () {},
             inputController: _emailController),
@@ -381,7 +380,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         ),
         InputFeild(
             suffix: Icons.phone_outlined,
-            hinntText: 'Phone',
+            hinntText: langProvider.get('Phone'),
             validatior: () {},
             inputController: _phoneController),
         SizedBox(
@@ -395,7 +394,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 isPassSecure = !isPassSecure;
               });
             },
-            hinntText: 'Password',
+            hinntText: langProvider.get('Password'),
             validatior: () {},
             inputController: _passwordController),
         SizedBox(
@@ -410,7 +409,9 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                     height: height(context),
                     width: width(context),
                     onTap: widget.action == 'edit' ? _editUser : _sigUpUser,
-                    title: widget.action == 'edit' ? 'Edit User' : 'Add User'),
+                    title: widget.action == 'edit'
+                        ? langProvider.get('Edit User')
+                        : langProvider.get('Add User')),
               )
       ],
     );

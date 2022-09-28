@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:anees_costing/Helpers/firebase_auth.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Widget/appbar.dart';
@@ -36,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _nameFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  
 
   int index = 0;
   bool isLoading = false;
@@ -133,6 +135,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var langProvider = Provider.of<Language>(context);
+
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;
 
@@ -148,8 +152,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Appbar(
-                    title: 'Profile',
-                    subtitle: 'Edit Your Profile',
+                    title: langProvider.get('Profile') ,
+                    subtitle: langProvider.get('Edit Your Profile') ,
                     svgIcon: 'assets/icons/profile.svg',
                     leadingIcon: Icons.home,
                     leadingTap: () {
@@ -214,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: height * 0.2,
                     ),
                     Text(
-                      '( ${currentUser.role} )',
+                    langProvider.get(currentUser.role),  
                       textAlign: TextAlign.center,
                       style: TextStyle(color: contentColor, fontSize: 12),
                     ),
@@ -262,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ]),
                                 child: Center(
                                   child: Text(
-                                    'Change Name',
+                                  langProvider.get('Change Name')  ,
                                     style: TextStyle(
                                         color: index == 0
                                             ? Colors.white
@@ -292,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(30)),
                                 child: Center(
                                   child: Text(
-                                    'Change Password',
+                                   langProvider.get('Change Password')   ,
                                     style: TextStyle(
                                         color: index == 1
                                             ? Colors.white
@@ -317,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InputFeild(
                                   readOnly: true,
-                                  hinntText: 'Email here',
+                                  hinntText: langProvider.get('Email here') ,
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -330,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 child: InputFeild(
                                     textInputAction: TextInputAction.next,
-                                    hinntText: 'First Name',
+                                    hinntText: langProvider.get('First Name') ,
                                     validatior: (String value) {
                                       if (value.isEmpty) {
                                         return '';
@@ -343,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               InputFeild(
                                   textInputAction: TextInputAction.done,
-                                  hinntText: 'Last Name',
+                                  hinntText: langProvider.get('Last Name') ,
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -363,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       onTap: _nameChange,
                                       height: height,
                                       width: width,
-                                      title: 'Change Name'),
+                                      title: langProvider.get('Change Name') ),
                             ],
                           ),
                         ),
@@ -377,7 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InputFeild(
                                   textInputAction: TextInputAction.next,
-                                  hinntText: 'New Password',
+                                  hinntText: langProvider.get('New Password') ,
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -392,7 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               InputFeild(
                                   textInputAction: TextInputAction.done,
-                                  hinntText: 'Confirm New Password',
+                                  hinntText: langProvider.get('Confirm New Password') ,
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return 'password didnot match';
@@ -415,7 +419,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       onTap: _passwordChange,
                                       height: height,
                                       width: width,
-                                      title: 'Change Password'),
+                                      title: langProvider.get('Change Password')),
                             ],
                           ),
                         ),

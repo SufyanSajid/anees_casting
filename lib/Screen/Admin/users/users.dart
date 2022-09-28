@@ -305,7 +305,7 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
-        var langProvider = Provider.of<Language>(context);
+    var langProvider = Provider.of<Language>(context);
 
     return Expanded(
       child: isLoading
@@ -339,7 +339,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor),
-                                child:  Text(langProvider.get('Edit User') ),
+                                child: Text(langProvider.get('Edit User')),
                               ),
                             ],
                             content: Container(
@@ -348,14 +348,14 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   UserDetail(
-                                    title: langProvider.get('Email') ,
+                                    title: langProvider.get('Email'),
                                     value: widget.users[index].email,
                                   ),
                                   SizedBox(
                                     height: height(context) * 1,
                                   ),
                                   UserDetail(
-                                    title: langProvider.get('Phone') ,
+                                    title: langProvider.get('Phone'),
                                     value: widget.users[index].phone,
                                   )
                                 ],
@@ -414,7 +414,6 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                  
                                     widget.users[index].name,
                                     style: TextStyle(
                                       color: headingColor,
@@ -529,7 +528,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 bottomLeft: Radius.circular(10))),
                         child: Center(
                           child: Text(
-                            widget.users[index].role,
+                            langProvider.get(widget.users[index].role),
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,

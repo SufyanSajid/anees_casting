@@ -1,5 +1,6 @@
 import 'package:anees_costing/Functions/popup.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
@@ -46,6 +47,8 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
   Widget build(BuildContext context) {
     logs = Provider.of<Logs>(context, listen: false)
         .getFilteredLog(selectedFilter);
+    var langProvider = Provider.of<Language>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: AppDrawer(),
@@ -58,8 +61,8 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
               Column(
                 children: [
                   Appbar(
-                    title: 'Log',
-                    subtitle: 'Users Activities',
+                    title: langProvider.get('Log'),
+                    subtitle: langProvider.get('Users Activities'),
                     svgIcon: 'assets/icons/recycle.svg',
                     leadingIcon: Icons.home,
                     leadingTap: () {
@@ -76,7 +79,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                             });
                           },
                           child: Text(
-                            'All',
+                            langProvider.get('All'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -88,7 +91,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                             });
                           },
                           child: Text(
-                            'Share',
+                            langProvider.get('Share'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -100,7 +103,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                             });
                           },
                           child: Text(
-                            'Activity',
+                            langProvider.get('Activity'),
                             style:
                                 TextStyle(color: Colors.white.withOpacity(0.9)),
                           ),
@@ -186,7 +189,7 @@ class _ActivityLogScreenState extends State<ActivityLogScreen> {
                                       Expanded(
                                         flex: 2,
                                         child: Text(
-                                          logs[index].logType,
+                                          langProvider.get(logs[index].logType),
                                           textAlign: TextAlign.right,
                                           style: GoogleFonts.righteous(
                                             color: primaryColor,
