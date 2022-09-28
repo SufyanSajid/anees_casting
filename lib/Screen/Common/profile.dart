@@ -145,26 +145,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Appbar(
-                  title: 'Profile',
-                  subtitle: 'Edit Your Profile',
-                  svgIcon: 'assets/icons/profile.svg',
-                  leadingIcon: Icons.home,
-                  leadingTap: () {
-                    if (currentUser.role == "customer") {
-                      Navigator.of(context).pushReplacementNamed(
-                          CustomerProductScreen.routeName);
-                    } else {
-                      Navigator.of(context)
-                          .pushReplacementNamed(AdminHomePage.routeName);
-                    }
-                    Provider.of<Counts>(context, listen: false)
-                        .setSelectedIndex(0);
-                  },
-                  tarilingIcon: Icons.filter_list,
-                  tarilingTap: () {
-                    _scaffoldKey.currentState!.openDrawer();
-                  }),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Appbar(
+                    title: 'Profile',
+                    subtitle: 'Edit Your Profile',
+                    svgIcon: 'assets/icons/profile.svg',
+                    leadingIcon: Icons.home,
+                    leadingTap: () {
+                      if (currentUser.role == "customer") {
+                        Navigator.of(context).pushReplacementNamed(
+                            CustomerProductScreen.routeName);
+                      } else {
+                        Navigator.of(context)
+                            .pushReplacementNamed(AdminHomePage.routeName);
+                      }
+                      Provider.of<Counts>(context, listen: false)
+                          .setSelectedIndex(0);
+                    },
+                    tarilingIcon: Icons.filter_list,
+                    tarilingTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    }),
+              ),
               Expanded(
                 child: ListView(
                   children: [
