@@ -1,3 +1,4 @@
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Product/components/add_product_field.dart';
 import 'package:anees_costing/Screen/Admin/users/add_user.dart';
@@ -42,6 +43,8 @@ class WebDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     return Container(
       padding: const EdgeInsets.only(top: 25),
       width: width(context) * 35,
@@ -53,24 +56,24 @@ class WebDrawer extends StatelessWidget {
             children: [
               if (selectedIndex == 1)
                 DrawerAppbar(
-                  title: 'Design',
+                  title: languageProvider.get('Design'),
                   subTitle: isProductEmpty(context)
-                      ? 'Add New Design'
-                      : 'Edit Design',
+                      ? languageProvider.get('Add New Design')
+                      : languageProvider.get('Edit Design'),
                   svgIcon: 'assets/icons/daimond.svg',
                 ),
               if (selectedIndex == 3)
                 DrawerAppbar(
-                  title: 'Category',
+                  title: languageProvider.get('Category'),
                   subTitle: isCategoryEmpty(context)
-                      ? 'Add New Category'
-                      : 'Edit Category',
+                      ? languageProvider.get('Add New Category')
+                      : languageProvider.get('Edit Category'),
                   svgIcon: 'assets/icons/category.svg',
                 ),
               if (selectedIndex == 2)
-                const DrawerAppbar(
-                  title: 'Users',
-                  subTitle: 'Add New Users',
+                DrawerAppbar(
+                  title: languageProvider.get('Users'),
+                  subTitle: languageProvider.get('Add New Users'),
                   svgIcon: 'assets/icons/profile.svg',
                 ),
               SizedBox(

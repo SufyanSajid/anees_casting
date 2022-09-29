@@ -65,7 +65,7 @@ class _WebHomeState extends State<WebHome> {
                           _alertShowing = false;
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: btnbgColor,
+                          backgroundColor: primaryColor,
                         ),
                         child: const Text('Yes')),
                     ElevatedButton(
@@ -74,7 +74,7 @@ class _WebHomeState extends State<WebHome> {
                           _alertShowing = false;
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: btnbgColor,
+                          backgroundColor: primaryColor,
                         ),
                         child: const Text('No'))
                   ]);
@@ -152,7 +152,7 @@ class _WebHomeState extends State<WebHome> {
                   children: [
                     FittedBox(
                       child: Text(
-                        'Welcome to Anees Casting',
+                        langProvider.get('Welcome to Anees Casting'),
                         style: TextStyle(
                             color: primaryColor,
                             fontSize: 32,
@@ -171,7 +171,7 @@ class _WebHomeState extends State<WebHome> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           BarButton(
-                            title: 'Manage Users',
+                            title: langProvider.get('Manage Users'),
                             onTap: () {
                               setState(() {
                                 selectedIndex = 2;
@@ -182,7 +182,7 @@ class _WebHomeState extends State<WebHome> {
                             width: width(context) * 1,
                           ),
                           BarButton(
-                            title: 'Manage Designs',
+                            title: langProvider.get('Manage Designs'),
                             onTap: () {
                               setState(() {
                                 selectedIndex = 1;
@@ -209,7 +209,7 @@ class _WebHomeState extends State<WebHome> {
           children: [
             Expanded(
               child: TotalBlock(
-                title: 'Designs',
+                title: langProvider.get('Designs'),
                 value: isLoading ? '...' : products.length.toString(),
                 icon: Icons.diamond_outlined,
               ),
@@ -219,7 +219,7 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
-                title: 'Categories',
+                title: langProvider.get('Categories'),
                 value: isLoading ? '...' : categories.length.toString(),
                 icon: Icons.category_outlined,
               ),
@@ -229,7 +229,7 @@ class _WebHomeState extends State<WebHome> {
             ),
             Expanded(
               child: TotalBlock(
-                title: 'Clients',
+                title: langProvider.get('Customers'),
                 value: isLoading
                     ? '...'
                     : Provider.of<Users>(context, listen: true)
@@ -260,14 +260,14 @@ class _WebHomeState extends State<WebHome> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Users',
+                  langProvider.get('Users'),
                   style: TextStyle(
                       fontSize: 20,
                       color: primaryColor,
                       fontWeight: FontWeight.bold),
                 ),
                 GradientButton(
-                  title: 'View All',
+                  title: langProvider.get('View All'),
                   onTap: () {
                     setState(() {
                       selectedIndex = 2;
@@ -353,7 +353,7 @@ class _WebHomeState extends State<WebHome> {
                                         height: height(context) * 0.5,
                                       ),
                                       Text(
-                                        users![index].role,
+                                        langProvider.get(users![index].role),
                                         style: TextStyle(
                                             color: contentColor, fontSize: 13),
                                       ),
@@ -376,7 +376,7 @@ class _WebHomeState extends State<WebHome> {
                                     bottomLeft: Radius.circular(10))),
                             child: Center(
                               child: Text(
-                                users![index].role,
+                                langProvider.get(users![index].role),
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -406,85 +406,81 @@ class _WebHomeState extends State<WebHome> {
       ActivityLogWebContent(),
     ];
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        endDrawer: WebDrawer(
-          selectedIndex: selectedIndex,
-        ),
-        endDrawerEnableOpenDragGesture: true,
-        key: _ScaffoldKey,
-        backgroundColor: backgroundColor,
-        body: Row(
-          children: [
-            //side bar area
-            Expanded(
-              flex: 2,
-              child: SideBar(
-                selectedIndex: selectedIndex,
-                onChanged: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
+    return Scaffold(
+      endDrawer: WebDrawer(
+        selectedIndex: selectedIndex,
+      ),
+      endDrawerEnableOpenDragGesture: true,
+      key: _ScaffoldKey,
+      backgroundColor: backgroundColor,
+      body: Row(
+        children: [
+          //side bar area
+          Expanded(
+            flex: 2,
+            child: SideBar(
+              selectedIndex: selectedIndex,
+              onChanged: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });
+              },
+            ),
+          ),
+          //sidebar area end
+
+          //apbar and main area
+          Expanded(
+            flex: 11,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              child: Column(
+                children: [
+                  if (selectedIndex == 0)
+                    WebAppbar(
+                        title: langProvider.get('Dashboard'),
+                        subTitle: langProvider.get('Contains all data'),
+                        onChanged: () {}),
+                  if (selectedIndex == 1)
+                    WebAppbar(
+                        title: langProvider.get('designs'),
+                        subTitle: langProvider.get('Your Designs'),
+                        onChanged: () {}),
+                  if (selectedIndex == 2)
+                    WebAppbar(
+                        title: langProvider.get('Users'),
+                        subTitle: langProvider.get('All Users'),
+                        onChanged: () {}),
+                  if (selectedIndex == 3)
+                    WebAppbar(
+                        title: langProvider.get('Cat List'),
+                        subTitle: langProvider.get('Your Categories'),
+                        onChanged: () {}),
+                  if (selectedIndex == 4)
+                    WebAppbar(
+                        title: langProvider.get('Activity'),
+                        subTitle: langProvider.get('All Users Activities'),
+                        onChanged: () {}),
+                  if (selectedIndex == 5)
+                    WebAppbar(
+                        title: langProvider.get('Activity'),
+                        subTitle: langProvider.get('All Users Activities'),
+                        onChanged: () {}),
+
+                  SizedBox(
+                    height: height(context) * 4,
+                  ),
+                  //home bar
+                  Expanded(
+                    child: _tabs[selectedIndex],
+                  ),
+                  //activity logs eng
+                ],
               ),
             ),
-            //sidebar area end
-
-            //apbar and main area
-            Expanded(
-              flex: 11,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                child: Column(
-                  children: [
-                    if (selectedIndex == 0)
-                      WebAppbar(
-                          title: langProvider.get('Dashboard'),
-                          subTitle: langProvider.get('Contains all data'),
-                          onChanged: () {}),
-                    if (selectedIndex == 1)
-                      WebAppbar(
-                          title: langProvider.get('designs'),
-                          subTitle: langProvider.get('Your Designs'),
-                          onChanged: () {}),
-                    if (selectedIndex == 2)
-                      WebAppbar(
-                          title: langProvider.get('Users'),
-                          subTitle: langProvider.get('All Users'),
-                          onChanged: () {}),
-                    if (selectedIndex == 3)
-                      WebAppbar(
-                          title: langProvider.get('Cat List'),
-                          subTitle: langProvider.get('Your Categories'),
-                          onChanged: () {}),
-                    if (selectedIndex == 4)
-                      WebAppbar(
-                          title: langProvider.get('Category'),
-                          subTitle: langProvider.get('All Users Activities'),
-                          onChanged: () {}),
-                    if (selectedIndex == 5)
-                      WebAppbar(
-                          title: langProvider.get('Activity'),
-                          subTitle: langProvider.get('All Users Activities'),
-                          onChanged: () {}),
-
-                    SizedBox(
-                      height: height(context) * 4,
-                    ),
-                    //home bar
-                    Expanded(
-                      child: _tabs[selectedIndex],
-                    ),
-                    //activity logs eng
-                  ],
-                ),
-              ),
-            ),
-            //appbar and main area end
-          ],
-        ),
+          ),
+          //appbar and main area end
+        ],
       ),
     );
   }

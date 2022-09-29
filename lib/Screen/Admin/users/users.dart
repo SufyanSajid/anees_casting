@@ -496,7 +496,8 @@ class _ShowUsersState extends State<ShowUsers> {
                                                           )),
                                                     ))));
                                       },
-                                      child: Text('View Products')),
+                                      child: Text(
+                                          langProvider.get('View Products'))),
                                 SizedBox(
                                   width: width(context) * 1,
                                 ),

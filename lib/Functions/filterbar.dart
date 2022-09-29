@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/dropdown.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,8 @@ Widget buildFilterBar(
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                  hintText: 'Search Here',
+                  hintText: Provider.of<Language>(context, listen: true)
+                      .get('Search Here'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),

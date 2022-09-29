@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:anees_costing/Functions/filterbar.dart';
 import 'package:anees_costing/Models/activitylogs.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/dropdown.dart';
@@ -49,6 +50,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
   Widget build(BuildContext context) {
     var logs = Provider.of<Logs>(context, listen: false)
         .getFilteredLog(selectedFilter);
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -68,7 +70,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
         // ),
 
         PopupMenuButton(
-          tooltip: 'Filters',
+          tooltip: languageProvider.get('Filters'),
           icon: Icon(
             Icons.more_vert,
             color: primaryColor,
@@ -81,8 +83,8 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
                   selectedFilter = 'All';
                 });
               },
-              child: const Text(
-                'All',
+              child: Text(
+                languageProvider.get('All'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -92,8 +94,8 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
                   selectedFilter = 'Share';
                 });
               },
-              child: const Text(
-                'Share',
+              child: Text(
+                languageProvider.get('Share'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -103,8 +105,8 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
                   selectedFilter = 'Activity';
                 });
               },
-              child: const Text(
-                'Activity',
+              child: Text(
+                languageProvider.get('Activity'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -173,7 +175,7 @@ class _ActivityLogWebContentState extends State<ActivityLogWebContent> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              logs[index].logType,
+                              languageProvider.get(logs[index].logType),
                               style: GoogleFonts.righteous(
                                 color: primaryColor,
                               ),

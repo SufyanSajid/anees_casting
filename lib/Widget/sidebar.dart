@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,8 @@ class _SideBarState extends State<SideBar> {
   int select = 0;
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     var currentUser = Provider.of<Auth>(
       context,
     ).currentUser;
@@ -56,7 +59,7 @@ class _SideBarState extends State<SideBar> {
                     });
                   },
                   child: SideBarItem(
-                    title: 'Home',
+                    title: languageProvider.get('Home'),
                     icon: Icons.home_outlined,
                     isSelected: select == 0,
                   ),
@@ -69,7 +72,7 @@ class _SideBarState extends State<SideBar> {
                     });
                   },
                   child: SideBarItem(
-                    title: 'Design',
+                    title: languageProvider.get('Design'),
                     icon: Icons.diamond_outlined,
                     isSelected: select == 1,
                   ),
@@ -83,7 +86,7 @@ class _SideBarState extends State<SideBar> {
                       });
                     },
                     child: SideBarItem(
-                      title: 'Users',
+                      title: languageProvider.get('Users'),
                       icon: Icons.groups_outlined,
                       isSelected: select == 2,
                     ),
@@ -96,7 +99,7 @@ class _SideBarState extends State<SideBar> {
                     });
                   },
                   child: SideBarItem(
-                    title: 'Category',
+                    title: languageProvider.get('Category'),
                     icon: Icons.interests_outlined,
                     isSelected: select == 3,
                   ),
@@ -110,7 +113,7 @@ class _SideBarState extends State<SideBar> {
                       });
                     },
                     child: SideBarItem(
-                      title: 'Logs',
+                      title: languageProvider.get('Logs'),
                       icon: Icons.recycling,
                       isSelected: select == 4,
                     ),

@@ -72,7 +72,6 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     users = Provider.of<Users>(context, listen: false).users;
     var products = Provider.of<Products>(context, listen: true).products;
     var categories = Provider.of<Categories>(context, listen: false).categories;
-    print('${currentUser!.role}');
 
     var height = MediaQuery.of(context).size.height / 100;
     var width = MediaQuery.of(context).size.width / 100;

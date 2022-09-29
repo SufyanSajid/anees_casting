@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/users/users.dart';
@@ -55,7 +56,8 @@ class _UserWebContentState extends State<UserWebContent> {
 
   @override
   Widget build(BuildContext context) {
-    print("main build");
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     users = Provider.of<Users>(context, listen: true)
         .getFilteredUsers(selectedFilter);
     searchedUsers = Provider.of<Users>(context, listen: false).searchedUsers;
@@ -98,7 +100,7 @@ class _UserWebContentState extends State<UserWebContent> {
                   Provider.of<Users>(context, listen: false).drawerUser = null;
                   widget.scaffoldKey.currentState!.openEndDrawer();
                 },
-                title: "Add New User",
+                title: languageProvider.get("Add New User"),
               ),
             ],
           ),
@@ -107,7 +109,7 @@ class _UserWebContentState extends State<UserWebContent> {
           height: height(context) * 2,
         ),
         PopupMenuButton(
-          tooltip: 'Filters',
+          tooltip: languageProvider.get('Filters'),
           icon: Icon(
             Icons.more_vert,
             color: primaryColor,
@@ -120,8 +122,8 @@ class _UserWebContentState extends State<UserWebContent> {
                   selectedFilter = 'All';
                 });
               },
-              child: const Text(
-                'All',
+              child: Text(
+                languageProvider.get('All'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -131,8 +133,8 @@ class _UserWebContentState extends State<UserWebContent> {
                   selectedFilter = 'Seller';
                 });
               },
-              child: const Text(
-                'Seller',
+              child: Text(
+                languageProvider.get('Seller'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -142,8 +144,8 @@ class _UserWebContentState extends State<UserWebContent> {
                   selectedFilter = 'Customer';
                 });
               },
-              child: const Text(
-                'Customer',
+              child: Text(
+                languageProvider.get('Customer'),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -153,8 +155,8 @@ class _UserWebContentState extends State<UserWebContent> {
                   selectedFilter = 'Admin';
                 });
               },
-              child: const Text(
-                'Admin',
+              child: Text(
+                languageProvider.get('Admin'),
                 style: TextStyle(color: Colors.white),
               ),
             ),

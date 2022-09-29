@@ -1,5 +1,6 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
@@ -81,8 +82,6 @@ class _ProductWebContentState extends State<ProductWebContent> {
         btn1: 'Yes',
         content: 'Do You want to delete this product',
         btn1Pressed: () async {
-
-
           Navigator.of(context).pop();
           setState(() {
             isLoading = true;
@@ -117,6 +116,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     var mediaQuery = MediaQuery.of(context).size;
     var height1 = mediaQuery.height / 100;
     var width1 = mediaQuery.width / 100;
@@ -137,13 +137,13 @@ class _ProductWebContentState extends State<ProductWebContent> {
             onTap: () {
               Navigator.of(context).pushNamed(CategoryListScreen.routeName);
             },
-            title: 'By Category',
+            title: languageProvider.get('By Category'),
           ),
           btnTap: () {
             Provider.of<Products>(context, listen: false).drawerProduct = null;
             widget.scaffoldKey.currentState!.openEndDrawer();
           },
-          btnText: 'Add Product',
+          btnText: languageProvider.get('Add Product'),
           dropDown: SizedBox(
             // height: height(context),
             width: 250,
@@ -275,11 +275,10 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                         itemBuilder: (BuildContext context) =>
                                             <PopupMenuEntry>[
                                           PopupMenuItem(
-                                          
                                             child: PopupItem(
                                               icon: Icons.edit_outlined,
-                                              
-                                              text: 'Edit',
+                                              text:
+                                                  languageProvider.get('Edit'),
                                               onTap: () {
                                                 Navigator.of(context).pop();
 
@@ -300,7 +299,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                           PopupMenuItem(
                                             child: PopupItem(
                                               icon: Icons.delete,
-                                              text: 'Delete',
+                                              text: languageProvider
+                                                  .get('Delete'),
                                               onTap: () {
                                                 Navigator.of(context).pop();
                                                 _deleteProduct(
@@ -369,7 +369,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
                   );
                 });
               },
-              title: 'Load more')
+              title: languageProvider.get('Load more'))
 
         //main area end
       ],

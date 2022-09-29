@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,6 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
 
   @override
   Widget build(BuildContext context) {
-    print("Auto");
     return Row(
       children: [
         SizedBox(
@@ -70,7 +70,8 @@ class _WebAutoCompleteState extends State<WebAutoComplete> {
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 0),
-                      hintText: 'Search',
+                      hintText:
+                          Provider.of<Language>(context).get('Search Here'),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
