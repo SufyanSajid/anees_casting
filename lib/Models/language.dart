@@ -21,9 +21,10 @@ class Language extends ChangeNotifier {
     'customers': 'Customers',
     'app_user': 'App User',
     'view_all': 'View All',
-    'User': ' User',
+    'user': ' User',
     'all users here': 'All users here',
     'all': "all",
+<<<<<<< Updated upstream
     'password': 'Password',
     'email': 'email',
     'name': 'name',
@@ -42,6 +43,17 @@ class Language extends ChangeNotifier {
     'confirm new password': 'Confirm New Password',
     'first name': 'First Name',
     'last name': 'Last Name',
+=======
+    'dashboard': 'Dashboard',
+    'contains all data': 'Contains All Data',
+    'profile': 'Profile',
+    'logout': "Logout",
+    'logout from aness casting': 'Logout from Aness casting',
+    'click on the logout button to proceed':
+        'Click on the logout button to proceed',
+    'cancel': 'Cancel',
+    'change your name and Password': 'Change your name and Password',
+>>>>>>> Stashed changes
     'language': 'English',
   };
   Map<String, String> urdu = {
@@ -59,6 +71,7 @@ class Language extends ChangeNotifier {
     'all': "تمام",
     'user': ' صارف',
     'all users here': 'تمام صارف',
+<<<<<<< Updated upstream
     'password': 'پاس ورڈ',
     'email': 'ای میل',
     'name': 'نام',
@@ -77,6 +90,19 @@ class Language extends ChangeNotifier {
     'confirm new password': 'نیا پاس ورڈ',
     'first name': 'پہلا نام',
     'last name': 'آخری نام',
+=======
+    'dashboard': 'ڈیش بورڈ',
+    'contains all data': 'تمام ریکارڈ',
+    'profile': 'پروفائل',
+    'logout': "لاگ آؤٹ",
+    'logout from aness casting': 'انیس کا سٹنگ سے لاگ آؤٹ',
+    'click on the logout button to proceed': 'بٹن دبائیں',
+    'cancel': 'مؤخر کریں',
+    'change your name and password': 'اپنا نام اور پاسورڈ تبدیل کریں',
+    'cat list': 'Cats List',
+    'add new category': 'Add New Category',
+    'name': 'Name',
+>>>>>>> Stashed changes
     'language': 'اردو',
   };
 

@@ -10,6 +10,7 @@ import 'package:anees_costing/Widget/drawer/web_drawer.dart';
 import 'package:anees_costing/Widget/webappbar.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/language.dart';
@@ -36,6 +37,52 @@ class _WebHomeState extends State<WebHome> {
   int categoriesCount = 0;
   CurrentUser? currentUser;
   List<AUser>? users;
+
+  var _alertShowing = false;
+  var _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      if (_index == 0) {
+        // if (_alertShowing) return false;
+        // _alertShowing = true;
+        print(123);
+        return await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  title: Text(
+                    'Do you really want to quit?',
+                    style: TextStyle(color: headingColor),
+                  ),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                          _alertShowing = false;
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: btnbgColor,
+                        ),
+                        child: const Text('Yes')),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                          _alertShowing = false;
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: btnbgColor,
+                        ),
+                        child: const Text('No'))
+                  ]);
+            });
+      }
+      return true;
+    });
+  }
 
   @override
   void didChangeDependencies() async {

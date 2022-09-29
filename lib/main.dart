@@ -17,6 +17,9 @@ import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
+
+import 'dart:io';
 
 import './Models/category.dart';
 import './Models/product.dart';
@@ -37,17 +40,66 @@ import 'Screen/Auth/forget/verification_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
-
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<bool> showExitPopup(context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              height: 90,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Do you want to exit?"),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print('yes selected');
+                            exit(0);
+                          },
+                          child: Text("Yes"),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.red.shade800),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          print('no selected');
+                          Navigator.of(context).pop();
+                        },
+                        child:
+                            Text("No", style: TextStyle(color: Colors.black)),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                        ),
+                      ))
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
   // This widget is the root of your application.
   @override
@@ -79,39 +131,42 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Language(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Anees_Casting',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          textTheme: GoogleFonts.ubuntuTextTheme(),
+      child: WillPopScope(
+        onWillPop: () => showExitPopup(context),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Anees_Casting',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            textTheme: GoogleFonts.ubuntuTextTheme(),
+          ),
+          routes: {
+            '/': (ctx) => const SplashScreen(),
+            ProfileScreen.routeName: (context) => ProfileScreen(),
+            LoginScreen.routeName: (ctx) => const LoginScreen(),
+            AdminHomePage.routeName: (ctx) => const AdminHomePage(),
+            CategoryScreen.routeName: (ctx) => CategoryScreen(),
+            UserScreen.routeName: (ctx) => const UserScreen(),
+            CustomerScreen.routeName: (ctx) => CustomerScreen(),
+            AdminSideCustomerProductScreen.routeName: (ctx) =>
+                const AdminSideCustomerProductScreen(),
+            ProductScreen.routeName: (ctx) => ProductScreen(),
+            AddProduct.routeName: (ctx) => const AddProduct(),
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            AddUser.routeName: (ctx) => AddUser(),
+            CustomerProductScreen.routeName: (ctx) =>
+                const CustomerProductScreen(),
+            ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
+            CategoryListScreen.routeName: (ctx) => const CategoryListScreen(),
+            CategoryChildListScreen.routeName: (ctx) =>
+                const CategoryChildListScreen(),
+            CatProductScreen.routeName: (ctx) => const CatProductScreen(),
+            ForgetScreen.routeName: (ctx) => ForgetScreen(),
+            VerificationScreen.routeName: (ctx) => VerificationScreen(),
+            NewPassScreen.routeName: (ctx) => const NewPassScreen(),
+            DesktopCategoryProduct.routeName: (ctx) => DesktopCategoryProduct(),
+          },
         ),
-        routes: {
-          '/': (ctx) => const SplashScreen(),
-          ProfileScreen.routeName: (context) => ProfileScreen(),
-          LoginScreen.routeName: (ctx) => const LoginScreen(),
-          AdminHomePage.routeName: (ctx) => const AdminHomePage(),
-          CategoryScreen.routeName: (ctx) => CategoryScreen(),
-          UserScreen.routeName: (ctx) => const UserScreen(),
-          CustomerScreen.routeName: (ctx) => CustomerScreen(),
-          AdminSideCustomerProductScreen.routeName: (ctx) =>
-              const AdminSideCustomerProductScreen(),
-          ProductScreen.routeName: (ctx) => ProductScreen(),
-          AddProduct.routeName: (ctx) => const AddProduct(),
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          AddUser.routeName: (ctx) => AddUser(),
-          CustomerProductScreen.routeName: (ctx) =>
-              const CustomerProductScreen(),
-          ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
-          CategoryListScreen.routeName: (ctx) => const CategoryListScreen(),
-          CategoryChildListScreen.routeName: (ctx) =>
-              const CategoryChildListScreen(),
-          CatProductScreen.routeName: (ctx) => const CatProductScreen(),
-          ForgetScreen.routeName: (ctx) => ForgetScreen(),
-          VerificationScreen.routeName: (ctx) => VerificationScreen(),
-          NewPassScreen.routeName: (ctx) => const NewPassScreen(),
-          DesktopCategoryProduct.routeName: (ctx) => DesktopCategoryProduct(),
-        },
       ),
     );
   }

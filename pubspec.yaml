@@ -48,6 +48,7 @@ dependencies:
   extended_image: ^6.3.0
   flutter_iconpicker: ^3.2.1
   flutter_launcher_icons: ^0.10.0
+  flutter_window_close: ^0.2.2
   # firebase_core: ^1.20.0
   # firebase_auth: ^3.6.2
   # cloud_firestore: ^3.4.3

@@ -1,5 +1,6 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:anees_costing/Widget/desk_autocomplete.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +139,8 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
   Widget build(BuildContext context) {
     categories = Provider.of<Categories>(context, listen: false).categories;
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     searchedCat =
         Provider.of<Categories>(context, listen: false).searchedCategories;
     if (searchedCat.isNotEmpty) {
@@ -179,7 +182,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                         .drawerCategory = null;
                     widget.scaffoldKey.currentState!.openEndDrawer();
                   },
-                  title: "Add New Category",
+                  title: languageProvider.get("Add New Category"),
                 ),
             ],
           ),
@@ -198,10 +201,11 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
             child: Column(
               children: [
                 RowDetail(
-                    first: const HeadingName(title: "Name"),
-                    second: const HeadingName(title: "Parent Category"),
+                    first: HeadingName(title: languageProvider.get("Name")),
+                    second: HeadingName(
+                        title: languageProvider.get("Parent Category")),
                     third: TextButton(
-                      child: const HeadingName(title: "Delete"),
+                      child: HeadingName(title: languageProvider.get("Delete")),
                       onPressed: () {},
                     ),
                     isHeading: true),
@@ -298,6 +302,8 @@ class HeadingName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     return Text(
       title,
       textAlign: TextAlign.left,
