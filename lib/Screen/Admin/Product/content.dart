@@ -75,12 +75,15 @@ class _ProductWebContentState extends State<ProductWebContent> {
     super.didChangeDependencies();
   }
 
-  _deleteProduct({required imgUrl, required Product prod}) {
+  _deleteProduct(
+      {required imgUrl,
+      required Product prod,
+      required Language langProvider}) {
     showCustomDialog(
         context: context,
-        title: 'Delete',
-        btn1: 'Yes',
-        content: 'Do You want to delete this product',
+        title: langProvider.get('Delete'),
+        btn1: langProvider.get('Yes'),
+        content: langProvider.get('Do You want to delete this product?'),
         btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
@@ -94,7 +97,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
             isLoading = false;
           });
         },
-        btn2: 'No',
+        btn2: langProvider.get('No'),
         btn2Pressed: () {
           Navigator.of(context).pop();
         });
@@ -198,29 +201,36 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                       cache: true,
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      alignment: Alignment.bottomRight,
-                                      child: Table(
-                                        children: [
-                                          TableRow(children: [
-                                            Text(
-                                                "Title: ${products[index].name}"),
-                                            Text(
-                                                "Cat:  ${products[index].categoryTitle}"),
-                                            Text(
-                                                "Unit:   ${products[index].unit}")
-                                          ]),
-                                          TableRow(children: [
-                                            Text(
-                                                "Length: ${products[index].length}"),
-                                            Text(
-                                                "Width:  ${products[index].width}"),
-                                            Text(
-                                                "Date:   ${products[index].dateTime} ")
-                                          ])
-                                        ],
+                                  Directionality(
+                                    textDirection:
+                                        languageProvider.currentLang ==
+                                                language.Urdu
+                                            ? TextDirection.rtl
+                                            : TextDirection.ltr,
+                                    child: Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        alignment: Alignment.bottomRight,
+                                        child: Table(
+                                          children: [
+                                            TableRow(children: [
+                                              Text(
+                                                  "${languageProvider.get('Title')}: ${products[index].name}"),
+                                              Text(
+                                                  "${languageProvider.get('Cat')}:  ${products[index].categoryTitle}"),
+                                              Text(
+                                                  "${languageProvider.get('Unit')}:  ${products[index].unit}")
+                                            ]),
+                                            TableRow(children: [
+                                              Text(
+                                                  "${languageProvider.get('Length')}: ${products[index].length}"),
+                                              Text(
+                                                  "${languageProvider.get('Width')}:  ${products[index].width}"),
+                                              Text(
+                                                  "${languageProvider.get('Date')}:   ${products[index].dateTime} ")
+                                            ])
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   )
@@ -304,6 +314,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                                               onTap: () {
                                                 Navigator.of(context).pop();
                                                 _deleteProduct(
+                                                    langProvider:
+                                                        languageProvider,
                                                     imgUrl:
                                                         products[index].image,
                                                     prod: products[index]);

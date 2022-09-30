@@ -1,5 +1,6 @@
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Models/user.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
@@ -55,13 +56,13 @@ class _AdminSideCustomerProductScreenState
     super.didChangeDependencies();
   }
 
-  void deleteCustomerProduct(Product prod, String cusId) {
+  void deleteCustomerProduct(Product prod, String cusId, Language langProvider) {
     showCustomDialog(
         context: context,
-        title: 'Delete',
-        btn1: 'Yes',
-        content: 'Product will be deleted from the list permamently',
-        btn2: 'No',
+        title: langProvider.get('Delete') ,
+        btn1: langProvider.get('Yes') ,
+        content: langProvider.get('Product will be deleted from the list permamently') ,
+        btn2: langProvider.get('No') ,
         btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
@@ -72,7 +73,7 @@ class _AdminSideCustomerProductScreenState
                   prodId: prod.id, userId: cusId, userToken: currentUser!.token)
               .then((value) async {
             showMySnackBar(
-                context: context, text: 'Customer : Product Deleted');
+                context: context, text: langProvider.get("Product has been deleted") );
             Provider.of<Products>(context, listen: false)
                 .removeCustomer(cusId, prod.id);
             await Provider.of<Products>(context, listen: false)
@@ -83,8 +84,8 @@ class _AdminSideCustomerProductScreenState
           }).catchError((error) {
             showCustomDialog(
                 context: context,
-                title: 'Error',
-                btn1: 'Okay',
+                title: langProvider.get('Error') ,
+                btn1: langProvider.get('Okay') ,
                 content: error.toString(),
                 btn1Pressed: () {
                   Navigator.of(context).pop();
@@ -99,6 +100,8 @@ class _AdminSideCustomerProductScreenState
   @override
   Widget build(BuildContext context) {
     products = Provider.of<Products>(context).customerProducts;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: AppDrawer(),
@@ -109,7 +112,7 @@ class _AdminSideCustomerProductScreenState
           child: Column(
             children: [
               Appbar(
-                title: 'Customer',
+                title: languageProvider.get('Customer') ,
                 subtitle: customer!.name,
                 svgIcon: 'assets/icons/users.svg',
                 leadingIcon: Icons.arrow_back,
@@ -133,7 +136,7 @@ class _AdminSideCustomerProductScreenState
                       )
                     : products!.isEmpty
                         ? Center(
-                            child: Text('No Products to show'),
+                            child: Text(languageProvider.get('No Products to show') ),
                           )
                         : GridView.builder(
                             // physics: NeverScrollableScrollPhysics(),
@@ -206,7 +209,7 @@ class _AdminSideCustomerProductScreenState
                                       child: IconButton(
                                         onPressed: () {
                                           deleteCustomerProduct(
-                                              products![index], customer!.id);
+                                              products![index], customer!.id, languageProvider);
                                         },
                                         icon: const Icon(
                                           Icons.cancel,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -34,6 +35,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     product = ModalRoute.of(context)!.settings.arguments as Product;
     String role = Provider.of<Auth>(context, listen: false).currentUser!.role!;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -71,7 +73,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(children: [
             Appbar(
-              title: 'Product',
+              title: languageProvider.get('Product') ,
               subtitle: product!.name,
               svgIcon: 'assets/icons/daimond.svg',
               leadingIcon: Icons.arrow_back,

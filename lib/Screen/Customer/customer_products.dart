@@ -1,5 +1,6 @@
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Models/product.dart';
 import 'package:anees_costing/Screen/Admin/Product/product_detail.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -50,6 +51,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     if (search.isEmpty) {
       products = Provider.of<Products>(context).customerProducts;
     }
@@ -96,14 +98,14 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Welcome Back',
+                           languageProvider.get('welcome') ,
                             style: TextStyle(
                                 color: secondaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Dear Customer',
+                           languageProvider.get('Dear Customer') ,
                             style: GoogleFonts.righteous(
                               color: primaryColor,
                               fontSize: 20,
@@ -132,7 +134,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: InputFeild(
-                hinntText: 'Search Product',
+                hinntText: languageProvider.get('Search Product'),
                 validatior: () {},
                 onChanged: (value) {
                   if (value.isEmpty) {

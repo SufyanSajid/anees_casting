@@ -5,13 +5,11 @@ import 'dart:typed_data';
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Helpers/show_snackbar.dart';
 import 'package:anees_costing/Models/auth.dart';
-import 'package:anees_costing/Models/counts.dart';
-import 'package:anees_costing/Widget/adaptiveDialog.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../Helpers/storage_methods.dart';
 import '../../../../Models/category.dart';
 import '../../../../Models/product.dart';
 import '../../../../Widget/adaptive_indecator.dart';
@@ -89,7 +87,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   Product prodObj() {
     return Product(
         id: "",
-          customers: [],
+        customers: [],
         name: _prodNameController.text.trim(),
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
@@ -107,7 +105,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     _prodNameController.clear();
   }
 
-  bool productNotEmpty() {
+  bool productNotEmpty({required Language langProvider}) {
     if (image != null &&
         category != null &&
         _prodNameController.text.isNotEmpty &&
@@ -123,9 +121,9 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     } else {
       showCustomDialog(
           context: context,
-          title: "Empty Fields",
-          btn1: "Ok",
-          content: "Please Fill all Fields",
+          title: langProvider.get("Empty Fields"),
+          btn1: langProvider.get("Ok"),
+          content: langProvider.get("Please Fill all Fields"),
           btn2: null,
           btn1Pressed: () {
             Navigator.of(context).pop();
@@ -135,7 +133,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     }
   }
 
-  void _addProduct(var img) async {
+  void _addProduct(var img, Language langProvider) async {
     print(img);
 
     if (category != null) {
@@ -144,12 +142,17 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
 
       if (childs.isNotEmpty) {
         showSnackBar(
-            context, "You can't assign ${category!.title} as it have child");
+            context,
+            langProvider.get("You can't assign") +
+                " " +
+                category!.title +
+                " " +
+                langProvider.get('it have childs'));
 
         return;
       }
     }
-    if (productNotEmpty()) {
+    if (productNotEmpty(langProvider: langProvider)) {
       setState(() {
         isLoading = true;
       });
@@ -158,7 +161,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
       Product newProduct = Product(
         id: "",
         name: _prodNameController.text.trim(),
-          customers: [],
+        customers: [],
         length: _prodLengthController.text.trim(),
         width: _prodWidthController.text.trim(),
         unit: prodUnit,
@@ -179,8 +182,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         isLoading = false;
       });
     } else {
-      print("hi");
-      showSnackBar(context, "Please fill all fields");
+      showSnackBar(context, langProvider.get("Please fill all fields"));
     }
   }
 
@@ -196,14 +198,13 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   _editProduct(
       {required var img,
       required String prodId,
-      required String imageUrl}) async {
+      required String imageUrl,
+      required Language langProvider}) async {
     setState(() {
       isLoading = true;
     });
 
-    print('eddddddiiiiiting product');
-
-    if (productNotEmpty()) {
+    if (productNotEmpty(langProvider: langProvider)) {
       Product newProduct = Product(
         id: prodId,
         name: _prodNameController.text.trim(),
@@ -213,7 +214,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         categoryId: category == null ? editCatId : category!.id,
         categoryTitle: category == null ? editCat : category!.title,
         image: img,
-          customers: [],
+        customers: [],
         dateTime: DateTime.now().microsecondsSinceEpoch.toString(),
       );
 
@@ -236,6 +237,8 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   Widget build(BuildContext context) {
     List<Category> categories =
         Provider.of<Categories>(context, listen: true).categories;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     return Column(
       children: [
         Stack(
@@ -275,7 +278,6 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                       var selectedImage = result1!.files.first;
                       base64Image = base64Encode(
                           File(selectedImage.path!).readAsBytesSync());
-                      print('this is base $base64Image');
                       imageExtention = result1.files.first.extension;
 
                       print(imageExtention);
@@ -301,7 +303,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
           height: height(context) * 2,
         ),
         InputFeild(
-            hinntText: 'Enter Article Number',
+            hinntText: languageProvider.get('Enter Article Number'),
             validatior: () {},
             inputController: _prodNameController),
         SizedBox(
@@ -311,7 +313,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
           children: [
             Expanded(
               child: InputFeild(
-                  hinntText: 'Length',
+                  hinntText: languageProvider.get('Length'),
                   validatior: () {},
                   inputController: _prodLengthController),
             ),
@@ -320,7 +322,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
             ),
             Expanded(
               child: InputFeild(
-                hinntText: 'Width',
+                hinntText: languageProvider.get('Width'),
                 validatior: () {},
                 inputController: _prodWidthController,
               ),
@@ -357,14 +359,16 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
                 width: width(context),
                 onTap: () {
                   drawerProduct == null
-                      ? _addProduct(base64Image)
+                      ? _addProduct(base64Image, languageProvider)
                       : _editProduct(
                           img: base64Image,
                           prodId: drawerProduct!.id,
                           imageUrl: drawerProduct!.image,
-                        );
+                          langProvider: languageProvider);
                 },
-                title: drawerProduct != null ? 'Save Changes' : 'Add Design',
+                title: drawerProduct != null
+                    ? languageProvider.get('Save Changes')
+                    : languageProvider.get('Add Design'),
               )
       ],
     );

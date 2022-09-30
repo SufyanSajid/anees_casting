@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/forget/verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
   bool isFirst = true;
   var data;
 
-  void _submit() {
+  void _submit(Language langProvider) {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -49,8 +50,8 @@ class _ForgetScreenState extends State<ForgetScreen> {
         });
         showCustomDialog(
             context: context,
-            title: 'Error',
-            btn1: 'Okay',
+            title: langProvider.get('Error'),
+            btn1: langProvider.get('OK'),
             content: error.toString(),
             btn1Pressed: () {
               Navigator.of(context).pop();
@@ -61,6 +62,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     var mediaQuery = MediaQuery.of(context).size;
     var height = mediaQuery.height / 100;
     var width = mediaQuery.width / 100;
@@ -112,7 +114,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                             margin:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
                             child: InputFeild(
-                                hinntText: 'Enter Your Email',
+                                hinntText: languageProvider.get('Enter Your Email'),
                                 validatior: (String value) {
                                   if (value.isEmpty) {
                                     return '';
@@ -124,7 +126,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                             height: height * 2,
                           ),
                           GestureDetector(
-                            onTap: _submit,
+                            onTap:()=> _submit(languageProvider),
                             child: Container(
                               height:
                                   currentOrientation == Orientation.landscape
@@ -147,9 +149,9 @@ class _ForgetScreenState extends State<ForgetScreen> {
                                   : Center(
                                       child: FittedBox(
                                         child: Text(
-                                          'Forget Password',
+                                          languageProvider.get('Forget Password') ,
                                           style: TextStyle(
-                                              fontFamily: 'Poppins',
+                                        fontFamily: languageProvider.currentLang == language.English?'Poppins':null,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
     super.didChangeDependencies();
   }
 
-  void _submit() {
+  void _submit(Language langProvider) {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -57,8 +58,8 @@ class _NewPassScreenState extends State<NewPassScreen> {
             builder: (ctx) => AdaptiveDiaglog(
                 ctx: ctx,
                 title: '✅',
-                content: 'Password Changed Try Login',
-                btnYes: 'OK',
+                content: langProvider.get('Password Changed Try Login'),
+                btnYes: langProvider.get('OK'),
                 yesPressed: () {
                   Navigator.of(context)
                       .pushReplacementNamed(LoginScreen.routeName);
@@ -70,7 +71,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
                 ctx: ctx,
                 title: '❌',
                 content: error.toString(),
-                btnYes: 'OK',
+                btnYes: langProvider.get('OK'),
                 yesPressed: () {
                   Navigator.of(context).pop();
                 }));
@@ -80,6 +81,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     var mediaQuery = MediaQuery.of(context).size;
     var height = mediaQuery.height / 100;
     var width = mediaQuery.width / 100;
@@ -131,13 +133,13 @@ class _NewPassScreenState extends State<NewPassScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: InputFeild(
                             secure: false,
-                            hinntText: 'New Password',
+                            hinntText:languageProvider.get('New Password') ,
                             validatior: (String value) {
                               if (value.isEmpty) {
                                 return '';
                               }
                               if (value.length < 6) {
-                                return 'Must contain 6 character';
+                                return languageProvider.get('Must contains 6 character') ;
                               }
                             },
                             inputController: _newPassController),
@@ -149,13 +151,13 @@ class _NewPassScreenState extends State<NewPassScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: InputFeild(
                             secure: false,
-                            hinntText: 'Confirm Password',
+                            hinntText: languageProvider.get('Confirm Password') ,
                             validatior: (String value) {
                               if (value.isEmpty) {
                                 return '';
                               }
                               if (value.toString() != _newPassController.text) {
-                                return 'Password didnot match';
+                                return languageProvider.get('Password is not matched') ;
                               }
                             },
                             inputController: _confirmPassController),
@@ -164,7 +166,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
                         height: height * 2,
                       ),
                       GestureDetector(
-                        onTap: _submit,
+                        onTap:()=> _submit(languageProvider),
                         child: Container(
                           alignment: Alignment.center,
                           height: currentOrientation == Orientation.landscape
@@ -174,7 +176,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
                               ? width * 15
                               : width * 60,
                           margin: const EdgeInsets.only(top: 15),
-                           padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                             color: primaryColor,
                             borderRadius: BorderRadius.circular(30),
@@ -187,9 +189,10 @@ class _NewPassScreenState extends State<NewPassScreen> {
                                 )
                               : FittedBox(
                                   child: Text(
-                                    'Change Password',
+                                   languageProvider.get('Change Password') ,
                                     style: TextStyle(
-                                        fontFamily: 'Poppins',
+
+                                        fontFamily: languageProvider.currentLang == language.English?'Poppins':null,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16),

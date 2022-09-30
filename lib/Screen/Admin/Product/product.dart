@@ -1,6 +1,7 @@
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Functions/showloader.dart';
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
@@ -65,12 +66,13 @@ class _ProductScreenState extends State<ProductScreen> {
     super.didChangeDependencies();
   }
 
-  _deleteProduct({required imgUrl, required prodId}) {
+  _deleteProduct(
+      {required imgUrl, required prodId, required Language langProvider}) {
     showCustomDialog(
         context: context,
-        title: 'Delete',
-        btn1: 'Yes',
-        content: 'Do You want to delete this product',
+        title: langProvider.get('Delete'),
+        btn1: langProvider.get('Yes'),
+        content: langProvider.get('Do You want to delete this product?'),
         btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
@@ -84,7 +86,7 @@ class _ProductScreenState extends State<ProductScreen> {
             isLoading = false;
           });
         },
-        btn2: 'No',
+        btn2: langProvider.get('No'),
         btn2Pressed: () {
           Navigator.of(context).pop();
         });
@@ -105,6 +107,7 @@ class _ProductScreenState extends State<ProductScreen> {
         Provider.of<Categories>(context, listen: false).categories;
 
     String? token = Provider.of<Products>(context).pageToken;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -116,8 +119,8 @@ class _ProductScreenState extends State<ProductScreen> {
           child: Column(
             children: [
               Appbar(
-                title: 'Product',
-                subtitle: 'List of Products',
+                title: languageProvider.get('Product') ,
+                subtitle: languageProvider.get('List of Products') ,
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -145,7 +148,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   Expanded(
                     flex: 1,
                     child: InputFeild(
-                      hinntText: 'Search Product',
+                      hinntText: languageProvider.get('Search Product') ,
                       validatior: () {},
                       inputController: _productController,
                       submitted: (value) {
@@ -275,7 +278,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       child: PopupItem(
                                                         icon:
                                                             Icons.edit_outlined,
-                                                        text: 'Edit',
+                                                        text: languageProvider.get('Edit') ,
                                                         onTap: () {
                                                           Navigator.of(context)
                                                               .pop();
@@ -296,11 +299,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                                     PopupMenuItem(
                                                       child: PopupItem(
                                                         icon: Icons.delete,
-                                                        text: 'Delete',
+                                                        text: languageProvider.get('Delete'),
                                                         onTap: () {
                                                           Navigator.of(context)
                                                               .pop();
                                                           _deleteProduct(
+                                                            langProvider: languageProvider,
                                                               imgUrl: products[
                                                                       index]
                                                                   .image,
@@ -359,7 +363,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         gradient: customGradient, shape: BoxShape.circle),
                     child: FloatingActionButton(
                       backgroundColor: Colors.transparent,
-                      child: const Text("More"),
+                      child:  Text(languageProvider.get('Load More')),
                       onPressed: () async {
                         setState(() {
                           isLoading = true;

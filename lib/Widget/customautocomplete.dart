@@ -1,5 +1,6 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+    
     // TextEditingValue textEditingValue = TextEditingValue(text: widget.town);
 
     var height = MediaQuery.of(context).size.height / 100;
@@ -83,7 +86,9 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               },
               decoration: InputDecoration(
                   label: Text(
-                    'Select Category',
+                    widget.firstSelction == null
+                        ? languageProvider.get('Select Category')
+                        : widget.firstSelction!,
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
