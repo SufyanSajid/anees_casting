@@ -133,12 +133,12 @@ class _MyAppState extends State<MyApp> {
           create: (ctx) => Language(),
         ),
       ],
-<<<<<<< Updated upstream
+
       child: WillPopScope(
         onWillPop: () => showExitPopup(context),
-=======
+
       child: UserActivityDetector(
->>>>>>> Stashed changes
+
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Anees_Casting',
@@ -147,12 +147,11 @@ class _MyAppState extends State<MyApp> {
             textTheme: GoogleFonts.ubuntuTextTheme(),
           ),
           routes: {
-<<<<<<< Updated upstream
+
             '/': (ctx) => const SplashScreen(),
-=======
+
             '/': (ctx) => auth.autoLogout ? LoginScreen() : SplashScreen(),
->>>>>>> Stashed changes
-            ProfileScreen.routeName: (context) => ProfileScreen(),
+           ProfileScreen.routeName: (context) => ProfileScreen(),
             LoginScreen.routeName: (ctx) => const LoginScreen(),
             AdminHomePage.routeName: (ctx) => const AdminHomePage(),
             CategoryScreen.routeName: (ctx) => CategoryScreen(),
@@ -178,6 +177,6 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
-    );
+    ));
   }
 }
