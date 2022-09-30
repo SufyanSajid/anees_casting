@@ -39,6 +39,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
 
   @override
   void didChangeDependencies() async {
+        currentUser = Provider.of<Auth>(context, listen: false).currentUser;  
     if (isFirst) {
       isFirst = false;
       if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
@@ -225,62 +226,96 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                     ? 'P'
                                     : categories[index].parentTitle,
                               ),
-                              third: Consumer<Products>(
-                                  builder: (context, prods, _) {
-                                return prods.deleteLoader &&
-                                        prods.deleteCatId ==
-                                            categories[index].id
-                                    ? Container(
-                                        alignment: Alignment.center,
-                                        height: height(context) * 3,
-                                        width: height(context) * 3,
-                                        child: CircularProgressIndicator(
-                                          color: btnbgColor.withOpacity(1),
+                              third: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Provider.of<Categories>(context,
+                                                listen: false)
+                                            .setCatgeory(categories[index]);
+                                        widget.scaffoldKey.currentState!
+                                            .openEndDrawer();
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey,
+                                                  offset: Offset(0, 5),
+                                                  blurRadius: 5),
+                                            ]),
+                                        padding: const EdgeInsets.all(10),
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: primaryColor,
                                         ),
-                                      )
-                                    : InkWell(
-                                        onTap: () {
-                                          if (currentUser!.role!
-                                                  .toLowerCase() !=
-                                              'admin') {
-                                            showDialog(
-                                                context: context,
-                                                builder: (ctx) =>
-                                                    AdaptiveDiaglog(
-                                                        ctx: ctx,
-                                                        title: 'Access Denied',
-                                                        content:
-                                                            'Only admin can delete Categories',
-                                                        btnYes: 'Okay',
-                                                        yesPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        }));
-                                          } else {
-                                            prods.setDeleteCatId(
-                                                categories[index].id);
-                                            prods.setLoader(true);
-                                            deleteCat(categories[index]);
-                                          }
-                                        },
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(0, 5),
-                                                    blurRadius: 5),
-                                              ]),
-                                          padding: const EdgeInsets.all(10),
-                                          child: const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      );
-                              }),
+                                      ),
+                                    ),
+                                    Consumer<Products>(
+                                        builder: (context, prods, _) {
+                                      return prods.deleteLoader &&
+                                              prods.deleteCatId ==
+                                                  categories[index].id
+                                          ? Container(
+                                              alignment: Alignment.center,
+                                              height: height(context) * 3,
+                                              width: height(context) * 3,
+                                              child: CircularProgressIndicator(
+                                                color:
+                                                    btnbgColor.withOpacity(1),
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () {
+                                                if (currentUser!.role!
+                                                        .toLowerCase() !=
+                                                    'admin') {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (ctx) =>
+                                                          AdaptiveDiaglog(
+                                                              ctx: ctx,
+                                                              title:
+                                                                  'Access Denied',
+                                                              content:
+                                                                  'Only admin can delete Categories',
+                                                              btnYes: 'Okay',
+                                                              yesPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              }));
+                                                } else {
+                                                  prods.setDeleteCatId(
+                                                      categories[index].id);
+                                                  prods.setLoader(true);
+                                                  deleteCat(categories[index]);
+                                                }
+                                              },
+                                              child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.grey,
+                                                          offset: Offset(0, 5),
+                                                          blurRadius: 5),
+                                                    ]),
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            );
+                                    }),
+                                  ]),
                               isHeading: false),
                         ),
                 ),

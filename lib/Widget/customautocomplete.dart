@@ -60,6 +60,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
       onSelected: (value) {},
       fieldViewBuilder: (BuildContext context, TextEditingController controller,
           FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+        controller.text =
+            widget.firstSelction == null ? '' : widget.firstSelction!;
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -81,9 +83,7 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
               },
               decoration: InputDecoration(
                   label: Text(
-                    widget.firstSelction == null
-                        ? 'Select Category'
-                        : widget.firstSelction!,
+                    'Select Category',
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,

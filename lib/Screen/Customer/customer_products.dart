@@ -189,66 +189,73 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                     )
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: GridView.builder(
-                        // physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15.0,
-                          mainAxisSpacing: 15.0,
-                        ),
-                        itemCount: products!.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  ProductDetailScreen.routeName,
-                                  arguments: products![index]);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      offset: const Offset(0, 5),
-                                      blurRadius: 15),
-                                  BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      offset: -Offset(5, 0),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ExtendedImage.network(
-                                    products![index].image,
-                                    cache: true,
-                                    fit: BoxFit.contain,
-                                    height: height(context) * 12,
-                                    width: width(context) * 100,
-                                  ),
-                                  SizedBox(
-                                    height: height(context) * 0.5,
-                                  ),
-                                  Text(
-                                    products![index].name,
-                                    style: GoogleFonts.righteous(
-                                      color: headingColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 20,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          await Provider.of<Products>(context, listen: false)
+                              .getCustomerProducts(
+                                  currentUser!.id, currentUser!.token);
                         },
+                        child: GridView.builder(
+                          // physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 15.0,
+                            mainAxisSpacing: 15.0,
+                          ),
+                          itemCount: products!.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    ProductDetailScreen.routeName,
+                                    arguments: products![index]);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        offset: const Offset(0, 5),
+                                        blurRadius: 15),
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        offset: -Offset(5, 0),
+                                        blurRadius: 5)
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ExtendedImage.network(
+                                      products![index].image,
+                                      cache: true,
+                                      fit: BoxFit.contain,
+                                      height: height(context) * 12,
+                                      width: width(context) * 100,
+                                    ),
+                                    SizedBox(
+                                      height: height(context) * 0.5,
+                                    ),
+                                    Text(
+                                      products![index].name,
+                                      style: GoogleFonts.righteous(
+                                        color: headingColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
             )

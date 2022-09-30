@@ -27,6 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
       await Future.delayed(const Duration(seconds: 2)).then((value) async {
         bool isLogin =
             await Provider.of<Auth>(context, listen: false).tryAutoLogin();
+            if(isLogin){
+            }
+          
         currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
         if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {

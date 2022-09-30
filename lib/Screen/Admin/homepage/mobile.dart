@@ -17,6 +17,7 @@ import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:anees_costing/Widget/bottombar.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +45,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       setState(() {
         isLoading = true;
       });
-
-      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
-
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       await Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);
       setState(() {
@@ -62,12 +61,44 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
     super.didChangeDependencies();
   }
 
+  Future<bool> _promptExit() async {
+    bool returnvalue = false;
+    await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text('Exit App'),
+              content: Text('Do you want to exit app'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    returnvalue = true;
+                    Navigator.of(context).pop();
+                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                    exit(0);
+                  },
+                  child: Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    
+                    returnvalue = false;
+                    Navigator.of(context).pop();
+
+                  },
+                  child: Text('No'),
+                ),
+              ],
+            ));
+
+    return returnvalue;
+  }
+
   @override
   Widget build(BuildContext context) {
     var langProvider = Provider.of<Language>(context);
 
     selectIndex = Provider.of<Counts>(context).selectedIndex;
-    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
     var products = Provider.of<Products>(context, listen: true).products;
@@ -447,20 +478,23 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
       const ProfileScreen(),
     ];
 
-    return Scaffold(
-        key: _scaffoldKey,
-        drawer: const AppDrawer(),
-        bottomNavigationBar: currentUser!.role!.toLowerCase() == 'admin'
-            ? CustomBottomBar(
-                onTap: (value) {
-                  // setState(() {
-                  //   selectIndex = value;
-                  // });
-                },
-                selectedIndex: selectIndex!,
-              )
-            : null,
-        body: _tabs[selectIndex!]);
+    return WillPopScope(
+      onWillPop: _promptExit,
+      child: Scaffold(
+          key: _scaffoldKey,
+          drawer: const AppDrawer(),
+          bottomNavigationBar: currentUser!.role!.toLowerCase() == 'admin'
+              ? CustomBottomBar(
+                  onTap: (value) {
+                    // setState(() {
+                    //   selectIndex = value;
+                    // });
+                  },
+                  selectedIndex: selectIndex!,
+                )
+              : null,
+          body: _tabs[selectIndex!]),
+    );
   }
 }
 

@@ -30,6 +30,12 @@ class Categories with ChangeNotifier {
   List<Category> _parentCategories = [];
   List<Category> _childCategories = [];
   List<Category> _searchedCategories = [];
+  bool isCatLoading=false;
+
+  void setCatLoader(bool value){
+    isCatLoading=value;
+    notifyListeners();
+  }
 
   List<Category> get categories {
     return [..._categories];
@@ -89,6 +95,21 @@ class Categories with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> EditCategory({
+    required String userToken,
+    required String parentId,
+    required String title,
+    required String catId,
+  }) async {
+    var url;
+    url = Uri.parse(
+        '${baseUrl}categories/$catId?name=$title&parent_id=$parentId');
+
+    var response = await http
+        .patch(url, headers: {'Authorization': 'Bearer ${userToken}'});
+    print(response.body);
   }
 
   Future<void> deleteCategory(String catId, String userToken) async {

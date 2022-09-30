@@ -92,7 +92,6 @@ class _WebHomeState extends State<WebHome> {
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
 
-      await Provider.of<Counts>(context, listen: false).fetchtAndUpdateCount();
 
       await Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);

@@ -15,6 +15,7 @@ import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/service/detector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
@@ -104,6 +105,7 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Auth auth = Auth();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -131,8 +133,12 @@ class _MyAppState extends State<MyApp> {
           create: (ctx) => Language(),
         ),
       ],
+<<<<<<< Updated upstream
       child: WillPopScope(
         onWillPop: () => showExitPopup(context),
+=======
+      child: UserActivityDetector(
+>>>>>>> Stashed changes
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Anees_Casting',
@@ -141,7 +147,11 @@ class _MyAppState extends State<MyApp> {
             textTheme: GoogleFonts.ubuntuTextTheme(),
           ),
           routes: {
+<<<<<<< Updated upstream
             '/': (ctx) => const SplashScreen(),
+=======
+            '/': (ctx) => auth.autoLogout ? LoginScreen() : SplashScreen(),
+>>>>>>> Stashed changes
             ProfileScreen.routeName: (context) => ProfileScreen(),
             LoginScreen.routeName: (ctx) => const LoginScreen(),
             AdminHomePage.routeName: (ctx) => const AdminHomePage(),

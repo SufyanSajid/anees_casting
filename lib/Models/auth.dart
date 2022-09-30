@@ -26,11 +26,29 @@ class CurrentUser {
 
 class Auth with ChangeNotifier {
   CurrentUser? currentUser;
+  bool autoLogout=false;
 
+  void setName(String name) {
+    currentUser!.name = name;
+    notifyListeners();
+  }
 
-  void setName(String name){
-currentUser!.name=name;
-notifyListeners();
+  void setAutoLogout(value){
+    autoLogout=value;
+    notifyListeners();
+  }
+  
+
+  bool isUserLoggedIn() {
+    return true;
+    // print('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+    // if (currentUser == null) {
+    //   print('ffffffffffffffffffffff');
+    //   return false;
+    // } else {
+    //   print('trrrrrrrrrrrrrrrrrrrrue');
+    //   return true;
+    // }
   }
 
   // String? _token;

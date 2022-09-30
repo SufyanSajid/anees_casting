@@ -28,22 +28,22 @@ class Counts with ChangeNotifier {
   }
 
   Future<void> fetchtAndUpdateCount() async {
-    http.Response res =
-        await FirestoreMethods().getRecords(collection: "counts");
+    // http.Response res =
+    //     await FirestoreMethods().getRecords(collection: "counts");
 
-    List<dynamic> resData = jsonDecode(res.body)["documents"];
+    // List<dynamic> resData = jsonDecode(res.body)["documents"];
 
-    Map fields = resData[0]["fields"];
-    String users = fields["users"]["stringValue"];
-    String categories = fields["categories"]["stringValue"];
-    String products = fields["products"]["stringValue"];
+    // Map fields = resData[0]["fields"];
+    // String users = fields["users"]["stringValue"];
+    // String categories = fields["categories"]["stringValue"];
+    // String products = fields["products"]["stringValue"];
 
-    _counts = Count(
-        productsCount: int.parse(products),
-        usersCount: int.parse(users),
-        catsCount: int.parse(categories));
+    // _counts = Count(
+    //     productsCount: int.parse(products),
+    //     usersCount: int.parse(users),
+    //     catsCount: int.parse(categories));
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> increaseCount(

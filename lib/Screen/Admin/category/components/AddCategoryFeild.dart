@@ -36,7 +36,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
     category = Provider.of<Categories>(context, listen: false).drawerCategory;
     currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     if (category != null) {
-      _nameController.text = category!.title.toString();
+      _nameController.text = category!.title.split('-').first;
     } else {
       _nameController.text = '';
     }
@@ -49,10 +49,31 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
     super.dispose();
   }
 
-  _uploadCat() async {
+  void editCat(Category cat, String parentId) async {
     var navi = Navigator.of(context);
     var catProvider = Provider.of<Categories>(context, listen: false);
-    var countProvider = Provider.of<Counts>(context, listen: false);
+
+    setState(() {
+      isCatLoading = true;
+    });
+    await catProvider.EditCategory(
+        userToken: currentUser!.token,
+        parentId: parentId,
+        title: _nameController.text.trim(),
+        catId: cat.id);
+    print('hu gya');
+    await catProvider.fetchAndUpdateCat(currentUser!.token);
+    setState(() {
+      isCatLoading = false;
+      _nameController.clear();
+    });
+    navi.pop();
+  }
+
+  _uploadCat() async {
+    print(123);
+    var navi = Navigator.of(context);
+    var catProvider = Provider.of<Categories>(context, listen: false);
 
     if (catProvider.isCatExist(
         title: _nameController.text.trim(), parentTitle: parentTitle ?? "")) {
@@ -76,7 +97,6 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
       );
 
       await catProvider.fetchAndUpdateCat(currentUser!.token);
-      countProvider.increaseCount(category: 1);
       setState(() {
         _nameController.clear();
         isCatLoading = false;
@@ -95,6 +115,9 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
       children: [
         CustomAutoComplete(
             categories: categories,
+            firstSelction: category == null
+                ? null
+                : category!.parentTitle.split('-').first,
             onChange: (Category cat) {
               parentId = cat.id;
               parentTitle = cat.title;
@@ -118,7 +141,9 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
                 height: height(context),
                 width: width(context),
                 onTap: () {
-                  _uploadCat();
+                  category == null
+                      ? _uploadCat()
+                      : editCat(category!, parentId == null ? '' : parentId!);
                 },
                 title: category != null ? 'Edit Category' : 'Add Category')
       ],
