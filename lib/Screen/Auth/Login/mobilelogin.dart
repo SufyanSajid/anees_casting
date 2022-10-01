@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Functions/dailog.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -138,7 +139,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
 
   bool isLoading = false;
 
-  void _submit() async {
+  void _submit(Language languageProvider) async {
     setState(() {
       isLoading = true;
     });
@@ -149,7 +150,6 @@ class _LoginFeildsState extends State<LoginFeilds> {
       setState(() {
         isLoading = false;
       });
-      print('logged in');
     }).then((value) async {
       final DateTime now = DateTime.now();
       final DateFormat dayFormatter = DateFormat('yyyy-MM-dd');
@@ -168,9 +168,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
               logType: 'Activity'),
           userToken: currentUser.token);
 
-      print("currentUser.role ${currentUser.role}");
       if (currentUser.role!.toLowerCase() == 'customer') {
-        print("Customer");
         Navigator.of(context)
             .pushReplacementNamed(CustomerProductScreen.routeName);
       } else {
@@ -182,8 +180,8 @@ class _LoginFeildsState extends State<LoginFeilds> {
       });
       showCustomDialog(
           context: context,
-          title: 'Error',
-          btn1: 'Okay',
+          title: languageProvider.get('Error'),
+          btn1: languageProvider.get('OK'),
           content: error.toString(),
           btn1Pressed: () {
             Navigator.of(context).pop();
@@ -200,14 +198,15 @@ class _LoginFeildsState extends State<LoginFeilds> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     return Column(
       children: [
         InputFeild(
           textInputAction: TextInputAction.next,
-          hinntText: 'Enter Email Address',
+          hinntText: languageProvider.get('Enter Your Email') ,
           validatior: (String value) {
             if (value.isEmpty) {
-              return "Enter email address !";
+              return languageProvider.get('Enter Your Email');
             }
 
             return null;
@@ -220,10 +219,10 @@ class _LoginFeildsState extends State<LoginFeilds> {
         InputFeild(
           textInputAction: TextInputAction.done,
           secure: isSecure,
-          hinntText: 'Enter Password',
+          hinntText: languageProvider.get('Enter Password') ,
           validatior: (String value) {
             if (value.isEmpty) {
-              return 'Enter your password';
+              return languageProvider.get('Enter Password');
             }
             return null;
           },
@@ -250,7 +249,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
               );
             },
             child: Text(
-              'Forget Password!',
+              languageProvider.get('Forget Password'),
               style: TextStyle(color: primaryColor, fontSize: 13),
             ),
           ),
@@ -267,19 +266,19 @@ class _LoginFeildsState extends State<LoginFeilds> {
                 child: SubmitButton(
                     height: height(context),
                     width: width(context),
-                    title: 'Login',
+                    title: languageProvider.get('Login') ,
                     onTap: () {
                       if (_emailController.text.trim().isEmpty ||
                           _passController.text.trim().isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                           SnackBar(
                             content: Text(
-                              'Empty Feilds: Please enter required info',
+                            languageProvider.get("please fill all fields")  ,
                             ),
                           ),
                         );
                       } else {
-                        _submit();
+                        _submit(languageProvider);
                       }
                     }),
               ),

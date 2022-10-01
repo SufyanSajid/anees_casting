@@ -1,7 +1,7 @@
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
-import 'package:anees_costing/Widget/adaptiveDialog.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Widget/adaptive_indecator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,8 +70,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
     navi.pop();
   }
 
-  _uploadCat() async {
-    print(123);
+  _uploadCat({required Language lanProvider}) async {
     var navi = Navigator.of(context);
     var catProvider = Provider.of<Categories>(context, listen: false);
 
@@ -79,10 +78,10 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
         title: _nameController.text.trim(), parentTitle: parentTitle ?? "")) {
       showCustomDialog(
           context: context,
-          title: "Alert",
+          title: lanProvider.get("Alert"),
           btn1: null,
-          content: "Category already exist",
-          btn2: "OK",
+          content: lanProvider.get("Category already exist"),
+          btn2: lanProvider.get("OK"),
           btn1Pressed: null,
           btn2Pressed: () => Navigator.of(context).pop());
     } else {
@@ -110,6 +109,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
   Widget build(BuildContext context) {
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
 
     return Column(
       children: [
@@ -126,7 +126,7 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
           height: height(context) * 2,
         ),
         InputFeild(
-          hinntText: 'Category Name',
+          hinntText: languageProvider.get('Category Name'),
           validatior: () {},
           inputController: _nameController,
         ),
@@ -142,10 +142,13 @@ class _AddCategoryFeildsState extends State<AddCategoryFeilds> {
                 width: width(context),
                 onTap: () {
                   category == null
-                      ? _uploadCat()
+                      ? _uploadCat(lanProvider: languageProvider)
                       : editCat(category!, parentId == null ? '' : parentId!);
+                  
                 },
-                title: category != null ? 'Edit Category' : 'Add Category')
+                title: category != null
+                    ? languageProvider.get('Edit Category')
+                    : languageProvider.get('Add Category'))
       ],
     );
   }

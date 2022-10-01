@@ -39,7 +39,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
 
   @override
   void didChangeDependencies() async {
-        currentUser = Provider.of<Auth>(context, listen: false).currentUser;  
+    currentUser = Provider.of<Auth>(context, listen: false).currentUser;
     if (isFirst) {
       isFirst = false;
       if (Provider.of<Categories>(context, listen: false).categories.isEmpty) {
@@ -60,7 +60,7 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
     super.didChangeDependencies();
   }
 
-  void deleteCat(Category cat) async {
+  void deleteCat(Category cat, Language lagnProvider) async {
     bool isParent = false;
     List<Category> childCat =
         Provider.of<Categories>(context, listen: false).childCategories;
@@ -75,10 +75,10 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
       provider.setLoader(false);
       showCustomDialog(
           context: context,
-          title: "Parent Category",
+          title: lagnProvider.get("Parent Category"),
           btn1: null,
-          content: "Parent category can't be deleted.",
-          btn2: "Ok",
+          content: lagnProvider.get('Parent category can\'t be deleted.'),
+          btn2: lagnProvider.get('OK'),
           btn1Pressed: null,
           btn2Pressed: () => Navigator.of(context).pop());
     } else {
@@ -93,9 +93,10 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
         provider.setLoader(false);
         showCustomDialog(
             context: context,
-            title: 'Delete',
-            btn1: 'Okay',
-            content: 'This Category contains products cannot delete',
+            title: lagnProvider.get('Delete'),
+            btn1: lagnProvider.get('Okay'),
+            content: lagnProvider
+                .get('This Category contains products cannot deleted'),
             btn1Pressed: () {
               Navigator.of(context).pop();
             });
@@ -103,10 +104,11 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
       } else {
         showCustomDialog(
             context: context,
-            title: 'Delete',
-            btn1: 'Yes',
-            content: 'Do You want to "${cat.title}" Category?',
-            btn2: 'No',
+            title: lagnProvider.get('Delete'),
+            btn1: lagnProvider.get('Yes'),
+            content:
+                lagnProvider.get('Do You want to Delete') + " " + cat.title,
+            btn2: lagnProvider.get('No'),
             btn1Pressed: () {
               Navigator.of(context).pop();
               setState(() {
@@ -116,7 +118,8 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                   .deleteCategory(cat.id, currentUser!.token)
                   .then((value) async {
                 showMySnackBar(
-                    context: context, text: 'Category : Category Deleted');
+                    context: context,
+                    text: lagnProvider.get('Category has been deleted'));
                 await Provider.of<Categories>(context, listen: false)
                     .fetchAndUpdateCat(currentUser!.token);
                 setState(() {
@@ -293,7 +296,8 @@ class _CategoryWebContentState extends State<CategoryWebContent> {
                                                   prods.setDeleteCatId(
                                                       categories[index].id);
                                                   prods.setLoader(true);
-                                                  deleteCat(categories[index]);
+                                                  deleteCat(categories[index],
+                                                      languageProvider);
                                                 }
                                               },
                                               child: Container(

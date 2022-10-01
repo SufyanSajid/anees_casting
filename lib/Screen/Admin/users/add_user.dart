@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:anees_costing/Functions/dailog.dart';
@@ -41,9 +42,7 @@ class _AddUserState extends State<AddUser> {
       if (action == 'edit') {
         user = routeData['data'];
 
-        print(user!.email);
       }
-      print(action);
     }
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -150,7 +149,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
   bool isLoading = false;
   bool isPassSecure = true;
 
-  void _editUser() async {
+  void _editUser(Language langProvider) async {
     setState(() {
       isLoading = true;
     });
@@ -184,7 +183,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         phone: _phoneController.text,
         role: role,
       );
-      showMySnackBar(context: context, text: 'User : User Data Updated');
+      showMySnackBar(context: context, text: langProvider.get('User Data has been Updated') );
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
       Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);
@@ -198,8 +197,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       });
       showCustomDialog(
         context: context,
-        title: 'Error',
-        btn1: 'Okay',
+        title: langProvider.get('Error') ,
+        btn1: langProvider.get('OK') ,
         content: error.toString(),
         btn1Pressed: () {
           Navigator.of(context).pop();
@@ -208,7 +207,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
     });
   }
 
-  void _sigUpUser() async {
+  void _sigUpUser(Language langProvider) async {
     setState(() {
       isLoading = true;
     });
@@ -233,7 +232,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         phone: _phoneController.text.trim(),
         role: role,
       );
-      showMySnackBar(context: context, text: 'User : User Added');
+      showMySnackBar(context: context, text:langProvider.get('User has been Added') );
       // Provider.of<Users>(context, listen: false)
       //     .fetchAndUpdateUser(userToken: currentUser!.token);
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
@@ -251,8 +250,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
       showCustomDialog(
         context: context,
-        title: 'Error',
-        btn1: 'Okay',
+        title: langProvider.get('Error') ,
+        btn1: langProvider.get('OK') ,
         content: error.toString(),
         btn1Pressed: () {
           Navigator.of(context).pop();
@@ -312,7 +311,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
   @override
   Widget build(BuildContext context) {
-    var langProvider = Provider.of<Language>(context);
+    Language languageProvider = Provider.of<Language>(context);
 
     return Column(
       children: [
@@ -343,7 +342,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
             Expanded(
               flex: 7,
               child: InputFeild(
-                  hinntText: langProvider.get('Name'),
+                  hinntText: languageProvider.get('Name'),
                   validatior: () {},
                   inputController: _nameController),
             ),
@@ -354,11 +353,11 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
               flex: 5,
               child: CustomDropDown(
                 items: [
-                  langProvider.get('Customer'),
-                  langProvider.get('Admin'),
-                  langProvider.get('Seller'),
+                  languageProvider.get('Customer'),
+                  languageProvider.get('Admin'),
+                  languageProvider.get('Seller'),
                 ],
-                firstSelect: widget.action == 'edit' ? langProvider.get(widget.user!.role)  : '',
+                firstSelect: widget.action == 'edit' ? languageProvider.get(widget.user!.role)  : '',
                 onChanged: (value) {
                   role = value;
                 },
@@ -371,7 +370,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         ),
         InputFeild(
             suffix: Icons.email_outlined,
-            hinntText: langProvider.get('Email'),
+            hinntText: languageProvider.get('Email'),
             readOnly: widget.action == 'edit' ? true : false,
             validatior: () {},
             inputController: _emailController),
@@ -380,7 +379,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         ),
         InputFeild(
             suffix: Icons.phone_outlined,
-            hinntText: langProvider.get('Phone'),
+            hinntText: languageProvider.get('Phone'),
             validatior: () {},
             inputController: _phoneController),
         SizedBox(
@@ -394,7 +393,7 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 isPassSecure = !isPassSecure;
               });
             },
-            hinntText: langProvider.get('Password'),
+            hinntText: languageProvider.get('Password'),
             validatior: () {},
             inputController: _passwordController),
         SizedBox(
@@ -408,10 +407,10 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 child: SubmitButton(
                     height: height(context),
                     width: width(context),
-                    onTap: widget.action == 'edit' ? _editUser : _sigUpUser,
+                    onTap:()=> widget.action == 'edit' ? _editUser(languageProvider) : _sigUpUser(languageProvider),
                     title: widget.action == 'edit'
-                        ? langProvider.get('Edit User')
-                        : langProvider.get('Add User')),
+                        ? languageProvider.get('Edit User')
+                        : languageProvider.get('Add User')),
               )
       ],
     );

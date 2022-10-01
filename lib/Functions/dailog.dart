@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Widget lightDivider() => Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -67,59 +69,66 @@ Future<void> showCustomDialog({
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          backgroundColor: btnbgColor.withOpacity(1),
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            height: Platform.isAndroid || Platform.isIOS
-                ? height(context) * 25
-                : 200,
-            width: width(context) * 18,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                buildTopTitle(context,
-                    title: title, image: 'assets/images/logo.png'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    content,
-                    maxLines: 2,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
+      return Directionality(
+        textDirection:
+            Provider.of<Language>(context, listen: true).currentLang ==
+                    language.Urdu
+                ? TextDirection.rtl
+                : TextDirection.ltr,
+        child: AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: btnbgColor.withOpacity(1),
+            contentPadding: EdgeInsets.zero,
+            content: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              height: Platform.isAndroid || Platform.isIOS
+                  ? height(context) * 25
+                  : 200,
+              width: width(context) * 18,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildTopTitle(context,
+                      title: title, image: 'assets/images/logo.png'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      content,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: height(context) * 1),
-                Row(
-                  children: [
-                    // const SizedBox(width: 85),
-                    if (btn1 != null)
-                      Expanded(
-                        child: DialogButton(
-                          text: btn1,
-                          btncolor: Colors.grey,
-                          onPressed: btn1Pressed,
+                  SizedBox(height: height(context) * 1),
+                  Row(
+                    children: [
+                      // const SizedBox(width: 85),
+                      if (btn1 != null)
+                        Expanded(
+                          child: DialogButton(
+                            text: btn1,
+                            btncolor: Colors.grey,
+                            onPressed: btn1Pressed,
+                          ),
                         ),
-                      ),
-                    if (btn2 != null)
-                      Expanded(
-                        child: DialogButton(
-                          text: btn2,
-                          btncolor: btnbgColor,
-                          onPressed: btn2Pressed,
+                      if (btn2 != null)
+                        Expanded(
+                          child: DialogButton(
+                            text: btn2,
+                            btncolor: btnbgColor,
+                            onPressed: btn2Pressed,
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-              ],
-            ),
-          ));
+                    ],
+                  ),
+                ],
+              ),
+            )),
+      );
     },
   );
 }

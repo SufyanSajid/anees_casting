@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/auth.dart';
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -46,6 +47,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
   @override
   Widget build(BuildContext context) {
     customers = Provider.of<Users>(context).customers;
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),
@@ -56,8 +59,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
           child: Column(
             children: [
               Appbar(
-                title: 'Customer',
-                subtitle: 'Customer Details',
+                title: languageProvider.get('Customer') ,
+                subtitle:  languageProvider.get('Customer Details'),
                 svgIcon: 'assets/icons/users.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -79,8 +82,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       )
                     : customers!.isEmpty
-                        ? const Center(
-                            child: Text('No Customers to show'),
+                        ?  Center(
+                            child: Text(languageProvider.get('No Customers to show')),
                           )
                         : ListView.builder(
                             itemCount: customers!.length,

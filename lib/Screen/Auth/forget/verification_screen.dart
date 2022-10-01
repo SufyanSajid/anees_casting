@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     super.didChangeDependencies();
   }
 
-  void _submit() {
+  void _submit(Language langProvider) {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
@@ -61,9 +62,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
           });
           showCustomDialog(
               context: context,
-              title: 'Code',
-              btn1: 'Okay',
-              content: 'Code didnot match',
+              title: langProvider.get('Code'),
+              btn1: langProvider.get('OK'),
+              content: langProvider.get("Icorrect Code"),
               btn1Pressed: () {
                 Navigator.of(context).pop();
               });
@@ -74,8 +75,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
         });
         showCustomDialog(
             context: context,
-            title: 'Error',
-            btn1: 'Okay',
+            title: langProvider.get('Error'),
+            btn1: langProvider.get('OK'),
             content: error.toString(),
             btn1Pressed: () {
               Navigator.of(context).pop();
@@ -86,6 +87,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     var mediaQuery = MediaQuery.of(context).size;
     var height = mediaQuery.height / 100;
     var width = mediaQuery.width / 100;
@@ -141,7 +143,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            'Enter the 6-digit code that is sent to your email address',
+                            languageProvider.get(
+                                'Enter the 6-digit code that is sent to your email address'),
                             style: TextStyle(
                                 color: btnbgColor.withOpacity(1), fontSize: 14),
                           )),
@@ -151,13 +154,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: InputFeild(
-                            hinntText: 'Code here',
+                            hinntText: languageProvider.get('Code here'),
                             validatior: (String value) {
                               if (value.isEmpty) {
-                                return 'Enter the 6-digit code that is sent to your email address';
+                                languageProvider.get(
+                                    'Enter the 6-digit code that is sent to your email address');
                               }
                               if (value.length > 6) {
-                                return 'Code invalid';
+                                return languageProvider.get('Invalid Code');
+                              
                               }
                             },
                             inputController: _codeController),
@@ -166,7 +171,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         height: height * 2,
                       ),
                       GestureDetector(
-                        onTap: _submit,
+                        onTap:()=> _submit(languageProvider),
                         child: Container(
                           height: currentOrientation == Orientation.landscape
                               ? height * 5
@@ -186,10 +191,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               : Center(
                                   child: FittedBox(
                                     child: Text(
-                                      'Verify Code',
+                                     languageProvider.get('Verify Code') ,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontFamily: 'Poppins',
+                                          fontFamily: languageProvider.currentLang == language.English? 'Poppins': null,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16),
                                     ),

@@ -255,12 +255,12 @@ class _ShowUsersState extends State<ShowUsers> {
     super.didChangeDependencies();
   }
 
-  void _deleteUser(AUser aUser) {
+  void _deleteUser({required AUser aUser, required Language lanProvider}) {
     showCustomDialog(
         context: context,
-        title: 'Delete User',
-        btn1: 'Yes',
-        content: 'Do you want to delete user ?',
+        title: lanProvider.get('Delete User'),
+        btn1: lanProvider.get('Yes'),
+        content: lanProvider.get('Do you want to delete user?'),
         btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
@@ -273,7 +273,7 @@ class _ShowUsersState extends State<ShowUsers> {
             // await Provider.of<Users>(context, listen: false)
             //     .fetchAndUpdateUser(userToken: currentUser!.token);
 
-            showMySnackBar(context: context, text: 'User: User Deleted');
+            showMySnackBar(context: context, text: lanProvider.get('User has been Deleted'));
             setState(() {
               isLoading = false;
             });
@@ -283,8 +283,8 @@ class _ShowUsersState extends State<ShowUsers> {
             });
             showCustomDialog(
               context: context,
-              title: 'Error',
-              btn1: 'Okay',
+              title: lanProvider.get('Error'),
+              btn1: lanProvider.get('Okay'),
               content: error.toString(),
               btn1Pressed: () {
                 Navigator.of(context).pop();
@@ -292,7 +292,7 @@ class _ShowUsersState extends State<ShowUsers> {
             );
           });
         },
-        btn2: 'No',
+        btn2: lanProvider.get('No'),
         btn2Pressed: () {
           Navigator.of(context).pop();
         });
@@ -305,7 +305,7 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
-    var langProvider = Provider.of<Language>(context);
+    var languageProvider = Provider.of<Language>(context);
 
     return Expanded(
       child: isLoading
@@ -339,7 +339,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor),
-                                child: Text(langProvider.get('Edit User')),
+                                child: Text(languageProvider.get('Edit User')),
                               ),
                             ],
                             content: Container(
@@ -348,14 +348,14 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   UserDetail(
-                                    title: langProvider.get('Email'),
+                                    title: languageProvider.get('Email'),
                                     value: widget.users[index].email,
                                   ),
                                   SizedBox(
                                     height: height(context) * 1,
                                   ),
                                   UserDetail(
-                                    title: langProvider.get('Phone'),
+                                    title: languageProvider.get('Phone'),
                                     value: widget.users[index].phone,
                                   )
                                 ],
@@ -496,8 +496,8 @@ class _ShowUsersState extends State<ShowUsers> {
                                                           )),
                                                     ))));
                                       },
-                                      child: Text(
-                                          langProvider.get('View Products'))),
+                                      child: Text(languageProvider
+                                          .get('View Products'))),
                                 SizedBox(
                                   width: width(context) * 1,
                                 ),
@@ -505,7 +505,9 @@ class _ShowUsersState extends State<ShowUsers> {
                                     'admin')
                                   IconButton(
                                     onPressed: () {
-                                      _deleteUser(widget.users[index]);
+                                      _deleteUser(
+                                          aUser: widget.users[index],
+                                          lanProvider: languageProvider);
                                     },
                                     icon: const Icon(
                                       Icons.delete,
@@ -529,7 +531,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 bottomLeft: Radius.circular(10))),
                         child: Center(
                           child: Text(
-                            langProvider.get(widget.users[index].role),
+                            languageProvider.get(widget.users[index].role),
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,

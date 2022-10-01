@@ -1,13 +1,16 @@
+import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/Login/mobilelogin.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class WebLogin extends StatelessWidget {
   const WebLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
     var width = MediaQuery.of(context).size.width;
     print(width);
     return Scaffold(
@@ -54,7 +57,7 @@ class WebLogin extends StatelessWidget {
                     Center(
                         child: FittedBox(
                       child: Text(
-                        'Welcome To Anees Casting',
+                       languageProvider.get('Welcome to Anees Casting') ,
                         style: GoogleFonts.berkshireSwash(
                             fontSize: 54, color: primaryColor),
                       ),
