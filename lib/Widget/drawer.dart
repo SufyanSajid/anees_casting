@@ -5,7 +5,7 @@ import 'package:anees_costing/Models/counts.dart';
 import 'package:anees_costing/Screen/Admin/homepage/admin_home.dart';
 import 'package:anees_costing/Screen/Auth/Login/mobilelogin.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
-import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:anees_costing/Widget/adaptiveDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

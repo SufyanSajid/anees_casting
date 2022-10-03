@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../Widget/adaptive_indecator.dart';
+import '../../Widget/appbar.dart';
 import '../../Widget/input_feild.dart';
 
 class CustomerProductScreen extends StatefulWidget {
@@ -65,67 +66,19 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
         child: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: height(context) * 7.5,
-                        width: height(context) * 7.5,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 5),
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(style: BorderStyle.solid, width: 2),
-                            borderRadius: BorderRadius.circular(50)),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            'assets/images/person22.jpeg',
-                            height: height(context) * 10,
-                            width: height(context) * 10,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width(context) * 2,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                           languageProvider.get('welcome') ,
-                            style: TextStyle(
-                                color: secondaryColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                           languageProvider.get('Dear Customer') ,
-                            style: GoogleFonts.righteous(
-                              color: primaryColor,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      _scaffoldKey.currentState!.openDrawer();
-                    },
-                    icon: Icon(
-                      Icons.filter_list,
-                      color: primaryColor,
-                      size: 30,
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Appbar(
+                title: languageProvider.get('Product'),
+                subtitle: languageProvider.get('List of Products'),
+                svgIcon: 'assets/icons/daimond.svg',
+                leadingIcon: Icons.arrow_back,
+                leadingTap: () {
+                  Navigator.of(context).pop();
+                },
+                tarilingIcon: Icons.filter_list,
+                tarilingTap: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                },
               ),
             ),
             SizedBox(

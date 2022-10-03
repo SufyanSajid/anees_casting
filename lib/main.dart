@@ -16,7 +16,11 @@ import 'package:anees_costing/Screen/Admin/users/customers.dart';
 import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
-import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Screen/Customer/cust_cat_prod.dart';
+import 'package:anees_costing/Screen/Customer/customer_catchild.dart';
+import 'package:anees_costing/Screen/Customer/customer_catlist.dart';
+import 'package:anees_costing/Screen/Customer/customer_home.dart';
+import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:io';
@@ -141,7 +145,7 @@ class _MyAppState extends State<MyApp> {
       _timer!.cancel();
     }
 
-    _timer = Timer(const Duration(minutes: 5), _logOutUser);
+    _timer = Timer(const Duration(minutes: 15), _logOutUser);
   }
 
   void _logOutUser() {
@@ -189,8 +193,12 @@ class _MyAppState extends State<MyApp> {
             AddProduct.routeName: (ctx) => const AddProduct(),
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
             AddUser.routeName: (ctx) => AddUser(),
+            CustomerHomeScreen.routeName: (ctx) => CustomerHomeScreen(),
             CustomerProductScreen.routeName: (ctx) =>
                 const CustomerProductScreen(),
+            CustomerCatList.routeName: (ctx) => CustomerCatList(),
+            CustomerCatChild.routeName: (ctx) => CustomerCatChild(),
+            CustomerCatProductScreen.routeName:(ctx)=>CustomerCatProductScreen(),
             ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
             CategoryListScreen.routeName: (ctx) => const CategoryListScreen(),
             CategoryChildListScreen.routeName: (ctx) =>

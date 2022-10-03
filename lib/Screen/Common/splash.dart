@@ -1,6 +1,7 @@
 import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/Login/login.dart';
-import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Screen/Customer/customer_home.dart';
+import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -24,26 +25,27 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() async {
     if (isFirst) {
       Provider.of<Language>(context, listen: false).defaultLang();
-      await Future.delayed(const Duration(seconds: 2)).then((value) async {
-        bool isLogin =
-            await Provider.of<Auth>(context, listen: false).tryAutoLogin();
-            if(isLogin){
-            }
-          
-        currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+      await Future.delayed(const Duration(seconds: 2)).then(
+        (value) async {
+          bool isLogin =
+              await Provider.of<Auth>(context, listen: false).tryAutoLogin();
+          if (isLogin) {}
 
-        if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
-          Navigator.of(context)
-              .pushReplacementNamed(CustomerProductScreen.routeName);
-        } else if (isLogin && currentUser!.role!.toLowerCase() == 'seller') {
-          Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
-        } else if (isLogin && currentUser!.role!.toLowerCase() == 'admin') {
-          Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
-        } else {
-          Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-        }
-        isFirst = false;
-      });
+          currentUser = Provider.of<Auth>(context, listen: false).currentUser;
+
+          if (isLogin && currentUser!.role!.toLowerCase() == 'customer') {
+            Navigator.of(context)
+                .pushReplacementNamed(CustomerHomeScreen.routeName);
+          } else if (isLogin && currentUser!.role!.toLowerCase() == 'seller') {
+            Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
+          } else if (isLogin && currentUser!.role!.toLowerCase() == 'admin') {
+            Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
+          } else {
+            Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+          }
+          isFirst = false;
+        },
+      );
     }
 
     // TODO: implement didChangeDependencies

@@ -1,7 +1,7 @@
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Admin/Product/customerproducts.dart';
-import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';

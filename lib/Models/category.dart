@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../Helpers/firestore_methods.dart';
 import '../contant.dart';
 
 class Category {
@@ -30,15 +29,22 @@ class Categories with ChangeNotifier {
   List<Category> _parentCategories = [];
   List<Category> _childCategories = [];
   List<Category> _searchedCategories = [];
-  bool isCatLoading=false;
+  List<Category> _customerCategories = [];
 
-  void setCatLoader(bool value){
-    isCatLoading=value;
+  List<String> customerCats = [];
+  bool isCatLoading = false;
+
+  void setCatLoader(bool value) {
+    isCatLoading = value;
     notifyListeners();
   }
 
   List<Category> get categories {
     return [..._categories];
+  }
+
+  List<Category> get customerCategories {
+    return [..._customerCategories];
   }
 
   List<Category> get parentCategories {
@@ -59,6 +65,55 @@ class Categories with ChangeNotifier {
 
   List<Category> getChildCategories(String catId) {
     return _categories.where((cat) => catId == cat.parentId).toList();
+  }
+
+  void getCustomerCategories() {
+    List<Category> cats = [];
+    
+     _categories.forEach((c) {
+      if(customerCats.contains(c.id)){
+        cats.add(c);
+      }
+      });
+    _customerCategories = cats;
+    print(_customerCategories.length);
+    notifyListeners();
+  }
+  
+   List<Category> getCategoresForCustomerSide({required List<Category> cats}) {
+    List<Category> tempCats = [];
+    
+     cats.forEach((c) {
+      if(customerCats.contains(c.id)){
+        tempCats.add(c);
+      }
+      });
+    return tempCats;
+  }
+  Future<void> getCustomerCategoriesIds(
+      {required String userToken, required String custId}) async {
+    List<String> tempCuscats = [];
+    final url =
+        Uri.parse('https://anees-casting.rapidev.tech/api/customer_cats');
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer ${userToken}'
+    }, body: {
+      'user_id': custId,
+    });
+
+    print(response.body);
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      var data = extractedData['data'] as List<dynamic>;
+
+      data.forEach((cat) {
+        tempCuscats.add(cat.toString());
+      });
+
+      customerCats = tempCuscats;
+      print(customerCats.length);
+      notifyListeners();
+    }
   }
 
   Future<void> uploadCatagory(

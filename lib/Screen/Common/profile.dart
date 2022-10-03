@@ -18,7 +18,7 @@ import '../../Widget/drawer.dart';
 import '../../Widget/input_feild.dart';
 import '../../Widget/snakbar.dart';
 import '../../Widget/submitbutton.dart';
-import '../Customer/customer_products.dart';
+import '../Customer/all_cat_prod.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/profileScreen';

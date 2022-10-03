@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Models/language.dart';
-import 'package:anees_costing/Screen/Customer/customer_products.dart';
+import 'package:anees_costing/Screen/Customer/customer_home.dart';
+import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -170,7 +171,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
 
       if (currentUser.role!.toLowerCase() == 'customer') {
         Navigator.of(context)
-            .pushReplacementNamed(CustomerProductScreen.routeName);
+            .pushReplacementNamed(CustomerHomeScreen.routeName);
       } else {
         Navigator.of(context).pushReplacementNamed(AdminHomePage.routeName);
       }
@@ -203,7 +204,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
       children: [
         InputFeild(
           textInputAction: TextInputAction.next,
-          hinntText: languageProvider.get('Enter Your Email') ,
+          hinntText: languageProvider.get('Enter Your Email'),
           validatior: (String value) {
             if (value.isEmpty) {
               return languageProvider.get('Enter Your Email');
@@ -219,7 +220,7 @@ class _LoginFeildsState extends State<LoginFeilds> {
         InputFeild(
           textInputAction: TextInputAction.done,
           secure: isSecure,
-          hinntText: languageProvider.get('Enter Password') ,
+          hinntText: languageProvider.get('Enter Password'),
           validatior: (String value) {
             if (value.isEmpty) {
               return languageProvider.get('Enter Password');
@@ -266,14 +267,14 @@ class _LoginFeildsState extends State<LoginFeilds> {
                 child: SubmitButton(
                     height: height(context),
                     width: width(context),
-                    title: languageProvider.get('Login') ,
+                    title: languageProvider.get('Login'),
                     onTap: () {
                       if (_emailController.text.trim().isEmpty ||
                           _passController.text.trim().isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
+                          SnackBar(
                             content: Text(
-                            languageProvider.get("please fill all fields")  ,
+                              languageProvider.get("please fill all fields"),
                             ),
                           ),
                         );
