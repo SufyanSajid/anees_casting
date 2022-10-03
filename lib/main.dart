@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anees_costing/Models/activitylogs.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/counts.dart';
@@ -15,10 +17,7 @@ import 'package:anees_costing/Screen/Auth/forget/newpassword_screen.dart';
 import 'package:anees_costing/Screen/Common/profile.dart';
 import 'package:anees_costing/Screen/Common/splash.dart';
 import 'package:anees_costing/Screen/Customer/customer_products.dart';
-import 'package:anees_costing/service/detector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_window_close/flutter_window_close.dart';
 
 import 'dart:io';
 
@@ -44,7 +43,32 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (ctx) => Auth(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Users(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Products(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Logs(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Categories(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Counts(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => SentProducts(),
+    ),
+    ChangeNotifierProvider(
+      create: (ctx) => Language(),
+    ),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -103,42 +127,46 @@ class _MyAppState extends State<MyApp> {
   }
 
   // This widget is the root of your application.
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTimer();
+  }
+
+  void _initializeTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    _timer = Timer(const Duration(minutes: 5), _logOutUser);
+  }
+
+  void _logOutUser() {
+    print('logut');
+    _timer!.cancel();
+    Provider.of<Auth>(context, listen: false).logout();
+
+    // Popping all routes and pushing welcome screen
+    _navigatorKey.currentState!.pushNamed(LoginScreen.routeName);
+  }
+
+  void _handleUserInteraction([_]) {
+    print('user interacted');
+    _initializeTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
     Auth auth = Auth();
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Auth(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Users(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Products(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Logs(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Categories(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Counts(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => SentProducts(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Language(),
-        ),
-      ],
-
-      child: WillPopScope(
-        onWillPop: () => showExitPopup(context),
-
-      child: UserActivityDetector(
-
+    return WillPopScope(
+      onWillPop: () => showExitPopup(context),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _handleUserInteraction,
+        onPanDown: _handleUserInteraction,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Anees_Casting',
@@ -146,12 +174,10 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.blue,
             textTheme: GoogleFonts.ubuntuTextTheme(),
           ),
+          navigatorKey: _navigatorKey,
           routes: {
-
-            '/': (ctx) => const SplashScreen(),
-
-            '/': (ctx) => auth.autoLogout ? LoginScreen() : SplashScreen(),
-           ProfileScreen.routeName: (context) => ProfileScreen(),
+            '/': (ctx) => SplashScreen(),
+            ProfileScreen.routeName: (context) => ProfileScreen(),
             LoginScreen.routeName: (ctx) => const LoginScreen(),
             AdminHomePage.routeName: (ctx) => const AdminHomePage(),
             CategoryScreen.routeName: (ctx) => CategoryScreen(),
@@ -177,6 +203,6 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
-    ));
+    );
   }
 }
