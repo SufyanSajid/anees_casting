@@ -173,7 +173,7 @@ class _UserWebContentState extends State<UserWebContent> {
               )
             : ShowUsers(
                 isWeb: true,
-                users: users,
+                selectedFilter: selectedFilter,
                 scaffoldKey: widget.scaffoldKey,
               ),
       ],

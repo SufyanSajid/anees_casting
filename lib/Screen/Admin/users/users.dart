@@ -38,8 +38,8 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    users = Provider.of<Users>(context, listen: true)
-        .getFilteredUsers(selectedFilter);
+
+    users.sort((a, b) => a.name.compareTo(b.name));
     var langProvider = Provider.of<Language>(context);
 
     return Scaffold(
@@ -154,8 +154,8 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                         )
                       : ShowUsers(
-                          users: users,
                           isWeb: false,
+                          selectedFilter: selectedFilter,
                         ),
                 ],
               ),
@@ -212,15 +212,16 @@ class _UserScreenState extends State<UserScreen> {
 }
 
 class ShowUsers extends StatefulWidget {
-  const ShowUsers({
+   ShowUsers({
     Key? key,
     required this.isWeb,
-    required this.users,
+    required this.selectedFilter,
     this.scaffoldKey,
   }) : super(key: key);
+  String selectedFilter;
   final bool isWeb;
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  final List<AUser> users;
+ 
 
   @override
   State<ShowUsers> createState() => _ShowUsersState();
@@ -230,6 +231,8 @@ class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
   CurrentUser? currentUser;
+  
+    List<AUser> users=[];
   // List<Product> customerProducts = [];
   // bool productLoading = false;
 
@@ -273,7 +276,9 @@ class _ShowUsersState extends State<ShowUsers> {
             // await Provider.of<Users>(context, listen: false)
             //     .fetchAndUpdateUser(userToken: currentUser!.token);
 
-            showMySnackBar(context: context, text: lanProvider.get('User has been Deleted'));
+            showMySnackBar(
+                context: context,
+                text: lanProvider.get('User has been Deleted'));
             setState(() {
               isLoading = false;
             });
@@ -305,6 +310,8 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
+        users = Provider.of<Users>(context, listen: true)
+        .getFilteredUsers(widget.selectedFilter);
     var languageProvider = Provider.of<Language>(context);
 
     return Expanded(
@@ -315,7 +322,7 @@ class _ShowUsersState extends State<ShowUsers> {
               ),
             )
           : ListView.builder(
-              itemCount: widget.users.length,
+              itemCount: users.length,
               itemBuilder: (ctx, index) => InkWell(
                 onTap: () {
                   showDialog(
@@ -323,7 +330,7 @@ class _ShowUsersState extends State<ShowUsers> {
                       builder: (ctx) => AlertDialog(
                             title: Center(
                               child: Text(
-                                widget.users[index].name,
+                                users[index].name,
                                 style: TextStyle(color: primaryColor),
                               ),
                             ),
@@ -334,7 +341,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                   Navigator.of(context)
                                       .pushNamed(AddUser.routeName, arguments: {
                                     'action': 'edit',
-                                    'data': widget.users[index],
+                                    'data': users[index],
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -349,14 +356,14 @@ class _ShowUsersState extends State<ShowUsers> {
                                 children: [
                                   UserDetail(
                                     title: languageProvider.get('Email'),
-                                    value: widget.users[index].email,
+                                    value:users[index].email,
                                   ),
                                   SizedBox(
                                     height: height(context) * 1,
                                   ),
                                   UserDetail(
                                     title: languageProvider.get('Phone'),
-                                    value: widget.users[index].phone,
+                                    value: users[index].phone,
                                   )
                                 ],
                               ),
@@ -414,7 +421,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    widget.users[index].name,
+                                    users[index].name,
                                     style: TextStyle(
                                       color: headingColor,
                                       fontSize: 16,
@@ -425,7 +432,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                     height: height(context) * 0.5,
                                   ),
                                   Text(
-                                    widget.users[index].email,
+                                    users[index].email,
                                     style: TextStyle(
                                         color: contentColor, fontSize: 12),
                                   ),
@@ -433,11 +440,11 @@ class _ShowUsersState extends State<ShowUsers> {
                               ),
                             ],
                           ),
-                          if (widget.users[index].role != 'Admin')
+                          if (users[index].role != 'Admin')
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                if (widget.users[index].role.toLowerCase() ==
+                                if (users[index].role.toLowerCase() ==
                                         'customer' &&
                                     (Platform.isMacOS || Platform.isWindows))
                                   ElevatedButton(
@@ -457,7 +464,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                                                 .spaceBetween,
                                                         children: [
                                                           Text(
-                                                            widget.users[index]
+                                                            users[index]
                                                                 .name,
                                                             style: GoogleFonts
                                                                 .righteous(
@@ -488,8 +495,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                                                   60,
                                                           child:
                                                               CustomerProducts(
-                                                            userId: widget
-                                                                .users[index]
+                                                            userId:users[index]
                                                                 .id,
                                                             scaffoldKey: widget
                                                                 .scaffoldKey!,
@@ -501,12 +507,12 @@ class _ShowUsersState extends State<ShowUsers> {
                                 SizedBox(
                                   width: width(context) * 1,
                                 ),
-                                if (widget.users[index].role.toLowerCase() !=
+                                if (users[index].role.toLowerCase() !=
                                     'admin')
                                   IconButton(
                                     onPressed: () {
                                       _deleteUser(
-                                          aUser: widget.users[index],
+                                          aUser: users[index],
                                           lanProvider: languageProvider);
                                     },
                                     icon: const Icon(
@@ -531,7 +537,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 bottomLeft: Radius.circular(10))),
                         child: Center(
                           child: Text(
-                            languageProvider.get(widget.users[index].role),
+                            languageProvider.get(users[index].role),
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,

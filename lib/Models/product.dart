@@ -4,6 +4,7 @@ import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../contant.dart';
+import 'category.dart';
 
 class Product {
   String id;
@@ -35,6 +36,8 @@ class Products with ChangeNotifier {
   List<Product> _products = [];
   List<Product> _catProducts = [];
   List<Product> _cutomerProducts = [];
+  List<Product> _cutomerCatProducts = [];
+
   Product? drawerProduct;
   String? pageToken;
   GlobalKey<ScaffoldState>? scaffoldKey;
@@ -55,6 +58,10 @@ class Products with ChangeNotifier {
     return [..._cutomerProducts];
   }
 
+  List<Product> get customerCatProducts {
+    return [..._cutomerCatProducts];
+  }
+
   List<Product> get catProducts {
     return [..._catProducts];
   }
@@ -62,6 +69,12 @@ class Products with ChangeNotifier {
   bool deleteLoader = false;
 
   String? deleteCatId;
+
+  List<Product> getCustCatProducts({required String catId}) {
+
+   return _cutomerProducts.where((element) => element.categoryId == catId).toList();
+   
+  }
 
   void setDeleteCatId(String value) {
     deleteCatId = value;
@@ -306,7 +319,7 @@ class Products with ChangeNotifier {
       var extractedResponse = json.decode(response.body);
       if (extractedResponse['success'] == true) {
         print(extractedResponse['message']);
-        _catProducts.removeWhere((element) => element.id==prodId);
+        _catProducts.removeWhere((element) => element.id == prodId);
         _products.removeWhere((element) => element.id == prodId);
         notifyListeners();
       } else {

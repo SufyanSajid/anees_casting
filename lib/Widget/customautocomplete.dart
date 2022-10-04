@@ -40,8 +40,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
 
   @override
   Widget build(BuildContext context) {
-    Language languageProvider = Provider.of<Language>(context, listen: true);
-    
+    Language languageProvider = Provider.of<Language>(context, listen: false);
+
     // TextEditingValue textEditingValue = TextEditingValue(text: widget.town);
 
     var height = MediaQuery.of(context).size.height / 100;
@@ -63,8 +63,8 @@ class _CustomAutoCompleteState extends State<CustomAutoComplete> {
       onSelected: (value) {},
       fieldViewBuilder: (BuildContext context, TextEditingController controller,
           FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-        controller.text =
-            widget.firstSelction == null ? '' : widget.firstSelction!;
+        // controller.text =
+        //     widget.firstSelction == null ? '' : widget.firstSelction!;
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,

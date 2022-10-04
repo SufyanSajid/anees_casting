@@ -101,50 +101,15 @@ class Users with ChangeNotifier {
 
   void updateUserLocally(AUser user) {
     print('yeh ha role ${user.role}');
+
+    _customers.removeWhere((element) => element.id == user.id);
+    _users.removeWhere((element) => element.id == user.id);
+    _users.add(user);
+
     if (user.role.toLowerCase() == 'customer') {
-      print('yes');
-      _customers.removeWhere((element) => element.id == user.id);
-      _users.add(user);
       _customers.add(user);
-      notifyListeners();
-    } else {
-      _customers.removeWhere((element) => element.id == user.id);
-      _users.removeWhere((element) => element.id == user.id);
-      _users.add(user);
-      notifyListeners();
     }
-
-    // int customerIndex =
-    //     _customers.indexWhere((element) => element.id == user.id);
-    // int userIndex = _users.indexWhere((element) => element.id == user.id);
-
-    // if (userIndex == -1) {
-    //   _users.add(user);
-    // } else {
-    //   _users.removeAt(userIndex);
-    // }
-
-    // if (customerIndex == -1) {
-    //   _customers.add(user);
-    // } else {
-    //   _customers.removeAt(customerIndex);
-    // }
-
-    // if (user.role.toLowerCase() == "customer") {
-    //   int customerIndex =
-    //       _customers.indexWhere((element) => element.id == user.id);
-
-    //   if (customerIndex == -1) {
-    //     _customers.add(user);
-    //     _users.add(user);
-    //   } else {
-    //     _customers.removeAt(customerIndex);
-    //   }
-    // } else {
-    //   int userIndex = _users.indexWhere((element) => element.id == user.id);
-
-    //   userIndex == -1 ? _users.add(user) : _users.removeAt(userIndex);
-    // }
+    notifyListeners();
 
     notifyListeners();
   }
@@ -215,6 +180,8 @@ class Users with ChangeNotifier {
 
     var response =
         await http.get(url, headers: {'Authorization': 'Bearer $userToken'});
+    print(response.body);
+    print('uuuuuibfskhkbskfbvkfbvkdfbvkfbvdfkjbvdfkjbvdfkvbfkbv');
 
     var extractedData = json.decode(response.body);
 
@@ -247,7 +214,7 @@ class Users with ChangeNotifier {
       });
       _customers = tempCustomers;
       _users = tempUsers;
-
+      print('yyyfhfbvkjbfvkjkksdbk  ${_users.length}');
       notifyListeners();
     } else {
       var message = extractedData['message'];
@@ -302,11 +269,15 @@ class Users with ChangeNotifier {
     }
 
     if (filter == "Seller") {
-      return _users.where((element) => element.role == "Seller").toList();
+      return _users
+          .where((element) => element.role.toLowerCase() == "seller")
+          .toList();
     }
 
     if (filter == "Admin") {
-      return _users.where((element) => element.role == "Admin").toList();
+      return _users
+          .where((element) => element.role.toLowerCase() == "admin")
+          .toList();
     }
     return _users;
   }

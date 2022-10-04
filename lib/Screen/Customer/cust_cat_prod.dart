@@ -46,8 +46,6 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
       setState(() {
         isLoading = true;
       });
-      await Provider.of<Products>(context, listen: false)
-          .getCatProducts(userToken: currentUser!.token, catId: cat!.id);
 
       setState(() {
         isLoading = false;
@@ -106,7 +104,9 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Product> products = Provider.of<Products>(context).catProducts;
+    List<Product> products = Provider.of<Products>(context, listen: false)
+        .getCustCatProducts(catId: cat!.id);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(

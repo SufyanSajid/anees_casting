@@ -76,14 +76,6 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    if (isFirst) {
-      isFirst = false;
-    }
-    super.didChangeDependencies();
-  }
-
   Product prodObj() {
     return Product(
         id: "",
@@ -236,7 +228,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   @override
   Widget build(BuildContext context) {
     List<Category> categories =
-        Provider.of<Categories>(context, listen: true).categories;
+        Provider.of<Categories>(context, listen: false).categories;
     Language languageProvider = Provider.of<Language>(context, listen: true);
 
     return Column(
@@ -297,7 +289,8 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
           onChange: (Category cat) {
             category = cat;
           },
-          firstSelction: selectedCatTitle,
+          firstSelction:
+              selectedCatTitle!.isEmpty ? 'Select Category' : selectedCatTitle,
         ),
         SizedBox(
           height: height(context) * 2,
