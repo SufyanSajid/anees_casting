@@ -111,7 +111,7 @@ class Users with ChangeNotifier {
     }
     notifyListeners();
 
-    notifyListeners();
+
   }
 
   Future<void> updateUserRole(

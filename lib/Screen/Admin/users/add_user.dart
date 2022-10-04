@@ -41,7 +41,6 @@ class _AddUserState extends State<AddUser> {
       action = routeData['action'];
       if (action == 'edit') {
         user = routeData['data'];
-
       }
     }
     // TODO: implement didChangeDependencies
@@ -183,7 +182,9 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         phone: _phoneController.text,
         role: role,
       );
-      showMySnackBar(context: context, text: langProvider.get('User Data has been Updated') );
+      showMySnackBar(
+          context: context,
+          text: langProvider.get('User Data has been Updated'));
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
       Provider.of<Users>(context, listen: false)
           .fetchAndUpdateUser(userToken: currentUser!.token);
@@ -197,8 +198,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
       });
       showCustomDialog(
         context: context,
-        title: langProvider.get('Error') ,
-        btn1: langProvider.get('OK') ,
+        title: langProvider.get('Error'),
+        btn1: langProvider.get('OK'),
         content: error.toString(),
         btn1Pressed: () {
           Navigator.of(context).pop();
@@ -232,7 +233,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
         phone: _phoneController.text.trim(),
         role: role,
       );
-      showMySnackBar(context: context, text:langProvider.get('User has been Added') );
+      showMySnackBar(
+          context: context, text: langProvider.get('User has been Added'));
       // Provider.of<Users>(context, listen: false)
       //     .fetchAndUpdateUser(userToken: currentUser!.token);
       Provider.of<Users>(context, listen: false).updateUserLocally(newUser);
@@ -250,8 +252,8 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
 
       showCustomDialog(
         context: context,
-        title: langProvider.get('Error') ,
-        btn1: langProvider.get('OK') ,
+        title: langProvider.get('Error'),
+        btn1: langProvider.get('OK'),
         content: error.toString(),
         btn1Pressed: () {
           Navigator.of(context).pop();
@@ -353,12 +355,15 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
               flex: 5,
               child: CustomDropDown(
                 items: [
-                  languageProvider.get('Customer'),
-                  languageProvider.get('Admin'),
-                  languageProvider.get('Seller'),
+                  'Customer',
+                  'Admin',
+                  'Seller',
                 ],
-                firstSelect: widget.action == 'edit' ? languageProvider.get(widget.user!.role)  : '',
+                firstSelect: widget.action == 'edit'
+                    ? widget.user!.role
+                    : '',
                 onChanged: (value) {
+                  print(value);
                   role = value;
                 },
               ),
@@ -407,7 +412,9 @@ class _AddUserFeildsState extends State<AddUserFeilds> {
                 child: SubmitButton(
                     height: height(context),
                     width: width(context),
-                    onTap:()=> widget.action == 'edit' ? _editUser(languageProvider) : _sigUpUser(languageProvider),
+                    onTap: () => widget.action == 'edit'
+                        ? _editUser(languageProvider)
+                        : _sigUpUser(languageProvider),
                     title: widget.action == 'edit'
                         ? languageProvider.get('Edit User')
                         : languageProvider.get('Add User')),
