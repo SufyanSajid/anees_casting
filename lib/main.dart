@@ -145,7 +145,7 @@ class _MyAppState extends State<MyApp> {
       _timer!.cancel();
     }
 
-    _timer = Timer(const Duration(minutes: 15), _logOutUser);
+    _timer = Timer(const Duration(minutes: 1), _logOutUser);
   }
 
   void _logOutUser() {
@@ -198,7 +198,8 @@ class _MyAppState extends State<MyApp> {
                 const CustomerProductScreen(),
             CustomerCatList.routeName: (ctx) => CustomerCatList(),
             CustomerCatChild.routeName: (ctx) => CustomerCatChild(),
-            CustomerCatProductScreen.routeName:(ctx)=>CustomerCatProductScreen(),
+            CustomerCatProductScreen.routeName: (ctx) =>
+                CustomerCatProductScreen(),
             ActivityLogScreen.routeName: (ctx) => ActivityLogScreen(),
             CategoryListScreen.routeName: (ctx) => const CategoryListScreen(),
             CategoryChildListScreen.routeName: (ctx) =>
