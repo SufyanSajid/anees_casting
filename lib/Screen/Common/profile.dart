@@ -37,7 +37,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _nameFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
 
   int index = 0;
   bool isLoading = false;
@@ -57,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         isLoading = false;
       });
-      showMySnackBar(context: context, text: langProvider.get("Empty Fields") );
+      showMySnackBar(context: context, text: langProvider.get("Empty Fields"));
     } else {
       setState(() {
         isLoading = true;
@@ -69,7 +68,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               phone: currentUser.phone,
               userToken: currentUser!.token)
           .then((value) {
-        showMySnackBar(context: context, text: langProvider.get('Username has been changed'));
+        showMySnackBar(
+            context: context,
+            text: langProvider.get('Username has been changed'));
         Provider.of<Auth>(context, listen: false).currentUser!.name =
             '${_firstNameController.text} ${_lastNameController.text}';
         _firstNameController.clear();
@@ -81,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }).catchError((error) {
         showCustomDialog(
             context: context,
-            title: langProvider.get('Error') ,
+            title: langProvider.get('Error'),
             btn1: langProvider.get('OK'),
             content: error.toString(),
             btn1Pressed: () {
@@ -95,12 +96,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(123);
     if (_newPasswordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(langProvider.get("Empty Fields")),
       ));
     } else if (_newPasswordController.text.toLowerCase() !=
         _confirmPasswordController.text.toLowerCase()) {
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(langProvider.get("Icorrect Password")),
       ));
     } else {
@@ -116,7 +117,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .then((value) {
         _newPasswordController.clear();
         _confirmPasswordController.clear();
-        showMySnackBar(context: context, text: langProvider.get('Password has been Changed'));
+        showMySnackBar(
+            context: context,
+            text: langProvider.get('Password has been Changed'));
         setState(() {
           isLoading = false;
         });
@@ -124,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         showCustomDialog(
             context: context,
             title: langProvider.get('Error'),
-            btn1: langProvider.get('OK') ,
+            btn1: langProvider.get('OK'),
             content: error.toString(),
             btn1Pressed: () {
               Navigator.of(context).pop();
@@ -152,8 +155,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Appbar(
-                    title: languageProvider.get('Profile') ,
-                    subtitle: languageProvider.get('Edit Your Profile') ,
+                    title: languageProvider.get('Profile'),
+                    subtitle: languageProvider.get('Edit Your Profile'),
                     svgIcon: 'assets/icons/profile.svg',
                     leadingIcon: Icons.home,
                     leadingTap: () {
@@ -218,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: height * 0.2,
                     ),
                     Text(
-                    languageProvider.get(currentUser.role),  
+                      languageProvider.get(currentUser.role),
                       textAlign: TextAlign.center,
                       style: TextStyle(color: contentColor, fontSize: 12),
                     ),
@@ -227,8 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 15),
-                      height: height * 5,
+                      height: height * 6,
                       width: width * 70,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
                         border: Border.all(
                             color: primaryColor,
@@ -266,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ]),
                                 child: Center(
                                   child: Text(
-                                  languageProvider.get('Change Name')  ,
+                                    languageProvider.get('Change Name'),
                                     style: TextStyle(
                                         color: index == 0
                                             ? Colors.white
@@ -296,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(30)),
                                 child: Center(
                                   child: Text(
-                                   languageProvider.get('Change Password')   ,
+                                    languageProvider.get('Change Password'),
                                     style: TextStyle(
                                         color: index == 1
                                             ? Colors.white
@@ -321,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InputFeild(
                                   readOnly: true,
-                                  hinntText: languageProvider.get('Email here') ,
+                                  hinntText: languageProvider.get('Email here'),
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -334,7 +338,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 child: InputFeild(
                                     textInputAction: TextInputAction.next,
-                                    hinntText: languageProvider.get('First Name') ,
+                                    hinntText:
+                                        languageProvider.get('First Name'),
                                     validatior: (String value) {
                                       if (value.isEmpty) {
                                         return '';
@@ -347,7 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               InputFeild(
                                   textInputAction: TextInputAction.done,
-                                  hinntText: languageProvider.get('Last Name') ,
+                                  hinntText: languageProvider.get('Last Name'),
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -364,10 +369,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     )
                                   : SubmitButton(
-                                      onTap:()=> _nameChange(languageProvider),
+                                      onTap: () =>
+                                          _nameChange(languageProvider),
                                       height: height,
                                       width: width,
-                                      title: languageProvider.get('Change Name') ),
+                                      title:
+                                          languageProvider.get('Change Name')),
                             ],
                           ),
                         ),
@@ -381,7 +388,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InputFeild(
                                   textInputAction: TextInputAction.next,
-                                  hinntText: languageProvider.get('New Password') ,
+                                  hinntText:
+                                      languageProvider.get('New Password'),
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return '';
@@ -396,7 +404,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               InputFeild(
                                   textInputAction: TextInputAction.done,
-                                  hinntText: languageProvider.get('Confirm New Password') ,
+                                  hinntText: languageProvider
+                                      .get('Confirm New Password'),
                                   validatior: (String value) {
                                     if (value.isEmpty) {
                                       return 'password didnot match';
@@ -416,10 +425,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: primaryColor),
                                     )
                                   : SubmitButton(
-                                      onTap:()=> _passwordChange(languageProvider),
+                                      onTap: () =>
+                                          _passwordChange(languageProvider),
                                       height: height,
                                       width: width,
-                                      title: languageProvider.get('Change Password')),
+                                      title: languageProvider
+                                          .get('Change Password')),
                             ],
                           ),
                         ),

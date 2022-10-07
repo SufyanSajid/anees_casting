@@ -33,6 +33,7 @@ class _AdminSideCustomerProductScreenState
   bool isLoading = false;
   AUser? customer;
   CurrentUser? currentUser;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

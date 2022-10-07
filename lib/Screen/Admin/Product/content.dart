@@ -41,6 +41,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
   bool isSended = false;
   String? receiverId;
   CurrentUser? currentUser;
+  String selectedFilter = 'By Date';
 
   @override
   void dispose() {
@@ -129,6 +130,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
     List<AUser> customers = Provider.of<Users>(context).customers;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         //Filter bar
 
@@ -161,8 +163,52 @@ class _ProductWebContentState extends State<ProductWebContent> {
         //Filter bar
 
         //main area//
+        PopupMenuButton(
+          tooltip: languageProvider.get('Filters'),
+          icon: Icon(
+            Icons.more_vert,
+            color: primaryColor,
+          ),
+          color: btnbgColor.withOpacity(1),
+          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+            PopupMenuItem(
+              onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await Provider.of<Products>(context, listen: false)
+                    .fetchAndUpdateProducts(userToken: currentUser!.token);
+                setState(() {
+                  isLoading = false;
+                });
+                setState(() {
+                  selectedFilter = 'By Date';
+                });
+              },
+              child: Text(
+                languageProvider.get('by date'),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () {
+                Provider.of<Products>(context, listen: false)
+                    .setProductByName();
+                setState(
+                  () {
+                    selectedFilter = 'By Name';
+                  },
+                );
+              },
+              child: Text(
+                languageProvider.get('by name'),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
         SizedBox(
-          height: height(context) * 4,
+          height: height(context) * 0.5,
         ),
         Expanded(
           child: isLoading

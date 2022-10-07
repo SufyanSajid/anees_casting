@@ -7,11 +7,13 @@ import 'package:anees_costing/Screen/Admin/Design/catlist.dart';
 import 'package:anees_costing/Screen/Admin/Design/desktop/desk_prod.dart';
 import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Widget/appbar.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../../Models/language.dart';
 import '../../../Widget/adaptive_indecator.dart';
 
 class CategoryChildListScreen extends StatefulWidget {
@@ -39,9 +41,14 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
     super.didChangeDependencies();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context);
+
     return Scaffold(
+        key: _scaffoldKey,
+        drawer: Platform.isAndroid || Platform.isIOS ? AppDrawer() : null,
         backgroundColor: backgroundColor,
         appBar: Platform.isAndroid || Platform.isIOS
             ? null
@@ -55,7 +62,7 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
               children: [
                 if (Platform.isIOS || Platform.isAndroid)
                   Appbar(
-                    title: 'Category',
+                    title: languageProvider.get('category'),
                     subtitle: cat!.title,
                     svgIcon: 'assets/icons/category.svg',
                     leadingIcon: Icons.arrow_back,
@@ -64,7 +71,9 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                           .pushReplacementNamed(CategoryListScreen.routeName);
                     },
                     tarilingIcon: Icons.filter_list,
-                    tarilingTap: () {},
+                    tarilingTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
                   ),
                 SizedBox(
                   height: height(context) * 3,
@@ -118,10 +127,10 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                                 margin: const EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                       color: btnbgColor.withOpacity(0.6),
-                                      width: 1),
+                                      width: 2),
                                   boxShadow: const [
                                     BoxShadow(
                                       color: Colors.grey,
@@ -136,7 +145,7 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                                     Icon(
                                       Icons.category_outlined,
                                       color: primaryColor,
-                                      size: 40,
+                                      size: 30,
                                     ),
                                     SizedBox(
                                       height: height(context) * 1,
@@ -146,7 +155,7 @@ class _CategoryChildListScreenState extends State<CategoryChildListScreen> {
                                       style: TextStyle(
                                           color: headingColor,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 20),
+                                          fontSize: 16),
                                     ),
                                   ],
                                 ),

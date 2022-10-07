@@ -148,8 +148,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             Container(
               margin: const EdgeInsets.only(top: 10),
               height: height(context) * 18,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+              alignment: Alignment.center,
+              child: Row(
+                // scrollDirection: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   QuickChecks(
                     width: width(context),

@@ -1,10 +1,12 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Models/auth.dart';
+import '../../../Models/language.dart';
 import '../../../Models/product.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
@@ -29,6 +31,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
   bool isFirst = true;
   bool isLoading = false;
   CurrentUser? currentUser;
+  String selectedFilter = 'By Date';
   Category? cat;
 
   @override
@@ -103,18 +106,24 @@ class _CatProductScreenState extends State<CatProductScreen> {
             ));
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context, listen: true);
+
     List<Product> products = Provider.of<Products>(context).catProducts;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
               Appbar(
-                title: 'Product',
-                subtitle: 'List of Products',
+                title: languageProvider.get('Product'),
+                subtitle: languageProvider.get('List of Products'),
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -122,7 +131,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
                 },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {
-                  // _scaffoldKey.currentState!.openDrawer();
+                  _scaffoldKey.currentState!.openDrawer();
                 },
               ),
               SizedBox(
@@ -131,7 +140,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
               Row(
                 children: [
                   Expanded(
-                    flex: 1,
+                    flex: 8,
                     child: InputFeild(
                       hinntText: 'Search Product',
                       validatior: () {},
@@ -140,6 +149,55 @@ class _CatProductScreenState extends State<CatProductScreen> {
                         getSearchedProductByCat(
                             search: value, context: context, catId: cat!.id);
                       },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: PopupMenuButton(
+                      tooltip: languageProvider.get('Filters'),
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: primaryColor,
+                      ),
+                      color: btnbgColor.withOpacity(1),
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                        PopupMenuItem(
+                          onTap: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await Provider.of<Products>(context, listen: false)
+                                .getCatProducts(
+                                    userToken: currentUser!.token,
+                                    catId: cat!.id);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            setState(() {
+                              selectedFilter = 'By Date';
+                            });
+                          },
+                          child: Text(
+                            languageProvider.get('by date'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            Provider.of<Products>(context, listen: false)
+                                .setCatProductByName();
+                            setState(
+                              () {
+                                selectedFilter = 'By Name';
+                              },
+                            );
+                          },
+                          child: Text(
+                            languageProvider.get('by name'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -222,7 +280,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
-                                            flex: 5,
+                                            flex: 4,
                                             child: Container(
                                               alignment: Alignment.bottomCenter,
                                               child: Text(
@@ -230,13 +288,13 @@ class _CatProductScreenState extends State<CatProductScreen> {
                                                 style: GoogleFonts.righteous(
                                                   color: headingColor,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 13,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ),
                                           ),
                                           Expanded(
-                                            flex: 5,
+                                            flex: 6,
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,

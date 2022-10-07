@@ -40,6 +40,7 @@ class _ProductScreenState extends State<ProductScreen> {
   bool isFirst = true;
   bool isLoading = false;
   CurrentUser? currentUser;
+  String selectedFilter = 'By Date';
 
   @override
   void didChangeDependencies() {
@@ -119,8 +120,8 @@ class _ProductScreenState extends State<ProductScreen> {
           child: Column(
             children: [
               Appbar(
-                title: languageProvider.get('Product') ,
-                subtitle: languageProvider.get('List of Products') ,
+                title: languageProvider.get('Product'),
+                subtitle: languageProvider.get('List of Products'),
                 svgIcon: 'assets/icons/daimond.svg',
                 leadingIcon: Icons.arrow_back,
                 leadingTap: () {
@@ -146,14 +147,62 @@ class _ProductScreenState extends State<ProductScreen> {
               Row(
                 children: [
                   Expanded(
-                    flex: 1,
+                    flex: 8,
                     child: InputFeild(
-                      hinntText: languageProvider.get('Search Product') ,
+                      hinntText: languageProvider.get('Search Product'),
                       validatior: () {},
                       inputController: _productController,
                       submitted: (value) {
                         getSearchedProduct(value, context);
                       },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: PopupMenuButton(
+                      tooltip: languageProvider.get('Filters'),
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: primaryColor,
+                      ),
+                      color: btnbgColor.withOpacity(1),
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                        PopupMenuItem(
+                          onTap: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await Provider.of<Products>(context, listen: false)
+                                .fetchAndUpdateProducts(
+                                    userToken: currentUser!.token);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            setState(() {
+                              selectedFilter = 'By Date';
+                            });
+                          },
+                          child: Text(
+                            languageProvider.get('by date'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            Provider.of<Products>(context, listen: false)
+                                .setProductByName();
+                            setState(
+                              () {
+                                selectedFilter = 'By Name';
+                              },
+                            );
+                          },
+                          child: Text(
+                            languageProvider.get('by name'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -278,7 +327,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       child: PopupItem(
                                                         icon:
                                                             Icons.edit_outlined,
-                                                        text: languageProvider.get('Edit') ,
+                                                        text: languageProvider
+                                                            .get('Edit'),
                                                         onTap: () {
                                                           Navigator.of(context)
                                                               .pop();
@@ -299,12 +349,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                                     PopupMenuItem(
                                                       child: PopupItem(
                                                         icon: Icons.delete,
-                                                        text: languageProvider.get('Delete'),
+                                                        text: languageProvider
+                                                            .get('Delete'),
                                                         onTap: () {
                                                           Navigator.of(context)
                                                               .pop();
                                                           _deleteProduct(
-                                                            langProvider: languageProvider,
+                                                              langProvider:
+                                                                  languageProvider,
                                                               imgUrl: products[
                                                                       index]
                                                                   .image,
@@ -363,7 +415,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         gradient: customGradient, shape: BoxShape.circle),
                     child: FloatingActionButton(
                       backgroundColor: Colors.transparent,
-                      child:  Text(languageProvider.get('Load More')),
+                      child: Text(languageProvider.get('Load More')),
                       onPressed: () async {
                         setState(() {
                           isLoading = true;

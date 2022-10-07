@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../../Functions/dailog.dart';
 import '../../../../Models/auth.dart';
 import '../../../../Models/category.dart';
+import '../../../../Models/language.dart';
 import '../../../../Models/product.dart';
 import '../../../../Widget/adaptive_indecator.dart';
 import '../../../../Widget/send_button.dart';
@@ -29,6 +30,7 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
   bool isLoading = false;
   CurrentUser? currentUser;
   Category? cat;
+  String selectedFilter = 'By Date';
   GlobalKey<ScaffoldState> _ScaffoldKey123 = GlobalKey();
 
   @override
@@ -85,6 +87,8 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
 
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context);
+
     List<Product> products = Provider.of<Products>(context).catProducts;
     return Scaffold(
       key: _ScaffoldKey123,
@@ -100,26 +104,76 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0, 5),
-                          blurRadius: 5),
-                    ]),
-                padding: const EdgeInsets.all(10),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: btnbgColor.withOpacity(1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0, 5),
+                              blurRadius: 5),
+                        ]),
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: btnbgColor.withOpacity(1),
+                    ),
+                  ),
                 ),
-              ),
+                PopupMenuButton(
+                  tooltip: languageProvider.get('Filters'),
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: primaryColor,
+                  ),
+                  color: btnbgColor.withOpacity(1),
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                    PopupMenuItem(
+                      onTap: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await Provider.of<Products>(context, listen: false)
+                            .getCatProducts(
+                                userToken: currentUser!.token, catId: cat!.id);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        setState(() {
+                          selectedFilter = 'By Date';
+                        });
+                      },
+                      child: Text(
+                        languageProvider.get('by date'),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        Provider.of<Products>(context, listen: false)
+                            .setCatProductByName();
+                        setState(
+                          () {
+                            selectedFilter = 'By Name';
+                          },
+                        );
+                      },
+                      child: Text(
+                        languageProvider.get('by name'),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(
               height: height(context) * 2,

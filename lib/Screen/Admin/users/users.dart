@@ -38,7 +38,6 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     users.sort((a, b) => a.name.compareTo(b.name));
     var langProvider = Provider.of<Language>(context);
 
@@ -212,7 +211,7 @@ class _UserScreenState extends State<UserScreen> {
 }
 
 class ShowUsers extends StatefulWidget {
-   ShowUsers({
+  ShowUsers({
     Key? key,
     required this.isWeb,
     required this.selectedFilter,
@@ -221,7 +220,6 @@ class ShowUsers extends StatefulWidget {
   String selectedFilter;
   final bool isWeb;
   final GlobalKey<ScaffoldState>? scaffoldKey;
- 
 
   @override
   State<ShowUsers> createState() => _ShowUsersState();
@@ -231,8 +229,8 @@ class _ShowUsersState extends State<ShowUsers> {
   bool isFirst = true;
   bool isLoading = false;
   CurrentUser? currentUser;
-  
-    List<AUser> users=[];
+
+  List<AUser> users = [];
   // List<Product> customerProducts = [];
   // bool productLoading = false;
 
@@ -310,8 +308,9 @@ class _ShowUsersState extends State<ShowUsers> {
 
   @override
   Widget build(BuildContext context) {
-        users = Provider.of<Users>(context, listen: true)
+    users = Provider.of<Users>(context, listen: true)
         .getFilteredUsers(widget.selectedFilter);
+    users.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     var languageProvider = Provider.of<Language>(context);
 
     return Expanded(
@@ -356,7 +355,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 children: [
                                   UserDetail(
                                     title: languageProvider.get('Email'),
-                                    value:users[index].email,
+                                    value: users[index].email,
                                   ),
                                   SizedBox(
                                     height: height(context) * 1,
@@ -464,8 +463,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                                                 .spaceBetween,
                                                         children: [
                                                           Text(
-                                                            users[index]
-                                                                .name,
+                                                            users[index].name,
                                                             style: GoogleFonts
                                                                 .righteous(
                                                                     color:
@@ -495,8 +493,8 @@ class _ShowUsersState extends State<ShowUsers> {
                                                                   60,
                                                           child:
                                                               CustomerProducts(
-                                                            userId:users[index]
-                                                                .id,
+                                                            userId:
+                                                                users[index].id,
                                                             scaffoldKey: widget
                                                                 .scaffoldKey!,
                                                           )),
@@ -507,8 +505,7 @@ class _ShowUsersState extends State<ShowUsers> {
                                 SizedBox(
                                   width: width(context) * 1,
                                 ),
-                                if (users[index].role.toLowerCase() !=
-                                    'admin')
+                                if (users[index].role.toLowerCase() != 'admin')
                                   IconButton(
                                     onPressed: () {
                                       _deleteUser(

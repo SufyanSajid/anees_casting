@@ -37,6 +37,8 @@ class Products with ChangeNotifier {
   List<Product> _catProducts = [];
   List<Product> _cutomerProducts = [];
   List<Product> _cutomerCatProducts = [];
+  List<Product> productsToSort = [];
+  List<Product> catProductsToSort = [];
 
   Product? drawerProduct;
   String? pageToken;
@@ -71,9 +73,9 @@ class Products with ChangeNotifier {
   String? deleteCatId;
 
   List<Product> getCustCatProducts({required String catId}) {
-
-   return _cutomerProducts.where((element) => element.categoryId == catId).toList();
-   
+    return _cutomerProducts
+        .where((element) => element.categoryId == catId)
+        .toList();
   }
 
   void setDeleteCatId(String value) {
@@ -84,6 +86,26 @@ class Products with ChangeNotifier {
   void setLoader(bool value) {
     deleteLoader = value;
     notifyListeners();
+  }
+
+  void getProductsByDate() {
+    _products = productsToSort;
+    notifyListeners();
+  }
+
+  void getCatProdByDate() {
+    _catProducts = catProductsToSort;
+    notifyListeners();
+  }
+
+  void setProductByName() {
+    _products
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  void setCatProductByName() {
+    _catProducts
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
   }
 
   Future<void> addProduct({
@@ -199,6 +221,7 @@ class Products with ChangeNotifier {
         );
       });
       _products = tempProds;
+      productsToSort = _products;
       notifyListeners();
     } else {
       var message = extractedData['message'];
@@ -242,6 +265,7 @@ class Products with ChangeNotifier {
 
       print('yeh ha cat prods ${tempProds.length}');
       _catProducts = tempProds;
+      catProductsToSort = _catProducts;
       notifyListeners();
     }
   }

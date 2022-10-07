@@ -33,6 +33,8 @@ class _SendProductButtonState extends State<SendProductButton> {
   Widget build(BuildContext context) {
     var currentUser = Provider.of<Auth>(context, listen: true).currentUser;
     List<AUser> customers = Provider.of<Users>(context).customers;
+    customers
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return IconButton(
       onPressed: () {
         showDialog(
@@ -110,6 +112,9 @@ class _SendProductButtonState extends State<SendProductButton> {
                                         .contains(val.toLowerCase()),
                                   )
                                   .toList();
+                              filteredUser.sort((a, b) => a.name
+                                  .toLowerCase()
+                                  .compareTo(b.name.toLowerCase()));
                             });
                           },
                         ),

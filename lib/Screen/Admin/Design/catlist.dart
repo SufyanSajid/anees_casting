@@ -5,12 +5,14 @@ import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Screen/Admin/Design/child_cat.dart';
 import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Widget/appbar.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/language.dart';
 import '../../../Widget/adaptive_indecator.dart';
 
 class CategoryListScreen extends StatefulWidget {
@@ -47,10 +49,15 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     super.didChangeDependencies();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    Language languageProvider = Provider.of<Language>(context);
     var categories = Provider.of<Categories>(context).parentCategories;
     return Scaffold(
+        key: _scaffoldKey,
+        drawer: Platform.isAndroid || Platform.isIOS ? AppDrawer() : null,
         backgroundColor: backgroundColor,
         appBar: Platform.isAndroid || Platform.isIOS
             ? null
@@ -64,15 +71,17 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
               children: [
                 if (Platform.isIOS || Platform.isAndroid)
                   Appbar(
-                    title: 'Category',
-                    subtitle: 'All Your Categories',
+                    title: languageProvider.get('category'),
+                    subtitle: languageProvider.get('all your categories'),
                     svgIcon: 'assets/icons/category.svg',
                     leadingIcon: Icons.arrow_back,
                     leadingTap: () {
                       Navigator.of(context).pop();
                     },
                     tarilingIcon: Icons.filter_list,
-                    tarilingTap: () {},
+                    tarilingTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
                   ),
                 SizedBox(
                   height: height(context) * 3,
@@ -121,10 +130,10 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                 margin: const EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(15),
                                   border: Border.all(
                                       color: btnbgColor.withOpacity(0.6),
-                                      width: 1),
+                                      width: 2),
                                   boxShadow: const [
                                     BoxShadow(
                                       color: Colors.grey,
@@ -139,7 +148,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                     Icon(
                                       Icons.category_outlined,
                                       color: primaryColor,
-                                      size: 40,
+                                      size: 30,
                                     ),
                                     SizedBox(
                                       height: height(context) * 1,
@@ -149,7 +158,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                       style: TextStyle(
                                           color: headingColor,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 20),
+                                          fontSize: 16),
                                     ),
                                   ],
                                 ),

@@ -549,7 +549,7 @@ class QuickChecks extends StatelessWidget {
       onTap: onTap,
       child: Container(
         // padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.only(left: 20, bottom: 10, top: 10),
+        margin: const EdgeInsets.only(left: 10, bottom: 10, top: 10, right: 10),
         width: width * 40,
         decoration: BoxDecoration(
           border: Border.all(color: btnbgColor.withOpacity(0.6), width: 1),

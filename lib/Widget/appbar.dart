@@ -105,9 +105,11 @@ class Appbar extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Center(
-                      child: Text(
-                        subtitle,
-                        style: TextStyle(color: contentColor),
+                      child: FittedBox(
+                        child: Text(
+                          subtitle,
+                          style: TextStyle(color: contentColor),
+                        ),
                       ),
                     ),
                   ),
