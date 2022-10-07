@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/category.dart';
 import 'package:anees_costing/Screen/Admin/Design/child_cat.dart';
+import 'package:anees_costing/Screen/Admin/Design/desktop/desk_prod.dart';
 import 'package:anees_costing/Screen/Admin/Design/prod_list.dart';
 import 'package:anees_costing/Widget/appbar.dart';
 import 'package:anees_costing/Widget/drawer.dart';
@@ -116,9 +117,15 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                         listen: false)
                                     .getChildCategories(categories[index].id);
                                 if (cats.isEmpty) {
-                                  Navigator.of(context).pushNamed(
-                                      CatProductScreen.routeName,
-                                      arguments: categories[index]);
+                                  if (Platform.isAndroid || Platform.isIOS) {
+                                    Navigator.of(context).pushNamed(
+                                        CatProductScreen.routeName,
+                                        arguments: categories[index]);
+                                  } else {
+                                    Navigator.of(context).pushNamed(
+                                        DesktopCategoryProduct.routeName,
+                                        arguments: categories[index]);
+                                  }
                                 } else {
                                   Navigator.of(context).pushReplacementNamed(
                                       CategoryChildListScreen.routeName,
