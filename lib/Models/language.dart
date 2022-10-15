@@ -277,7 +277,6 @@ class Language extends ChangeNotifier {
   };
 
   String get(String key) {
-    print(key.toLowerCase());
     key = key.toLowerCase();
     var en = (english[key] != null ? english[key] : key);
     var ur = (urdu[key] != null ? urdu[key] : key);

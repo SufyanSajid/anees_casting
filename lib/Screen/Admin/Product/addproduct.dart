@@ -140,8 +140,12 @@ class _AddProductState extends State<AddProduct> {
         id: prodId,
         customers: [],
         name: _prodNameController.text.trim(),
-        length: _prodLengthController.text.trim(),
-        width: _prodWidthController.text.trim(),
+        length: _prodLengthController.text.isEmpty
+            ? ''
+            : _prodLengthController.text.trim(),
+        width: _prodWidthController.text.isEmpty
+            ? ''
+            : _prodWidthController.text.trim(),
         unit: prodUnit,
         categoryId: category == null ? editCatId : category!.id,
         categoryTitle: category == null ? editCat : category!.title,
@@ -383,9 +387,7 @@ class _AddProductState extends State<AddProduct> {
   bool productNotEmpty({required Language langProvider}) {
     if ((image != null || editCat.isNotEmpty) &&
         (category != null || editCat.isNotEmpty) &&
-        _prodNameController.text.isNotEmpty &&
-        _prodLengthController.text.isNotEmpty &&
-        _prodWidthController.text.isNotEmpty) {
+        _prodNameController.text.isNotEmpty) {
       return true;
     } else {
       showCustomDialog(

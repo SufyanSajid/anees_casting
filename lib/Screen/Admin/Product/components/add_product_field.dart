@@ -100,15 +100,11 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
   bool productNotEmpty({required Language langProvider}) {
     if (image != null &&
         category != null &&
-        _prodNameController.text.isNotEmpty &&
-        _prodLengthController.text.isNotEmpty &&
-        _prodWidthController.text.isNotEmpty) {
+        _prodNameController.text.isNotEmpty) {
       return true;
     } else if (drawerProduct != null &&
         category != null &&
-        _prodNameController.text.isNotEmpty &&
-        _prodLengthController.text.isNotEmpty &&
-        _prodWidthController.text.isNotEmpty) {
+        _prodNameController.text.isNotEmpty) {
       return true;
     } else {
       showCustomDialog(
@@ -154,8 +150,12 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
         id: "",
         name: _prodNameController.text.trim(),
         customers: [],
-        length: _prodLengthController.text.trim(),
-        width: _prodWidthController.text.trim(),
+        length: _prodLengthController.text.isEmpty
+            ? ''
+            : _prodLengthController.text.trim(),
+        width: _prodWidthController.text.isEmpty
+            ? ''
+            : _prodWidthController.text.trim(),
         unit: prodUnit,
         categoryId: category!.id,
         categoryTitle: category!.title,
@@ -290,7 +290,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
             category = cat;
           },
           firstSelction:
-              selectedCatTitle!.isEmpty ? 'Select Category' : selectedCatTitle,
+              selectedCatTitle == null ? 'Select Category' : selectedCatTitle,
         ),
         SizedBox(
           height: height(context) * 2,

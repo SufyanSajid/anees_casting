@@ -113,46 +113,48 @@ class Products with ChangeNotifier {
     required userToken,
     required String imageExtension,
   }) async {
-    try {
-      final url = Uri.parse('${baseUrl}products');
+    // try {
+    final url = Uri.parse('${baseUrl}products');
 
-      var response = await http.post(url, headers: {
-        'Authorization': 'Bearer $userToken',
-      }, body: {
-        'name': product.name,
-        'image': product.image,
-        'length': product.length,
-        'width': product.width,
-        'unit': product.unit,
-        'ext': imageExtension,
-        'category_id': product.categoryId,
-      });
-      var extractedData = json.decode(response.body);
-      if (extractedData['success'] == true) {
-        print(extractedData['message']);
-        var data = extractedData['data'];
-        Product prod = Product(
-            id: data['id'].toString(),
-            name: data['name'],
-            length: data['length'],
-            width: data['width'],
-            unit: data['unit'],
-            customers: [],
-            categoryId: data['category_id'].toString(),
-            categoryTitle: data['category_name'],
-            image: data['imageUrl'],
-            dateTime: data['created_at']);
+    var response = await http.post(url, headers: {
+      'Authorization': 'Bearer $userToken',
+    }, body: {
+      'name': product.name,
+      'image': product.image,
+      'length': product.length,
+      'width': product.width,
+      'unit': product.unit,
+      'ext': imageExtension,
+      'category_id': product.categoryId,
+    });
+    var extractedData = json.decode(response.body);
+    if (extractedData['success'] == true) {
+      // print(extractedData['message']);
+      var data = extractedData['data'];
+      Product prod = Product(
+          id: data['id'].toString(),
+          name: data['name'],
+          length: data['length'],
+          width: data['width'],
+          unit: data['unit'],
+          customers: [],
+          categoryId: data['category_id'].toString(),
+          categoryTitle: data['category_name'],
+          image: data['imageUrl'],
+          dateTime: data['created_at']);
 
-        _products.add(prod);
-        notifyListeners();
-      } else {
-        var message = extractedData['message'];
-        throw message;
-      }
-    } catch (error) {
-      print(error);
-      throw error;
+      _products.add(prod);
+      notifyListeners();
+    } else {
+      var message = extractedData['message'];
+      print(message);
+      // throw message;
     }
+    // }
+    //  catch (error) {
+    //   print(error);
+    //   throw error;
+    // }
   }
 
   void updateProductLocally(Product prod) {
