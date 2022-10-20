@@ -331,7 +331,7 @@ class _AddProductFeildsState extends State<AddProductFeilds> {
             Expanded(
               flex: 4,
               child: CustomDropDown(
-                items: const ['Cm', 'MM'],
+                items: const ['cm', 'mm'],
                 onChanged: (String value) {
                   prodUnit = value;
                 },

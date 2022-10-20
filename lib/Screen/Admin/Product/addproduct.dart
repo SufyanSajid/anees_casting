@@ -241,7 +241,7 @@ class _AddProductState extends State<AddProduct> {
                         ),
                         Positioned(
                             right: 1,
-                            bottom: 1,
+                            bottom: -10,
                             child: IconButton(
                                 onPressed: () async {
                                   FilePickerResult? result1 =
@@ -320,7 +320,7 @@ class _AddProductState extends State<AddProduct> {
                         Expanded(
                           flex: 4,
                           child: CustomDropDown(
-                              items: const ['Cm', 'MM'],
+                              items: const ['cm', 'mm'],
                               onChanged: (String value) {
                                 prodUnit = value;
                               }),
