@@ -13,7 +13,9 @@ import 'package:provider/provider.dart';
 
 import '../../Models/auth.dart';
 import '../../Models/language.dart';
+
 import '../../Models/product.dart';
+
 import '../Admin/homepage/mobile.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
@@ -39,8 +41,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       await Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
-      await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(userId:currentUser!.id, userToken:currentUser!.token);
+      await Provider.of<Products>(context, listen: false).getCustomerProducts(
+          page: '1', userId: currentUser!.id, userToken: currentUser!.token);
       await Provider.of<Categories>(context, listen: false)
           .getCustomerCategoriesIds(
               userToken: currentUser!.token, custId: currentUser!.id);

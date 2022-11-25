@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
+import '../Admin/Design/desktop/desk_prod.dart';
+import 'cust_cat_prod.dart';
 
 class CustomerCatList extends StatefulWidget {
   static const routeName = 'csutomer-cat-list';
@@ -112,8 +114,11 @@ class _CustomerCatListState extends State<CustomerCatList> {
                                     .getChildCategories(categories[index].id);
                                 if (cats.isEmpty) {
                                   Navigator.of(context).pushNamed(
-                                      CatProductScreen.routeName,
+                                      CustomerCatProductScreen.routeName,
                                       arguments: categories[index]);
+                                  //  Navigator.of(context).pushNamed(
+                                  //      CatProductScreen.routeName,
+                                  //     arguments: categories[index]);
                                 } else {
                                   Navigator.of(context).pushReplacementNamed(
                                       CustomerCatChild.routeName,

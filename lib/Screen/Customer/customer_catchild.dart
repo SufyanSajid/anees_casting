@@ -105,15 +105,9 @@ class _CustomerCatChildState extends State<CustomerCatChild> {
                                         listen: false)
                                     .getChildCategories(categories[index].id);
                                 if (cats.isEmpty) {
-                                  if (Platform.isAndroid || Platform.isIOS) {
-                                    Navigator.of(context).pushNamed(
-                                        CustomerCatProductScreen.routeName,
-                                        arguments: categories[index]);
-                                  } else {
-                                    Navigator.of(context).pushNamed(
-                                        DesktopCategoryProduct.routeName,
-                                        arguments: categories[index]);
-                                  }
+                                  Navigator.of(context).pushNamed(
+                                      CustomerCatProductScreen.routeName,
+                                      arguments: categories[index]);
                                 } else {
                                   Navigator.of(context).pushReplacementNamed(
                                       CustomerCatChild.routeName,
