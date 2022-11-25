@@ -124,8 +124,8 @@ class _CatProductScreenState extends State<CatProductScreen> {
         isLoading = true;
       });
       Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
-              page: page.url.split('=').last, userId: currentUser!.token, userToken: currentUser!.token)
+          .getCatProducts(
+              page: page.url.split('=').last, catId: cat!.id, userToken: currentUser!.token)
           .then((value) {
         setState(() {
           isLoading = false;

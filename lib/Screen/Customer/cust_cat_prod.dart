@@ -11,6 +11,8 @@ import '../../../Widget/appbar.dart';
 import '../../../Widget/input_feild.dart';
 import '../../../Widget/send_button.dart';
 import '../../../contant.dart';
+import '../../Models/pagination.dart';
+import '../../Widget/paginate.dart';
 import '../Admin/Product/addproduct.dart';
 import '../Admin/Product/content.dart';
 import '../Admin/Product/functions/getsearchedproducts.dart';
@@ -46,7 +48,8 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
       setState(() {
         isLoading = true;
       });
-
+      await Provider.of<Products>(context, listen: false).getCatProducts(
+          page: '1', userToken: currentUser!.token, catId: cat!.id);
       setState(() {
         isLoading = false;
       });
@@ -106,6 +109,27 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
   Widget build(BuildContext context) {
     List<Product> products = Provider.of<Products>(context, listen: false)
         .getCustCatProducts(catId: cat!.id);
+
+    List<CustomPage> pages = Provider.of<Products>(
+      context,
+    ).pages;
+
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .getCatProducts(
+              page: page.url.split('=').last,
+              catId: cat!.id,
+              userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -244,7 +268,23 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
                               );
                             },
                           ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ...pages.map(
+                      (page) => Paginate(
+                        page: page,
+                        onTap: page.url.isEmpty
+                            ? () {}
+                            : () => _onPageChange(page),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -196,6 +196,15 @@ class Products with ChangeNotifier {
     return _products.firstWhere((element) => element.id == id);
   }
 
+  CustomPage fromLink(Map<String, dynamic> link) {
+    return CustomPage(
+      id: DateTime.now().millisecond.toString(),
+      title: link['label'],
+      active: link['active'],
+      url: link['url'] ?? '',
+    );
+  }
+
   Future<void> fetchAndUpdateProducts(
       {String? page, required String userToken, bool? forced}) async {
     if (forced == false) {
@@ -205,7 +214,6 @@ class Products with ChangeNotifier {
     }
     List<Product> tempProds = [];
     Uri url = Uri.parse('${baseUrl}products?page=${page}');
-   
 
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
@@ -246,12 +254,8 @@ class Products with ChangeNotifier {
 
     if (links.isNotEmpty) {
       for (var link in links) {
-        tempPage.add(CustomPage(
-          id: DateTime.now().millisecond.toString(),
-          title: link['label'],
-          active: link['active'],
-          url: link['url'] ?? '',
-        ));
+        CustomPage page = fromLink(link);
+        tempPage.add(page);
       }
       _total = metaData['total'];
       _pages = tempPage;
@@ -303,12 +307,8 @@ class Products with ChangeNotifier {
 
     if (links.isNotEmpty) {
       for (var link in links) {
-        tempPage.add(CustomPage(
-          id: DateTime.now().millisecond.toString(),
-          title: link['label'],
-          active: link['active'],
-          url: link['url'] ?? '',
-        ));
+        CustomPage page = fromLink(link);
+        tempPage.add(page);
       }
     }
     _pages = tempPage;
@@ -520,12 +520,8 @@ class Products with ChangeNotifier {
 
     if (links.isNotEmpty) {
       for (var link in links) {
-        tempPage.add(CustomPage(
-          id: DateTime.now().millisecond.toString(),
-          title: link['label'],
-          active: link['active'],
-          url: link['url'] ?? '',
-        ));
+        CustomPage page = fromLink(link);
+        tempPage.add(page);
       }
     }
     _cutomerProducts = tempProds;
