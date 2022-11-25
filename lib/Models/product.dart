@@ -42,6 +42,8 @@ class Products with ChangeNotifier {
   List<Product> catProductsToSort = [];
 
   List<CustomPage> _pages = [];
+  List<CustomPage> _catpages = [];
+
 
   Product? drawerProduct;
   String? pageToken;
@@ -76,8 +78,12 @@ class Products with ChangeNotifier {
     return [..._catProducts];
   }
 
-  List<CustomPage> get pages {
-    return [..._pages];
+ List<CustomPage> get pages {
+   return [..._pages];
+ }
+
+  List<CustomPage> get catpages {
+    return [..._catpages];
   }
 
   bool deleteLoader = false;
@@ -311,7 +317,7 @@ class Products with ChangeNotifier {
         tempPage.add(page);
       }
     }
-    _pages = tempPage;
+    _catpages = tempPage;
     _catProducts = tempProds;
     catProductsToSort = _catProducts;
     notifyListeners();

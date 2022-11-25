@@ -6,6 +6,7 @@ import 'package:anees_costing/Screen/Admin/Design/desktop/desk_prod.dart';
 import 'package:anees_costing/Screen/Customer/cust_cat_prod.dart';
 import 'package:anees_costing/Screen/Customer/customer_catlist.dart';
 import 'package:anees_costing/Widget/appbar.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:anees_costing/contant.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,7 @@ class _CustomerCatChildState extends State<CustomerCatChild> {
     super.didChangeDependencies();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     print(
@@ -48,7 +50,9 @@ class _CustomerCatChildState extends State<CustomerCatChild> {
     categories = Provider.of<Categories>(context, listen: false)
         .getCategoresForCustomerSide(cats: child);
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: backgroundColor,
+        drawer: AppDrawer(),
         appBar: Platform.isAndroid || Platform.isIOS
             ? null
             : AppBar(
@@ -70,7 +74,9 @@ class _CustomerCatChildState extends State<CustomerCatChild> {
                           .pushReplacementNamed(CustomerCatList.routeName);
                     },
                     tarilingIcon: Icons.filter_list,
-                    tarilingTap: () {},
+                    tarilingTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
                   ),
                 SizedBox(
                   height: height(context) * 3,

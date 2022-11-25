@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
+import '../../Widget/drawer.dart';
 import '../Admin/Design/desktop/desk_prod.dart';
 import 'cust_cat_prod.dart';
 
@@ -50,6 +51,7 @@ class _CustomerCatListState extends State<CustomerCatList> {
     super.didChangeDependencies();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     var parent = Provider.of<Categories>(context).parentCategories;
@@ -57,12 +59,14 @@ class _CustomerCatListState extends State<CustomerCatList> {
         .getCategoresForCustomerSide(cats: parent);
 
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: backgroundColor,
         appBar: Platform.isAndroid || Platform.isIOS
             ? null
             : AppBar(
                 backgroundColor: primaryColor,
               ),
+        drawer: AppDrawer(),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -78,7 +82,9 @@ class _CustomerCatListState extends State<CustomerCatList> {
                       Navigator.of(context).pop();
                     },
                     tarilingIcon: Icons.filter_list,
-                    tarilingTap: () {},
+                    tarilingTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
                   ),
                 SizedBox(
                   height: height(context) * 3,

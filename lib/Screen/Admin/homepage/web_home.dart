@@ -101,7 +101,7 @@ class _WebHomeState extends State<WebHome> {
       Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
      await Provider.of<Products>(context, listen: false)
-          .fetchAndUpdateProducts(page:'1',userToken: currentUser!.token);
+          .fetchAndUpdateProducts(page: '1',userToken: currentUser!.token);
 
       setState(() {
         isLoading = false;
@@ -119,7 +119,7 @@ class _WebHomeState extends State<WebHome> {
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;
     users = Provider.of<Users>(context, listen: false).users;
-    var products = Provider.of<Products>(context, listen: true).total;
+    final products = Provider.of<Products>(context, listen: true).total;
     var categories = Provider.of<Categories>(context, listen: false).categories;
 
     Widget homeContent = Column(

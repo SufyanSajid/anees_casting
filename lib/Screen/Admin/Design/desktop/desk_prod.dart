@@ -96,7 +96,7 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
 
     List<CustomPage> pages = Provider.of<Products>(
       context,
-    ).pages;
+    ).catpages;
 
     void _onPageChange(CustomPage page) {
       // print(p.url);
@@ -104,9 +104,9 @@ class _DesktopCategoryProductState extends State<DesktopCategoryProduct> {
         isLoading = true;
       });
       Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
+          .getCatProducts(
               page: page.url.split('=').last,
-              userId: currentUser!.token,
+              catId: cat!.id,
               userToken: currentUser!.token)
           .then((value) {
         setState(() {

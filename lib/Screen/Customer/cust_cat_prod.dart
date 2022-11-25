@@ -1,4 +1,5 @@
 import 'package:anees_costing/Models/category.dart';
+import 'package:anees_costing/Widget/drawer.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -104,7 +105,7 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
               ],
             ));
   }
-
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     List<Product> products = Provider.of<Products>(context, listen: false)
@@ -112,7 +113,7 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
 
     List<CustomPage> pages = Provider.of<Products>(
       context,
-    ).pages;
+    ).catpages;
 
     void _onPageChange(CustomPage page) {
       // print(p.url);
@@ -132,6 +133,8 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -147,7 +150,7 @@ class _CustomerCatProductScreenState extends State<CustomerCatProductScreen> {
                 },
                 tarilingIcon: Icons.filter_list,
                 tarilingTap: () {
-                  // _scaffoldKey.currentState!.openDrawer();
+                  _scaffoldKey.currentState!.openDrawer();
                 },
               ),
               SizedBox(

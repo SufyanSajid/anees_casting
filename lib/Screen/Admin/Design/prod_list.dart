@@ -115,7 +115,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
     Language languageProvider = Provider.of<Language>(context, listen: true);
     List<Product> products = Provider.of<Products>(context).catProducts;
     List<CustomPage> pages =
-        Provider.of<Products>(context,).pages;
+        Provider.of<Products>(context,).catpages;
     
     
     void _onPageChange(CustomPage page) {

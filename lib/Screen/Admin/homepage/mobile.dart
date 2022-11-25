@@ -99,7 +99,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
 
     count = Provider.of<Counts>(context, listen: false).getCount;
     users = Provider.of<Users>(context, listen: false).users;
-    var products = Provider.of<Products>(context, listen: true).total;
+    final products = Provider.of<Products>(context, listen: true).total;
     var categories = Provider.of<Categories>(context, listen: false).categories;
 
     var height = MediaQuery.of(context).size.height / 100;
