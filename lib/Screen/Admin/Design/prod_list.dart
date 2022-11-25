@@ -7,10 +7,12 @@ import 'package:provider/provider.dart';
 
 import '../../../Models/auth.dart';
 import '../../../Models/language.dart';
+import '../../../Models/pagination.dart';
 import '../../../Models/product.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
 import '../../../Widget/input_feild.dart';
+import '../../../Widget/paginate.dart';
 import '../../../Widget/send_button.dart';
 import '../../../contant.dart';
 import '../Product/addproduct.dart';
@@ -49,7 +51,7 @@ class _CatProductScreenState extends State<CatProductScreen> {
         isLoading = true;
       });
       await Provider.of<Products>(context, listen: false)
-          .getCatProducts(userToken: currentUser!.token, catId: cat!.id);
+          .getCatProducts(page: '1',userToken: currentUser!.token, catId: cat!.id);
 
       setState(() {
         isLoading = false;
@@ -111,8 +113,25 @@ class _CatProductScreenState extends State<CatProductScreen> {
   @override
   Widget build(BuildContext context) {
     Language languageProvider = Provider.of<Language>(context, listen: true);
-
     List<Product> products = Provider.of<Products>(context).catProducts;
+    List<CustomPage> pages =
+        Provider.of<Products>(context,).pages;
+    
+    
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(
+              page: page.url.split('=').last, userId: currentUser!.token, userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
     return Scaffold(
       key: _scaffoldKey,
       drawer: AppDrawer(),
@@ -162,14 +181,12 @@ class _CatProductScreenState extends State<CatProductScreen> {
                       color: btnbgColor.withOpacity(1),
                       itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                         PopupMenuItem(
-                          onTap: () async {
+                          onTap: () {
                             setState(() {
                               isLoading = true;
                             });
-                            await Provider.of<Products>(context, listen: false)
-                                .getCatProducts(
-                                    userToken: currentUser!.token,
-                                    catId: cat!.id);
+                            Provider.of<Products>(context, listen: false)
+                                .getCatProdByDate();
                             setState(() {
                               isLoading = false;
                             });
@@ -367,7 +384,23 @@ class _CatProductScreenState extends State<CatProductScreen> {
                               );
                             },
                           ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ...pages.map(
+                      (page) => Paginate(
+                        page: page,
+                        onTap: page.url.isEmpty
+                            ? () {}
+                            : () => _onPageChange(page),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

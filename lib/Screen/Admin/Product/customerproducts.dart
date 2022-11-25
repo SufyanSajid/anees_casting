@@ -12,9 +12,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Models/pagination.dart';
 import '../../../Models/sent_products.dart';
 import '../../../Widget/adaptive_indecator.dart';
 import '../../../Widget/appbar.dart';
+import '../../../Widget/paginate.dart';
 import '../../../Widget/snakbar.dart';
 
 class AdminSideCustomerProductScreen extends StatefulWidget {
@@ -46,8 +48,8 @@ class _AdminSideCustomerProductScreenState
 
       customer = ModalRoute.of(context)!.settings.arguments as AUser;
 
-      await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(customer!.id, currentUser!.token);
+      await Provider.of<Products>(context, listen: false).getCustomerProducts(
+          page: '1', userId: customer!.id, userToken: currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -57,13 +59,15 @@ class _AdminSideCustomerProductScreenState
     super.didChangeDependencies();
   }
 
-  void deleteCustomerProduct(Product prod, String cusId, Language langProvider) {
+  void deleteCustomerProduct(
+      Product prod, String cusId, Language langProvider) {
     showCustomDialog(
         context: context,
-        title: langProvider.get('Delete') ,
-        btn1: langProvider.get('Yes') ,
-        content: langProvider.get('Product will be deleted from the list permamently') ,
-        btn2: langProvider.get('No') ,
+        title: langProvider.get('Delete'),
+        btn1: langProvider.get('Yes'),
+        content: langProvider
+            .get('Product will be deleted from the list permamently'),
+        btn2: langProvider.get('No'),
         btn1Pressed: () async {
           Navigator.of(context).pop();
           setState(() {
@@ -74,19 +78,21 @@ class _AdminSideCustomerProductScreenState
                   prodId: prod.id, userId: cusId, userToken: currentUser!.token)
               .then((value) async {
             showMySnackBar(
-                context: context, text: langProvider.get("Product has been deleted") );
+                context: context,
+                text: langProvider.get("Product has been deleted"));
             Provider.of<Products>(context, listen: false)
                 .removeCustomer(cusId, prod.id);
             await Provider.of<Products>(context, listen: false)
-                .getCustomerProducts(customer!.id, currentUser!.token);
+                .getCustomerProducts(
+                    userId: customer!.id, userToken: currentUser!.token);
             setState(() {
               isLoading = false;
             });
           }).catchError((error) {
             showCustomDialog(
                 context: context,
-                title: langProvider.get('Error') ,
-                btn1: langProvider.get('Okay') ,
+                title: langProvider.get('Error'),
+                btn1: langProvider.get('Okay'),
                 content: error.toString(),
                 btn1Pressed: () {
                   Navigator.of(context).pop();
@@ -102,6 +108,24 @@ class _AdminSideCustomerProductScreenState
   Widget build(BuildContext context) {
     products = Provider.of<Products>(context).customerProducts;
     Language languageProvider = Provider.of<Language>(context, listen: true);
+    List<CustomPage> pages =
+        Provider.of<Products>(context,).pages;
+    
+    
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(
+              page: page.url.split('=').last, userId: customer!.id, userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -113,7 +137,7 @@ class _AdminSideCustomerProductScreenState
           child: Column(
             children: [
               Appbar(
-                title: languageProvider.get('Customer') ,
+                title: languageProvider.get('Customer'),
                 subtitle: customer!.name,
                 svgIcon: 'assets/icons/users.svg',
                 leadingIcon: Icons.arrow_back,
@@ -137,7 +161,8 @@ class _AdminSideCustomerProductScreenState
                       )
                     : products!.isEmpty
                         ? Center(
-                            child: Text(languageProvider.get('No Products to show') ),
+                            child: Text(
+                                languageProvider.get('No Products to show')),
                           )
                         : GridView.builder(
                             // physics: NeverScrollableScrollPhysics(),
@@ -210,7 +235,9 @@ class _AdminSideCustomerProductScreenState
                                       child: IconButton(
                                         onPressed: () {
                                           deleteCustomerProduct(
-                                              products![index], customer!.id, languageProvider);
+                                              products![index],
+                                              customer!.id,
+                                              languageProvider);
                                         },
                                         icon: const Icon(
                                           Icons.cancel,
@@ -224,7 +251,23 @@ class _AdminSideCustomerProductScreenState
                               );
                             },
                           ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ...pages.map(
+                      (page) => Paginate(
+                        page: page,
+                        onTap: page.url.isEmpty
+                            ? () {}
+                            : () => _onPageChange(page),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

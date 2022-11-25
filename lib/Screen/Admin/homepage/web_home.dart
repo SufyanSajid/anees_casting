@@ -100,8 +100,8 @@ class _WebHomeState extends State<WebHome> {
       });
       Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
-      Provider.of<Products>(context, listen: false)
-          .fetchAndUpdateProducts(userToken: currentUser!.token);
+     await Provider.of<Products>(context, listen: false)
+          .fetchAndUpdateProducts(page:'1',userToken: currentUser!.token);
 
       setState(() {
         isLoading = false;
@@ -119,7 +119,7 @@ class _WebHomeState extends State<WebHome> {
     usersCount = Provider.of<Users>(context).users.length;
     categoriesCount = Provider.of<Categories>(context).categories.length;
     users = Provider.of<Users>(context, listen: false).users;
-    var products = Provider.of<Products>(context, listen: true).products;
+    var products = Provider.of<Products>(context, listen: true).total;
     var categories = Provider.of<Categories>(context, listen: false).categories;
 
     Widget homeContent = Column(
@@ -209,7 +209,7 @@ class _WebHomeState extends State<WebHome> {
             Expanded(
               child: TotalBlock(
                 title: langProvider.get('Designs'),
-                value: isLoading ? '...' : products.length.toString(),
+                value: isLoading ? '...' : products.toString(),
                 icon: Icons.diamond_outlined,
               ),
             ),

@@ -37,7 +37,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       await Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(currentUser!.id, currentUser!.token);
+          .getCustomerProducts(userId:currentUser!.id, userToken:currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -148,7 +148,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                         onRefresh: () async {
                           await Provider.of<Products>(context, listen: false)
                               .getCustomerProducts(
-                                  currentUser!.id, currentUser!.token);
+                                 userId:currentUser!.id,userToken:currentUser!.token);
                         },
                         child: GridView.builder(
                           // physics: NeverScrollableScrollPhysics(),

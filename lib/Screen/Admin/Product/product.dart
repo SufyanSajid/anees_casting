@@ -2,6 +2,7 @@ import 'package:anees_costing/Functions/dailog.dart';
 import 'package:anees_costing/Functions/showloader.dart';
 import 'package:anees_costing/Models/auth.dart';
 import 'package:anees_costing/Models/language.dart';
+import 'package:anees_costing/Models/pagination.dart';
 import 'package:anees_costing/Screen/Admin/Product/content.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getproductbycatid.dart';
 import 'package:anees_costing/Screen/Admin/Product/functions/getsearchedproducts.dart';
@@ -12,6 +13,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Widget/adaptive_indecator.dart';
+import '../../../Widget/paginate.dart';
 import '/Helpers/storage_methods.dart';
 import 'addproduct.dart';
 
@@ -23,6 +25,7 @@ import '/Widget/input_feild.dart';
 import '/contant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../../Models/category.dart';
 
@@ -51,7 +54,7 @@ class _ProductScreenState extends State<ProductScreen> {
           isLoading = true;
         });
         Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts(userToken: currentUser!.token)
+            .fetchAndUpdateProducts(page: '1', userToken: currentUser!.token)
             .then(
           (value) {
             setState(
@@ -106,9 +109,26 @@ class _ProductScreenState extends State<ProductScreen> {
     List<Product> products = Provider.of<Products>(context).products;
     List<Category> categories =
         Provider.of<Categories>(context, listen: false).categories;
+    List<CustomPage> pages =
+        Provider.of<Products>(context, listen: false).pages;
 
     String? token = Provider.of<Products>(context).pageToken;
     Language languageProvider = Provider.of<Language>(context, listen: true);
+
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .fetchAndUpdateProducts(
+              page: page.url.split('=').last, userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -168,13 +188,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       color: btnbgColor.withOpacity(1),
                       itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                         PopupMenuItem(
-                          onTap: () async {
+                          onTap: () {
                             setState(() {
                               isLoading = true;
                             });
-                            await Provider.of<Products>(context, listen: false)
-                                .fetchAndUpdateProducts(
-                                    userToken: currentUser!.token);
+                            Provider.of<Products>(context, listen: false)
+                                .getProductsByDate();
                             setState(() {
                               isLoading = false;
                             });
@@ -208,6 +227,25 @@ class _ProductScreenState extends State<ProductScreen> {
                 ],
               ),
               SizedBox(
+                height: height(context) * 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ...pages.map((page) {
+                      return Paginate(
+                        page: page,
+                        onTap: page.url.isEmpty
+                            ? () {}
+                            : () => _onPageChange(page),
+                      );
+                    })
+                  ],
+                ),
+              ),
+              SizedBox(
                 height: height(context) * 3,
               ),
               Expanded(
@@ -224,7 +262,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           // });
                           await Provider.of<Products>(context, listen: false)
                               .fetchAndUpdateProducts(
-                                  userToken: currentUser!.token);
+                                  page: '1', userToken: currentUser!.token);
                         },
                         child: GridView.builder(
                           cacheExtent: 9999,
@@ -382,7 +420,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           },
                         ),
                       ),
-              )
+              ),
             ],
           ),
         ),

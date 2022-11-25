@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
+import 'package:anees_costing/Models/pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../contant.dart';
@@ -40,9 +41,16 @@ class Products with ChangeNotifier {
   List<Product> productsToSort = [];
   List<Product> catProductsToSort = [];
 
+  List<CustomPage> _pages = [];
+
   Product? drawerProduct;
   String? pageToken;
   GlobalKey<ScaffoldState>? scaffoldKey;
+  int _total = 0;
+
+  int get total {
+    return _total;
+  }
 
   void setProduct(Product prod) {
     drawerProduct = prod;
@@ -66,6 +74,10 @@ class Products with ChangeNotifier {
 
   List<Product> get catProducts {
     return [..._catProducts];
+  }
+
+  List<CustomPage> get pages {
+    return [..._pages];
   }
 
   bool deleteLoader = false;
@@ -185,91 +197,125 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndUpdateProducts(
-      {required String userToken, bool? forced}) async {
+      {String? page, required String userToken, bool? forced}) async {
     if (forced == false) {
       if (products.isNotEmpty) {
         return;
       }
     }
     List<Product> tempProds = [];
-    final url = Uri.parse('${baseUrl}products');
+    Uri url = Uri.parse('${baseUrl}products?page=${page}');
+   
 
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
     });
     var extractedData = json.decode(response.body);
+    print(extractedData);
 
-    if (extractedData['success'] == true) {
-      var data = extractedData['data'] as List<dynamic>;
-      data.forEach((prod) {
-        List<String> tempCustomers = [];
-        var customers = prod['customers'] as List<dynamic>;
-        customers.forEach((cust) {
-          tempCustomers.add(cust.toString());
-        });
-        tempProds.add(
-          Product(
-            id: prod['id'].toString(),
-            name: prod['name'],
-            length: prod['length'],
-            width: prod['width'],
-            unit: prod['unit'],
-            customers: tempCustomers,
-            categoryId: prod['category_id'].toString(),
-            categoryTitle: prod['category_name'],
-            image: prod['imageUrl'],
-            dateTime: prod['created_at'],
-          ),
-        );
+    _total = extractedData['meta']['total'];
+    var data = extractedData['data'] as List<dynamic>;
+    data.forEach((prod) {
+      List<String> tempCustomers = [];
+      var customers = prod['customers'] as List<dynamic>;
+      customers.forEach((cust) {
+        tempCustomers.add(cust.toString());
       });
-      _products = tempProds;
-      productsToSort = _products;
+      tempProds.add(
+        Product(
+          id: prod['id'].toString(),
+          name: prod['name'],
+          length: prod['length'],
+          width: prod['width'],
+          unit: prod['unit'],
+          customers: tempCustomers,
+          categoryId: prod['category_id'].toString(),
+          categoryTitle: prod['category_name'],
+          image: prod['imageUrl'],
+          dateTime: prod['created_at'],
+        ),
+      );
+    });
+    _products = tempProds;
+    productsToSort = _products;
+    notifyListeners();
+    var metaData = extractedData['meta'];
+    var links = metaData['links'] as List<dynamic>;
+
+    List<CustomPage> tempPage = [];
+
+    if (links.isNotEmpty) {
+      for (var link in links) {
+        tempPage.add(CustomPage(
+          id: DateTime.now().millisecond.toString(),
+          title: link['label'],
+          active: link['active'],
+          url: link['url'] ?? '',
+        ));
+      }
+      _total = metaData['total'];
+      _pages = tempPage;
       notifyListeners();
-    } else {
-      var message = extractedData['message'];
-      throw message;
     }
+    print(_pages.length);
   }
 
   Future<void> getCatProducts(
-      {required String userToken, required String catId}) async {
+      {required String userToken, String? page, required String catId}) async {
     List<Product> tempProds = [];
-    final url = Uri.parse('${baseUrl}products?cat_id=$catId');
+    final url = Uri.parse('${baseUrl}products?cat_id=$catId&page=$page');
     print(url);
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
     });
     var extractedData = json.decode(response.body);
+    print(extractedData);
 
-    if (extractedData['success'] == true) {
-      var data = extractedData['data'] as List<dynamic>;
-      data.forEach((prod) {
-        List<String> tempCustomers = [];
-        var customers = prod['customers'] as List<dynamic>;
-        customers.forEach((cust) {
-          tempCustomers.add(cust.toString());
-        });
-        tempProds.add(
-          Product(
-            id: prod['id'].toString(),
-            name: prod['name'],
-            length: prod['length'],
-            width: prod['width'],
-            unit: prod['unit'],
-            customers: tempCustomers,
-            categoryId: prod['category_id'].toString(),
-            categoryTitle: prod['category_name'],
-            image: prod['imageUrl'],
-            dateTime: prod['created_at'],
-          ),
-        );
+    //if (extractedData['success'] == true) {
+    var data = extractedData['data'] as List<dynamic>;
+    data.forEach((prod) {
+      List<String> tempCustomers = [];
+      var customers = prod['customers'] as List<dynamic>;
+      customers.forEach((cust) {
+        tempCustomers.add(cust.toString());
       });
+      tempProds.add(
+        Product(
+          id: prod['id'].toString(),
+          name: prod['name'],
+          length: prod['length'],
+          width: prod['width'],
+          unit: prod['unit'],
+          customers: tempCustomers,
+          categoryId: prod['category_id'].toString(),
+          categoryTitle: prod['category_name'],
+          image: prod['imageUrl'],
+          dateTime: prod['created_at'],
+        ),
+      );
+    });
 
-      print('yeh ha cat prods ${tempProds.length}');
-      _catProducts = tempProds;
-      catProductsToSort = _catProducts;
-      notifyListeners();
+    print('yeh ha cat prods ${tempProds.length}');
+
+    var metaData = extractedData['meta'];
+    var links = metaData['links'] as List<dynamic>;
+    List<CustomPage> tempPage = [];
+
+    if (links.isNotEmpty) {
+      for (var link in links) {
+        tempPage.add(CustomPage(
+          id: DateTime.now().millisecond.toString(),
+          title: link['label'],
+          active: link['active'],
+          url: link['url'] ?? '',
+        ));
+      }
     }
+    _pages = tempPage;
+    _catProducts = tempProds;
+    catProductsToSort = _catProducts;
+    notifyListeners();
+    // }
   }
 
   Future<void> getPaginationProducts() async {
@@ -427,46 +473,65 @@ class Products with ChangeNotifier {
     });
   }
 
-  Future<void> getCustomerProducts(String userId, String userToken) async {
+  Future<void> getCustomerProducts(
+      {required String userId, String? page, required String userToken}) async {
     print(userId);
     List<Product> tempProds = [];
-    final url = Uri.parse('${baseUrl}customer_products?user_id=$userId');
+    final url =
+        Uri.parse('${baseUrl}customer_products?user_id=$userId&page=$page');
 
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
     });
     var extractedResponse = json.decode(response.body);
-    if (extractedResponse['success'] == true) {
-      var data = extractedResponse['data'] as List<dynamic>;
-      data.forEach((prod) {
-        List<String> tempCustomers = [];
-        var customers = prod['customers'] as List<dynamic>;
-        customers.forEach((cust) {
-          tempCustomers.add(cust.toString());
-        });
-        tempProds.add(
-          Product(
-            id: prod['id'].toString(),
-            name: prod['name'],
-            length: prod['length'],
-            width: prod['width'],
-            unit: prod['unit'],
-            customers: tempCustomers,
-            categoryId: prod['category_id'].toString(),
-            categoryTitle: prod['category_name'],
-            image: prod['imageUrl'],
-            dateTime: prod['created_at'],
-          ),
-        );
+    // if (extractedResponse['success'] == true) {
+    var data = extractedResponse['data'] as List<dynamic>;
+    data.forEach((prod) {
+      List<String> tempCustomers = [];
+      var customers = prod['customers'] as List<dynamic>;
+      customers.forEach((cust) {
+        tempCustomers.add(cust.toString());
       });
-      _cutomerProducts = tempProds;
-      notifyListeners();
-    } else {
-      var message = extractedResponse['message'];
-      throw message;
-    }
+      tempProds.add(
+        Product(
+          id: prod['id'].toString(),
+          name: prod['name'],
+          length: prod['length'],
+          width: prod['width'],
+          unit: prod['unit'],
+          customers: tempCustomers,
+          categoryId: prod['category_id'].toString(),
+          categoryTitle: prod['category_name'],
+          image: prod['imageUrl'],
+          dateTime: prod['created_at'],
+        ),
+      );
+    });
+    // _cutomerProducts = tempProds;
+    // notifyListeners();
+    // } else {
+    //   var message = extractedResponse['message'];
+    //   throw message;
+    // }
+    // print(documents.toString())
+    var metaData = extractedResponse['meta'];
+    var links = metaData['links'] as List<dynamic>;
+    List<CustomPage> tempPage = [];
 
-    // print(documents.toString());
+    if (links.isNotEmpty) {
+      for (var link in links) {
+        tempPage.add(CustomPage(
+          id: DateTime.now().millisecond.toString(),
+          title: link['label'],
+          active: link['active'],
+          url: link['url'] ?? '',
+        ));
+      }
+    }
+    _cutomerProducts = tempProds;
+    _pages = tempPage;
+    notifyListeners();
+    // print(_pages.length);
   }
 
   Future<void> deleteCustomerProduct({

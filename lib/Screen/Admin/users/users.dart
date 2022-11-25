@@ -10,7 +10,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Functions/popup.dart';
 import '../../../Models/language.dart';
+import '../../../Models/pagination.dart';
 import '../../../Widget/adaptive_indecator.dart';
+import '../../../Widget/paginate.dart';
 import '../../../Widget/snakbar.dart';
 import '/Models/user.dart';
 import 'add_user.dart';
@@ -605,8 +607,9 @@ class _CustomerProductsState extends State<CustomerProducts> {
         productLoading = true;
       });
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-        widget.userId,
-        currentUser!.token,
+      page: '1',
+       userId: widget.userId,
+      userToken : currentUser!.token,
       );
       setState(() {
         productLoading = false;
@@ -619,6 +622,24 @@ class _CustomerProductsState extends State<CustomerProducts> {
   @override
   Widget build(BuildContext context) {
     customerProducts = Provider.of<Products>(context).customerProducts;
+     List<CustomPage> pages =
+        Provider.of<Products>(context,).pages;
+    
+    
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        productLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .getCustomerProducts(
+              page: page.url.split('=').last, userId: widget.userId, userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          productLoading = false;
+        });
+      });
+    }
     return productLoading
         ? Center(
             child: AdaptiveIndecator(
@@ -629,140 +650,162 @@ class _CustomerProductsState extends State<CustomerProducts> {
             ? Center(
                 child: Text('No Products assigned to this customer'),
               )
-            : GridView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  // crossAxisCount: width1 < 900 ? 3 : 4,
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
-                ),
-                itemCount: customerProducts.length,
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: btnbgColor.withOpacity(0.6), width: 1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: GridTile(
-                          footer: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            height: height(context) * 5,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                              gradient: LinearGradient(
-                                  colors: [Colors.white24, Colors.black38],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(
-                                    customerProducts[index].name,
-                                    style: GoogleFonts.righteous(
-                                      color: Colors.black54,
-                                      fontSize: 25,
-                                    ),
-                                    textAlign: TextAlign.start,
+            : Column(
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        // crossAxisCount: width1 < 900 ? 3 : 4,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 20.0,
+                        mainAxisSpacing: 20.0,
+                      ),
+                      itemCount: customerProducts.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: btnbgColor.withOpacity(0.6), width: 1),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: GridTile(
+                                footer: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  height: height(context) * 5,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                    gradient: LinearGradient(
+                                        colors: [Colors.white24, Colors.black38],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          customerProducts[index].name,
+                                          style: GoogleFonts.righteous(
+                                            color: Colors.black54,
+                                            fontSize: 25,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(
-                                      0.4,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(
+                                            0.4,
+                                          ),
+                                          offset: const Offset(0, 5),
+                                          blurRadius: 20,
+                                          spreadRadius: 1,
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(
+                                            0.5,
+                                          ),
+                                          offset: -Offset(5, 0),
+                                          blurRadius: 5,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                      borderRadius: customRadius),
+                                  child: Hero(
+                                    tag: customerProducts[index].id,
+                                    child: ExtendedImage.network(
+                                      cache: true,
+                                      key: ValueKey(customerProducts[index].id),
+                                      customerProducts[index].image,
                                     ),
-                                    offset: const Offset(0, 5),
-                                    blurRadius: 20,
-                                    spreadRadius: 1,
                                   ),
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(
-                                      0.5,
-                                    ),
-                                    offset: -Offset(5, 0),
-                                    blurRadius: 5,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                                borderRadius: customRadius),
-                            child: Hero(
-                              tag: customerProducts[index].id,
-                              child: ExtendedImage.network(
-                                cache: true,
-                                key: ValueKey(customerProducts[index].id),
-                                customerProducts[index].image,
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 20,
-                        top: 0,
-                        child: IconButton(
-                            onPressed: () async {
-                              showCustomDialog(
-                                  context: widget.scaffoldKey.currentContext!,
-                                  title: 'Delete',
-                                  btn1: 'Yes',
-                                  content:
-                                      'Product will be deleted from the list permamently',
-                                  btn2: 'No',
-                                  btn1Pressed: () async {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      productLoading = true;
-                                    });
-                                    await Provider.of<Products>(context,
-                                            listen: false)
-                                        .deleteCustomerProduct(
-                                            prodId: customerProducts[index].id,
-                                            userId: widget.userId,
-                                            userToken: currentUser!.token);
-                                    Provider.of<Products>(
-                                            widget.scaffoldKey.currentContext!,
-                                            listen: false)
-                                        .removeCustomer(widget.userId,
-                                            customerProducts[index].id);
-                                    await Provider.of<Products>(
-                                            widget.scaffoldKey.currentContext!,
-                                            listen: false)
-                                        .getCustomerProducts(
-                                            widget.userId, currentUser!.token);
-
-                                    setState(() {
-                                      productLoading = false;
-                                    });
-                                    Navigator.of(context).pop();
+                            Positioned(
+                              right: 20,
+                              top: 0,
+                              child: IconButton(
+                                  onPressed: () async {
+                                    showCustomDialog(
+                                        context: widget.scaffoldKey.currentContext!,
+                                        title: 'Delete',
+                                        btn1: 'Yes',
+                                        content:
+                                            'Product will be deleted from the list permamently',
+                                        btn2: 'No',
+                                        btn1Pressed: () async {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            productLoading = true;
+                                          });
+                                          await Provider.of<Products>(context,
+                                                  listen: false)
+                                              .deleteCustomerProduct(
+                                                  prodId: customerProducts[index].id,
+                                                  userId: widget.userId,
+                                                  userToken: currentUser!.token);
+                                          Provider.of<Products>(
+                                                  widget.scaffoldKey.currentContext!,
+                                                  listen: false)
+                                              .removeCustomer(widget.userId,
+                                                  customerProducts[index].id);
+                                          await Provider.of<Products>(
+                                                  widget.scaffoldKey.currentContext!,
+                                                  listen: false)
+                                              .getCustomerProducts(
+                                                 userId: widget.userId, userToken:currentUser!.token);
+                
+                                          setState(() {
+                                            productLoading = false;
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        btn2Pressed: () {
+                                          Navigator.of(context).pop();
+                                        });
                                   },
-                                  btn2Pressed: () {
-                                    Navigator.of(context).pop();
-                                  });
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 30,
-                              color: Colors.red,
-                            )),
-                      )
-                    ],
-                  );
-                },
-              );
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    size: 30,
+                                    color: Colors.red,
+                                  )),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                ),
+                Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ...pages.map(
+                      (page) => Paginate(
+                        page: page,
+                        onTap: page.url.isEmpty
+                            ? () {}
+                            : () => _onPageChange(page),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ],
+            );
   }
 }

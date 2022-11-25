@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 
 import '../../../Functions/dailog.dart';
 import '../../../Functions/filterbar.dart';
+import '../../../Models/pagination.dart';
+import '../../../Widget/paginate.dart';
 import '../../../Widget/send_button.dart';
 import 'functions/getsearchedproducts.dart';
 
@@ -62,7 +64,7 @@ class _ProductWebContentState extends State<ProductWebContent> {
           isLoading = true;
         });
         await Provider.of<Products>(context, listen: false)
-            .fetchAndUpdateProducts(userToken: currentUser!.token)
+            .fetchAndUpdateProducts(page: '1', userToken: currentUser!.token)
             .then((value) {
           setState(
             () {
@@ -128,6 +130,23 @@ class _ProductWebContentState extends State<ProductWebContent> {
     String? token = Provider.of<Products>(context).pageToken;
     List<Category> categories = Provider.of<Categories>(context).categories;
     List<AUser> customers = Provider.of<Users>(context).customers;
+    List<CustomPage> pages =
+        Provider.of<Products>(context, listen: false).pages;
+
+    void _onPageChange(CustomPage page) {
+      // print(p.url);
+      setState(() {
+        isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .fetchAndUpdateProducts(
+              page: page.url.split('=').last, userToken: currentUser!.token)
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -176,8 +195,8 @@ class _ProductWebContentState extends State<ProductWebContent> {
                 setState(() {
                   isLoading = true;
                 });
-                await Provider.of<Products>(context, listen: false)
-                    .fetchAndUpdateProducts(userToken: currentUser!.token);
+              Provider.of<Products>(context, listen: false)
+                    .getProductsByDate();
                 setState(() {
                   isLoading = false;
                 });
@@ -410,6 +429,23 @@ class _ProductWebContentState extends State<ProductWebContent> {
                     );
                   },
                 ),
+        ),
+        // SizedBox(
+        //   height: height(context) * 2,
+        // ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ...pages.map(
+                (page) => Paginate(
+                  page: page,
+                  onTap: page.url.isEmpty ? () {} : () => _onPageChange(page),
+                ),
+              )
+            ],
+          ),
         ),
         if (token != null)
           GradientButton(
