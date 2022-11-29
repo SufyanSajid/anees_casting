@@ -44,7 +44,6 @@ class Products with ChangeNotifier {
   List<CustomPage> _pages = [];
   List<CustomPage> _catpages = [];
 
-
   Product? drawerProduct;
   String? pageToken;
   GlobalKey<ScaffoldState>? scaffoldKey;
@@ -78,9 +77,9 @@ class Products with ChangeNotifier {
     return [..._catProducts];
   }
 
- List<CustomPage> get pages {
-   return [..._pages];
- }
+  List<CustomPage> get pages {
+    return [..._pages];
+  }
 
   List<CustomPage> get catpages {
     return [..._catpages];
@@ -480,59 +479,58 @@ class Products with ChangeNotifier {
   }
 
   Future<void> getCustomerProducts(
-      {required String userId, String? page, required String userToken}) async {
+      {required String userId, required String userToken}) async {
     print(userId);
     List<Product> tempProds = [];
-    final url =
-        Uri.parse('${baseUrl}customer_products?user_id=$userId&page=$page');
+    final url = Uri.parse('${baseUrl}customer_products?user_id=$userId');
 
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer $userToken',
     });
     var extractedResponse = json.decode(response.body);
-    // if (extractedResponse['success'] == true) {
-    var data = extractedResponse['data'] as List<dynamic>;
-    data.forEach((prod) {
-      List<String> tempCustomers = [];
-      var customers = prod['customers'] as List<dynamic>;
-      customers.forEach((cust) {
-        tempCustomers.add(cust.toString());
+    if (extractedResponse['success'] == true) {
+      var data = extractedResponse['data'] as List<dynamic>;
+      data.forEach((prod) {
+        List<String> tempCustomers = [];
+        var customers = prod['customers'] as List<dynamic>;
+        customers.forEach((cust) {
+          tempCustomers.add(cust.toString());
+        });
+        tempProds.add(
+          Product(
+            id: prod['id'].toString(),
+            name: prod['name'],
+            length: prod['length'],
+            width: prod['width'],
+            unit: prod['unit'],
+            customers: tempCustomers,
+            categoryId: prod['category_id'].toString(),
+            categoryTitle: prod['category_name'],
+            image: prod['imageUrl'],
+            dateTime: prod['created_at'],
+          ),
+        );
       });
-      tempProds.add(
-        Product(
-          id: prod['id'].toString(),
-          name: prod['name'],
-          length: prod['length'],
-          width: prod['width'],
-          unit: prod['unit'],
-          customers: tempCustomers,
-          categoryId: prod['category_id'].toString(),
-          categoryTitle: prod['category_name'],
-          image: prod['imageUrl'],
-          dateTime: prod['created_at'],
-        ),
-      );
-    });
-    // _cutomerProducts = tempProds;
-    // notifyListeners();
-    // } else {
-    //   var message = extractedResponse['message'];
-    //   throw message;
-    // }
-    // print(documents.toString())
-    var metaData = extractedResponse['meta'];
-    var links = metaData['links'] as List<dynamic>;
-    List<CustomPage> tempPage = [];
-
-    if (links.isNotEmpty) {
-      for (var link in links) {
-        CustomPage page = fromLink(link);
-        tempPage.add(page);
-      }
+      _cutomerProducts = tempProds;
+      notifyListeners();
+    } else {
+      var message = extractedResponse['message'];
+      throw message;
     }
-    _cutomerProducts = tempProds;
-    _pages = tempPage;
-    notifyListeners();
+    // print(documents.toString());
+    // var metaData = extractedResponse['meta'];
+    // var links = metaData['links'] as List<dynamic>;
+    // List<CustomPage> tempPage = [];
+
+    // if (links.isNotEmpty) {
+    //   for (var link in links) {
+    //     CustomPage page = fromLink(link);
+    //     tempPage.add(page);
+    //   }
+    // }
+    // _cutomerProducts = tempProds;
+    // _pages = tempPage;
+    // notifyListeners();
     // print(_pages.length);
   }
 

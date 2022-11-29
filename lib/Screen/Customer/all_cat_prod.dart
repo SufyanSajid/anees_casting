@@ -39,7 +39,7 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
       });
       currentUser = Provider.of<Auth>(context, listen: false).currentUser;
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-          page: '1', userId: currentUser!.id, userToken: currentUser!.token);
+         userId: currentUser!.id, userToken: currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -55,26 +55,26 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
   @override
   Widget build(BuildContext context) {
     Language languageProvider = Provider.of<Language>(context, listen: true);
-    List<CustomPage> pages = Provider.of<Products>(
-      context,
-    ).pages;
+    // List<CustomPage> pages = Provider.of<Products>(
+    //   context,
+    // ).pages;
 
-    void _onPageChange(CustomPage page) {
-      // print(p.url);
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
-              page: page.url.split('=').last,
-              userId: currentUser!.id,
-              userToken: currentUser!.token)
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      });
-    }
+    // void _onPageChange(CustomPage page) {
+    //   // print(p.url);
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+    //   Provider.of<Products>(context, listen: false)
+    //       .getCustomerProducts(
+    //           page: page.url.split('=').last,
+    //           userId: currentUser!.id,
+    //           userToken: currentUser!.token)
+    //       .then((value) {
+    //     setState(() {
+    //       isLoading = false;
+    //     });
+    //   });
+    // }
 
     if (search.isEmpty) {
       products = Provider.of<Products>(context).customerProducts;
@@ -241,22 +241,22 @@ class _CustomerProductScreenState extends State<CustomerProductScreen> {
                         ),
                       ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ...pages.map(
-                      (page) => Paginate(
-                        page: page,
-                        onTap: page.url.isEmpty
-                            ? () {}
-                            : () => _onPageChange(page),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //       ...pages.map(
+              //         (page) => Paginate(
+              //           page: page,
+              //           onTap: page.url.isEmpty
+              //               ? () {}
+              //               : () => _onPageChange(page),
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

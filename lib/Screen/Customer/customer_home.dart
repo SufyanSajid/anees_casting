@@ -42,7 +42,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       await Provider.of<Categories>(context, listen: false)
           .fetchAndUpdateCat(currentUser!.token);
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-          page: '1', userId: currentUser!.id, userToken: currentUser!.token);
+          userId: currentUser!.id, userToken: currentUser!.token);
       await Provider.of<Categories>(context, listen: false)
           .getCustomerCategoriesIds(
               userToken: currentUser!.token, custId: currentUser!.id);

@@ -607,7 +607,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
         productLoading = true;
       });
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-      page: '1',
+      
        userId: widget.userId,
       userToken : currentUser!.token,
       );
@@ -622,24 +622,24 @@ class _CustomerProductsState extends State<CustomerProducts> {
   @override
   Widget build(BuildContext context) {
     customerProducts = Provider.of<Products>(context).customerProducts;
-     List<CustomPage> pages =
-        Provider.of<Products>(context,).pages;
+    //  List<CustomPage> pages =
+    //     Provider.of<Products>(context,).pages;
     
     
-    void _onPageChange(CustomPage page) {
-      // print(p.url);
-      setState(() {
-        productLoading = true;
-      });
-      Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
-              page: page.url.split('=').last, userId: widget.userId, userToken: currentUser!.token)
-          .then((value) {
-        setState(() {
-          productLoading = false;
-        });
-      });
-    }
+    // void _onPageChange(CustomPage page) {
+    //   // print(p.url);
+    //   setState(() {
+    //     productLoading = true;
+    //   });
+    //   Provider.of<Products>(context, listen: false)
+    //       .getCustomerProducts(
+    //           page: page.url.split('=').last, userId: widget.userId, userToken: currentUser!.token)
+    //       .then((value) {
+    //     setState(() {
+    //       productLoading = false;
+    //     });
+    //   });
+    // }
     return productLoading
         ? Center(
             child: AdaptiveIndecator(
@@ -789,22 +789,22 @@ class _CustomerProductsState extends State<CustomerProducts> {
                       },
                     ),
                 ),
-                Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ...pages.map(
-                      (page) => Paginate(
-                        page: page,
-                        onTap: page.url.isEmpty
-                            ? () {}
-                            : () => _onPageChange(page),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              //   Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //       ...pages.map(
+              //         (page) => Paginate(
+              //           page: page,
+              //           onTap: page.url.isEmpty
+              //               ? () {}
+              //               : () => _onPageChange(page),
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
               ],
             );
   }

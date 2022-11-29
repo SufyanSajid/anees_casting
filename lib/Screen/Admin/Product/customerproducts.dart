@@ -49,7 +49,7 @@ class _AdminSideCustomerProductScreenState
       customer = ModalRoute.of(context)!.settings.arguments as AUser;
 
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-          page: '1', userId: customer!.id, userToken: currentUser!.token);
+          userId: customer!.id, userToken: currentUser!.token);
       setState(() {
         isLoading = false;
       });
@@ -108,24 +108,24 @@ class _AdminSideCustomerProductScreenState
   Widget build(BuildContext context) {
     products = Provider.of<Products>(context).customerProducts;
     Language languageProvider = Provider.of<Language>(context, listen: true);
-    List<CustomPage> pages =
-        Provider.of<Products>(context,).pages;
+    // List<CustomPage> pages =
+    //     Provider.of<Products>(context,).pages;
     
     
-    void _onPageChange(CustomPage page) {
-      // print(p.url);
-      setState(() {
-        isLoading = true;
-      });
-      Provider.of<Products>(context, listen: false)
-          .getCustomerProducts(
-              page: page.url.split('=').last, userId: customer!.id, userToken: currentUser!.token)
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      });
-    }
+    // void _onPageChange(CustomPage page) {
+    //   // print(p.url);
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+    //   Provider.of<Products>(context, listen: false)
+    //       .getCustomerProducts(
+    //           page: page.url.split('=').last, userId: customer!.id, userToken: currentUser!.token)
+    //       .then((value) {
+    //     setState(() {
+    //       isLoading = false;
+    //     });
+    //   });
+    // }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -252,22 +252,22 @@ class _AdminSideCustomerProductScreenState
                             },
                           ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ...pages.map(
-                      (page) => Paginate(
-                        page: page,
-                        onTap: page.url.isEmpty
-                            ? () {}
-                            : () => _onPageChange(page),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //       ...pages.map(
+              //         (page) => Paginate(
+              //           page: page,
+              //           onTap: page.url.isEmpty
+              //               ? () {}
+              //               : () => _onPageChange(page),
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),
