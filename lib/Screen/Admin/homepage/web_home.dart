@@ -367,7 +367,7 @@ class _WebHomeState extends State<WebHome> {
                           right: 0,
                           top: 0,
                           child: Container(
-                            height: height(context) * 2,
+                            height: height(context) * 3,
                             width: width(context) * 20,
                             decoration: BoxDecoration(
                                 color: btnbgColor.withOpacity(1),

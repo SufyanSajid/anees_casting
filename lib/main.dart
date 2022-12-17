@@ -22,6 +22,7 @@ import 'package:anees_costing/Screen/Customer/customer_catlist.dart';
 import 'package:anees_costing/Screen/Customer/customer_home.dart';
 import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:flutter/services.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'dart:io';
 
@@ -44,6 +45,12 @@ import 'Screen/Auth/forget/verification_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //----- To restrict Desktop app for certain height to avoid overflow -----//
+  await windowManager.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    WindowManager.instance.setMinimumSize(const Size(710, 650)); // below 710 * 650 cause overflow on few pages
+  }
+  //----- To restrict Desktop app for certain height to avoid overflow -----//
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 

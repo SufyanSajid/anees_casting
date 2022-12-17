@@ -66,7 +66,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Container(
+                       Container(
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.8),
                           borderRadius: const BorderRadius.only(
@@ -76,7 +76,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         height: height * 24.5,
                         width: width * 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 30),
+                            horizontal: 30, vertical: 15),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,11 +119,14 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 10,
+                           SizedBox(
+                              height: height * 1,
                             ),
                             // if (currentUser != null)
-                            Text(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
                               currentUser!.name!,
                               style: Theme.of(context)
                                   .textTheme
@@ -133,10 +136,10 @@ class _AppDrawerState extends State<AppDrawer> {
                                     color: Colors.white.withOpacity(0.8),
                                   ),
                             ),
-                            SizedBox(
-                              height: height * 0,
-                            ),
-                            // if (currentUser != null)
+                            // SizedBox(
+                            //   height: height * 0,
+                            // ),
+                            // // if (currentUser != null)
                             Text(
                               currentUser.email,
                               style: TextStyle(
@@ -144,18 +147,18 @@ class _AppDrawerState extends State<AppDrawer> {
                                 fontSize: 14,
                               ),
                             ),
-                            SizedBox(
-                              height: height * 1,
-                            ),
+                           
                             // if (currentUser != null)
                             Text(
                               currentUser.role!,
                               style: TextStyle(
                                 color: btnbgColor.withOpacity(0.8),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 16,
                               ),
                             ),
+                              ],
+                            )
                           ],
                         ),
                       ),

@@ -319,60 +319,64 @@ class _CatProductScreenState extends State<CatProductScreen> {
                                                 if (currentUser!.role!
                                                         .toLowerCase() ==
                                                     'admin')
-                                                  PopupMenuButton(
-                                                    icon: Icon(
-                                                      Icons.more_vert,
-                                                      color: primaryColor
-                                                          .withOpacity(0.8),
-                                                    ),
-                                                    itemBuilder: (BuildContext
-                                                            context) =>
-                                                        <PopupMenuEntry>[
-                                                      PopupMenuItem(
-                                                        child: PopupItem(
-                                                          icon: Icons
-                                                              .edit_outlined,
-                                                          text: 'Edit',
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            Navigator.pushNamed(
-                                                                context,
-                                                                AddProduct
-                                                                    .routeName,
-                                                                arguments: {
-                                                                  "action":
-                                                                      "edit",
-                                                                  "product":
-                                                                      products[
+                                                  Expanded(
+                                                    child: PopupMenuButton(
+                                                      icon: Icon(
+                                                        Icons.more_vert,
+                                                        color: primaryColor
+                                                            .withOpacity(0.8),
+                                                      ),
+                                                      itemBuilder: (BuildContext
+                                                              context) =>
+                                                          <PopupMenuEntry>[
+                                                        PopupMenuItem(
+                                                          child: PopupItem(
+                                                            icon: Icons
+                                                                .edit_outlined,
+                                                            text: 'Edit',
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              Navigator.pushNamed(
+                                                                  context,
+                                                                  AddProduct
+                                                                      .routeName,
+                                                                  arguments: {
+                                                                    "action":
+                                                                        "edit",
+                                                                    "product":
+                                                                        products[
+                                                                            index]
+                                                                  });
+                                                            },
+                                                          ),
+                                                        ),
+                                                        PopupMenuItem(
+                                                          child: PopupItem(
+                                                            icon: Icons.delete,
+                                                            text: 'Delete',
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              _deleteProduct(
+                                                                  imgUrl: products[
                                                                           index]
-                                                                });
-                                                          },
+                                                                      .image,
+                                                                  prodId: products[
+                                                                          index]
+                                                                      .id);
+                                                            },
+                                                          ),
                                                         ),
-                                                      ),
-                                                      PopupMenuItem(
-                                                        child: PopupItem(
-                                                          icon: Icons.delete,
-                                                          text: 'Delete',
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            _deleteProduct(
-                                                                imgUrl: products[
-                                                                        index]
-                                                                    .image,
-                                                                prodId: products[
-                                                                        index]
-                                                                    .id);
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-                                                SendProductButton(
-                                                    prod: products[index])
+                                                Flexible(
+                                                  child: SendProductButton(
+                                                      prod: products[index]),
+                                                )
                                               ],
                                             ),
                                           ),

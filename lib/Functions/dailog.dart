@@ -22,7 +22,7 @@ Column buildTopTitle(
   return Column(
     children: [
       ListTile(
-        leading: Image.asset('assets/images/logo.png'),
+        leading: Image.asset('assets/images/logo.png',height: 50,),
         trailing: Material(
           color: Colors.transparent,
           child: IconButton(
@@ -35,7 +35,8 @@ Column buildTopTitle(
         title: title != null && customTitle == null
             ? Text(
                 title,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+              
+                style: const TextStyle(fontSize: 12, color: Colors.white),
               )
             : customTitle,
         onTap: () {
@@ -44,7 +45,7 @@ Column buildTopTitle(
       ),
       if (showDivider)
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: lightDivider(),
         ),
     ],
@@ -82,9 +83,7 @@ Future<void> showCustomDialog({
             contentPadding: EdgeInsets.zero,
             content: Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              height: Platform.isAndroid || Platform.isIOS
-                  ? height(context) * 25
-                  : 200,
+              height: 200,
               width: width(context) * 18,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

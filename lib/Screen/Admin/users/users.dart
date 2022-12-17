@@ -528,19 +528,21 @@ class _ShowUsersState extends State<ShowUsers> {
                       right: 0,
                       top: 0,
                       child: Container(
-                        height: height(context) * 2,
+                        height: height(context) * 2.5,
                         width: width(context) * 20,
                         decoration: BoxDecoration(
                             color: btnbgColor.withOpacity(1),
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(10))),
                         child: Center(
-                          child: Text(
-                            languageProvider.get(users[index].role),
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor),
+                          child: FittedBox(
+                            child: Text(
+                              languageProvider.get(users[index].role),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor),
+                            ),
                           ),
                         ),
                       ),

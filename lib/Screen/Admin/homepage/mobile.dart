@@ -265,6 +265,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
             height: height * 18,
             child: ListView(
               scrollDirection: Axis.horizontal,
+            
               children: [
                 QuickChecks(
                   width: width,
@@ -435,7 +436,7 @@ class _MobileAdminHomePageState extends State<MobileAdminHomePage> {
                               right: 0,
                               top: 0,
                               child: Container(
-                                height: height * 2,
+                                height: height * 3.5,
                                 width: width * 20,
                                 decoration: BoxDecoration(
                                     color: btnbgColor.withOpacity(1),

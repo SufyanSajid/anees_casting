@@ -230,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width * 15),
-                      height: height * 6,
+                      height: height * 7,
                       width: width * 70,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -275,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: index == 0
                                             ? Colors.white
                                             : headingColor,
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )),
@@ -305,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: index == 1
                                             ? Colors.white
                                             : headingColor,
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 )),

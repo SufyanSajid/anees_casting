@@ -326,15 +326,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                     flex: 1,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Expanded(
                                           flex: 4,
                                           child: Container(
-                                            alignment: Alignment.bottomLeft,
+                                            alignment: Alignment.bottomCenter,
                                             child: Text(
                                               products[index].name,
-                                              textAlign: TextAlign.start,
+                                              // textAlign: TextAlign.start,
                                               style: GoogleFonts.righteous(
                                                 color: headingColor,
                                                 fontWeight: FontWeight.bold,
@@ -352,62 +352,66 @@ class _ProductScreenState extends State<ProductScreen> {
                                               if (currentUser!.role!
                                                       .toLowerCase() ==
                                                   'admin')
-                                                PopupMenuButton(
-                                                  icon: Icon(
-                                                    Icons.more_vert,
-                                                    color: primaryColor
-                                                        .withOpacity(0.8),
-                                                  ),
-                                                  itemBuilder:
-                                                      (BuildContext context) =>
-                                                          <PopupMenuEntry>[
-                                                    PopupMenuItem(
-                                                      child: PopupItem(
-                                                        icon:
-                                                            Icons.edit_outlined,
-                                                        text: languageProvider
-                                                            .get('Edit'),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              AddProduct
-                                                                  .routeName,
-                                                              arguments: {
-                                                                "action":
-                                                                    "edit",
-                                                                "product":
-                                                                    products[
+                                                Expanded(
+                                                  child: PopupMenuButton(
+                                                    icon: Icon(
+                                                      Icons.more_vert,
+                                                      color: primaryColor
+                                                          .withOpacity(0.8),
+                                                    ),
+                                                    itemBuilder:
+                                                        (BuildContext context) =>
+                                                            <PopupMenuEntry>[
+                                                      PopupMenuItem(
+                                                        child: PopupItem(
+                                                          icon:
+                                                              Icons.edit_outlined,
+                                                          text: languageProvider
+                                                              .get('Edit'),
+                                                          onTap: () {
+                                                            Navigator.of(context)
+                                                                .pop();
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                AddProduct
+                                                                    .routeName,
+                                                                arguments: {
+                                                                  "action":
+                                                                      "edit",
+                                                                  "product":
+                                                                      products[
+                                                                          index]
+                                                                });
+                                                          },
+                                                        ),
+                                                      ),
+                                                      PopupMenuItem(
+                                                        child: PopupItem(
+                                                          icon: Icons.delete,
+                                                          text: languageProvider
+                                                              .get('Delete'),
+                                                          onTap: () {
+                                                            Navigator.of(context)
+                                                                .pop();
+                                                            _deleteProduct(
+                                                                langProvider:
+                                                                    languageProvider,
+                                                                imgUrl: products[
                                                                         index]
-                                                              });
-                                                        },
+                                                                    .image,
+                                                                prodId: products[
+                                                                        index]
+                                                                    .id);
+                                                          },
+                                                        ),
                                                       ),
-                                                    ),
-                                                    PopupMenuItem(
-                                                      child: PopupItem(
-                                                        icon: Icons.delete,
-                                                        text: languageProvider
-                                                            .get('Delete'),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          _deleteProduct(
-                                                              langProvider:
-                                                                  languageProvider,
-                                                              imgUrl: products[
-                                                                      index]
-                                                                  .image,
-                                                              prodId: products[
-                                                                      index]
-                                                                  .id);
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              SendProductButton(
-                                                  prod: products[index])
+                                              Flexible(
+                                                child: SendProductButton(
+                                                    prod: products[index]),
+                                              )
                                             ],
                                           ),
                                         ),

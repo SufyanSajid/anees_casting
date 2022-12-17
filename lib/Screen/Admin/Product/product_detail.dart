@@ -148,15 +148,17 @@ class RowItem extends StatelessWidget {
         children: [
           SvgPicture.asset(
             svgIcon,
-            height: height(context) * 5,
+            height: height(context) * 3,
             color: btnbgColor.withOpacity(1),
           ),
-          // SizedBox(
-          //   height: height(context) * 0.8,
-          // ),
-          Text(
-            value,
-            style: TextStyle(color: primaryColor),
+          SizedBox(
+            height: height(context) * 0.5,
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(color: primaryColor),
+            ),
           )
         ],
       ),
