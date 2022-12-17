@@ -46,8 +46,8 @@ import 'Screen/Auth/forget/verification_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //----- To restrict Desktop app for certain height to avoid overflow -----//
-  await windowManager.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await windowManager.ensureInitialized();
     WindowManager.instance.setMinimumSize(const Size(710, 650)); // below 710 * 650 cause overflow on few pages
   }
   //----- To restrict Desktop app for certain height to avoid overflow -----//

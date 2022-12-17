@@ -477,7 +477,7 @@ class Products with ChangeNotifier {
       'product_id': product.id,
     });
   }
-
+ //----only showing products for first page
   Future<void> getCustomerProducts(
       {required String userId, required String userToken}) async {
     print(userId);
@@ -488,7 +488,7 @@ class Products with ChangeNotifier {
       'Authorization': 'Bearer $userToken',
     });
     var extractedResponse = json.decode(response.body);
-    if (extractedResponse['success'] == true) {
+    // if (extractedResponse['success'] == true) {
       var data = extractedResponse['data'] as List<dynamic>;
       data.forEach((prod) {
         List<String> tempCustomers = [];
@@ -513,11 +513,10 @@ class Products with ChangeNotifier {
       });
       _cutomerProducts = tempProds;
       notifyListeners();
-    } else {
-      var message = extractedResponse['message'];
-      throw message;
-    }
-    // print(documents.toString());
+    // } else {
+    //   var message = extractedResponse['message'];
+    //   throw message;
+    // }
     // var metaData = extractedResponse['meta'];
     // var links = metaData['links'] as List<dynamic>;
     // List<CustomPage> tempPage = [];

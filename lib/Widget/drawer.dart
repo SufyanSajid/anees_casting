@@ -81,43 +81,45 @@ class _AppDrawerState extends State<AppDrawer> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                    onTap: () {
-                                      print('line 66');
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.centerLeft,
-                                      height: currentOrientation ==
-                                              Orientation.landscape
-                                          ? height * 12
-                                          : height * 6,
-                                      width: currentOrientation ==
-                                              Orientation.landscape
-                                          ? height * 12
-                                          : height * 15,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        image: const DecorationImage(
-                                          fit: BoxFit.contain,
-                                          image: AssetImage(
-                                              'assets/images/logo.png'),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                      onTap: () {
+                                        print('line 66');
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: currentOrientation ==
+                                                Orientation.landscape
+                                            ? height * 12
+                                            : height * 6,
+                                        width: currentOrientation ==
+                                                Orientation.landscape
+                                            ? height * 12
+                                            : height * 15,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          image: const DecorationImage(
+                                            fit: BoxFit.contain,
+                                            image: AssetImage(
+                                                'assets/images/logo.png'),
+                                          ),
                                         ),
-                                      ),
-                                    )),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Icon(
-                                    Icons.menu_open_outlined,
-                                    color: primaryColor,
-                                    size: 30,
+                                      )),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Icon(
+                                      Icons.menu_open_outlined,
+                                      color: primaryColor,
+                                      size: 30,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                            SizedBox(
                               height: height * 1,
