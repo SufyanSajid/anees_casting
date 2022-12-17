@@ -94,7 +94,7 @@ class Categories with ChangeNotifier {
       {required String userToken, required String custId}) async {
     List<String> tempCuscats = [];
     final url =
-        Uri.parse('https://anees-casting.rapidev.tech/api/customer_cats');
+        Uri.parse('${baseUrl}customer_cats');
     var response = await http.post(url, headers: {
       'Authorization': 'Bearer ${userToken}'
     }, body: {
