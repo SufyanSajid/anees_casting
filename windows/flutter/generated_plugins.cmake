@@ -4,11 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_window_close
-<<<<<<< Updated upstream
   screen_retriever
-=======
   share_plus
->>>>>>> Stashed changes
   url_launcher_windows
   window_manager
 )
