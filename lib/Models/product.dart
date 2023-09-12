@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:anees_costing/Helpers/firestore_methods.dart';
 import 'package:anees_costing/Models/pagination.dart';
@@ -265,6 +266,10 @@ class Products with ChangeNotifier {
       _total = metaData['total'];
       _pages = tempPage;
       notifyListeners();
+    } else {
+      var message = extractedData['message'];
+      log(message.toString());
+      //throw message;
     }
     print(_pages.length);
   }
