@@ -312,6 +312,9 @@ class _ShowUsersState extends State<ShowUsers> {
   Widget build(BuildContext context) {
     users = Provider.of<Users>(context, listen: true)
         .getFilteredUsers(widget.selectedFilter);
+    if (currentUser!.role!.toLowerCase() != 'admin') {
+      users.removeWhere((element) => element.role.toLowerCase() == 'admin');
+    }
     users.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     var languageProvider = Provider.of<Language>(context);
 
@@ -609,9 +612,8 @@ class _CustomerProductsState extends State<CustomerProducts> {
         productLoading = true;
       });
       await Provider.of<Products>(context, listen: false).getCustomerProducts(
-      
-       userId: widget.userId,
-      userToken : currentUser!.token,
+        userId: widget.userId,
+        userToken: currentUser!.token,
       );
       setState(() {
         productLoading = false;
@@ -626,8 +628,7 @@ class _CustomerProductsState extends State<CustomerProducts> {
     customerProducts = Provider.of<Products>(context).customerProducts;
     //  List<CustomPage> pages =
     //     Provider.of<Products>(context,).pages;
-    
-    
+
     // void _onPageChange(CustomPage page) {
     //   // print(p.url);
     //   setState(() {
@@ -653,13 +654,14 @@ class _CustomerProductsState extends State<CustomerProducts> {
                 child: Text('No Products assigned to this customer'),
               )
             : Column(
-              children: [
-                Expanded(
-                  child: GridView.builder(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                children: [
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                       shrinkWrap: true,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         // crossAxisCount: width1 < 900 ? 3 : 4,
                         crossAxisCount: 3,
                         crossAxisSpacing: 20.0,
@@ -672,23 +674,29 @@ class _CustomerProductsState extends State<CustomerProducts> {
                             Container(
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: btnbgColor.withOpacity(0.6), width: 1),
+                                      color: btnbgColor.withOpacity(0.6),
+                                      width: 1),
                                   borderRadius: BorderRadius.circular(10)),
                               child: GridTile(
                                 footer: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
                                   height: height(context) * 5,
                                   decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.only(
                                         bottomLeft: Radius.circular(10),
                                         bottomRight: Radius.circular(10)),
                                     gradient: LinearGradient(
-                                        colors: [Colors.white24, Colors.black38],
+                                        colors: [
+                                          Colors.white24,
+                                          Colors.black38
+                                        ],
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       FittedBox(
                                         fit: BoxFit.contain,
@@ -743,7 +751,8 @@ class _CustomerProductsState extends State<CustomerProducts> {
                               child: IconButton(
                                   onPressed: () async {
                                     showCustomDialog(
-                                        context: widget.scaffoldKey.currentContext!,
+                                        context:
+                                            widget.scaffoldKey.currentContext!,
                                         title: 'Delete',
                                         btn1: 'Yes',
                                         content:
@@ -757,20 +766,27 @@ class _CustomerProductsState extends State<CustomerProducts> {
                                           await Provider.of<Products>(context,
                                                   listen: false)
                                               .deleteCustomerProduct(
-                                                  prodId: customerProducts[index].id,
+                                                  prodId:
+                                                      customerProducts[index]
+                                                          .id,
                                                   userId: widget.userId,
-                                                  userToken: currentUser!.token);
+                                                  userToken:
+                                                      currentUser!.token);
                                           Provider.of<Products>(
-                                                  widget.scaffoldKey.currentContext!,
+                                                  widget.scaffoldKey
+                                                      .currentContext!,
                                                   listen: false)
                                               .removeCustomer(widget.userId,
                                                   customerProducts[index].id);
                                           await Provider.of<Products>(
-                                                  widget.scaffoldKey.currentContext!,
+                                                  widget.scaffoldKey
+                                                      .currentContext!,
                                                   listen: false)
                                               .getCustomerProducts(
-                                                 userId: widget.userId, userToken:currentUser!.token);
-                
+                                                  userId: widget.userId,
+                                                  userToken:
+                                                      currentUser!.token);
+
                                           setState(() {
                                             productLoading = false;
                                           });
@@ -790,24 +806,24 @@ class _CustomerProductsState extends State<CustomerProducts> {
                         );
                       },
                     ),
-                ),
-              //   Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 20),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: [
-              //       ...pages.map(
-              //         (page) => Paginate(
-              //           page: page,
-              //           onTap: page.url.isEmpty
-              //               ? () {}
-              //               : () => _onPageChange(page),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
-              ],
-            );
+                  ),
+                  //   Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //     children: [
+                  //       ...pages.map(
+                  //         (page) => Paginate(
+                  //           page: page,
+                  //           onTap: page.url.isEmpty
+                  //               ? () {}
+                  //               : () => _onPageChange(page),
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                ],
+              );
   }
 }

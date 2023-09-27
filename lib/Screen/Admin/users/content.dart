@@ -149,17 +149,18 @@ class _UserWebContentState extends State<UserWebContent> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            PopupMenuItem(
-              onTap: () {
-                setState(() {
-                  selectedFilter = 'Admin';
-                });
-              },
-              child: Text(
-                languageProvider.get('Admin'),
-                style: TextStyle(color: Colors.white),
+            if (currentUser!.role!.toLowerCase() == 'admin')
+              PopupMenuItem(
+                onTap: () {
+                  setState(() {
+                    selectedFilter = 'Admin';
+                  });
+                },
+                child: Text(
+                  languageProvider.get('Admin'),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ),
           ],
         ),
         SizedBox(
