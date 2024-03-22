@@ -18,7 +18,7 @@ class GradientButton extends StatelessWidget {
       child: ElevatedButton(
           onPressed: onTap,
           style: ElevatedButton.styleFrom(
-            primary: Colors.transparent,
+            backgroundColor: Colors.transparent,
             maximumSize: Size(150, 50),
             minimumSize: Size(150, 50),
           ),

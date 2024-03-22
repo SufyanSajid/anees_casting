@@ -1,7 +1,6 @@
 import 'package:anees_costing/Models/language.dart';
 import 'package:anees_costing/Screen/Auth/Login/login.dart';
 import 'package:anees_costing/Screen/Customer/customer_home.dart';
-import 'package:anees_costing/Screen/Customer/all_cat_prod.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Text(
           'Anees Casting',
+          textAlign: TextAlign.center,
           style: GoogleFonts.berkshireSwash(
             fontSize: 60,
             color: primaryColor,

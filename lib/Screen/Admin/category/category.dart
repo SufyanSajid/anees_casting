@@ -36,15 +36,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Icon? _icon;
 
-  _pickIcon() async {
-    IconData? icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackModes: [IconPack.cupertino]);
-
-    _icon = Icon(icon);
-    setState(() {});
-
-    debugPrint('Picked Icon:  $icon');
-  }
 
   @override
   void didChangeDependencies() async {

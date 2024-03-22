@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
                           },
                           child: Text("Yes"),
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.red.shade800),
+                              backgroundColor: Colors.red.shade800),
                         ),
                       ),
                       SizedBox(width: 15),
@@ -125,7 +125,7 @@ class _MyAppState extends State<MyApp> {
                         child:
                             Text("No", style: TextStyle(color: Colors.black)),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
+                          backgroundColor: Colors.white,
                         ),
                       ))
                     ],
@@ -182,6 +182,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Anees_Casting',
           theme: ThemeData(
+            useMaterial3: false,
             primarySwatch: Colors.blue,
             textTheme: GoogleFonts.ubuntuTextTheme(),
           ),
